@@ -40,7 +40,7 @@
                     </a>
                 @endif
 
-                <x-primary-button class="ml-5">
+                <x-primary-button class="ml-5" style="margin-right: 10px">
                     {{ __('تسجيل الدخول') }}
                 </x-primary-button>
             </div>

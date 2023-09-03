@@ -1,4 +1,7 @@
 @extends('main_master')
+@section('title')
+    الصفحة الرئيسية
+@endsection
 
 @section('page-header')
     <div class="content-header">

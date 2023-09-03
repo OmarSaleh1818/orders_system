@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Sections;
+use App\Models\MultiSections;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +22,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $users = User::all();
+        return view('users.users_view', compact('users'));
     }
 
     /**
@@ -48,4 +51,40 @@ class RegisteredUserController extends Controller
 
         return redirect(RouteServiceProvider::HOME);
     }
+
+    public function UsersCreate(Request $request) {
+        $section = Sections::all();
+        return view('users.users_create', compact('section'));
+    }
+
+
+    public function UsersStore(Request $request) {
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|same:confirm-password',
+            'section_name' => 'required'
+        ]);
+
+        $user_id = User::insertGetId([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $selectedSections = $request->input('section_name');
+
+        foreach ($selectedSections as $selectedSection) {
+            // Create a new database record for each selected section
+            MultiSections::insert([
+                'user_id' => $user_id,
+                'section_name' => $selectedSection
+            ]);
+        }
+
+        $request->session()->flash('status', 'تم اضافة المستخدم  بنجاح');
+        return redirect()->route('users');
+    }
+
+
 }
