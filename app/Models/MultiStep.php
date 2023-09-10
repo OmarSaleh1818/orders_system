@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MultiProject extends Model
+class MultiStep extends Model
 {
     use HasFactory;
+
 
     protected $guarded = [];
 
@@ -17,10 +18,10 @@ class MultiProject extends Model
 
     }
 
-    public function step() {
-
-        return $this->belongsTo(MultiStep::class, 'step_id', 'id');
-
+    public function items()
+    {
+        return $this->hasMany(MultiProject::class);
     }
+
 
 }

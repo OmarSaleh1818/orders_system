@@ -60,9 +60,15 @@
                         <p>معتمد الصرف</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('project.approved') }}" class="nav-link {{ ($route == '#')? 'active' : '' }}">
+                        <i class="nav-icon fa fa-tasks" aria-hidden="true"></i>
+                        <p>معتمد المشروع</p>
+                    </a>
+                </li>
                 <li class="nav-header">المحاسب</li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ ($route == '#')? 'active' : '' }}">
+                    <a href="" class="nav-link {{ ($route == '#')? 'active' : '' }}">
                         <i class="nav-icon fa fa-check-square" aria-hidden="true"></i>
                         <p class="text">منفذ الطلب</p>
                     </a>

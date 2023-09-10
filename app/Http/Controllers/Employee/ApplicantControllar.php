@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
+use App\Models\MultiProject;
+use App\Models\projects;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MultiSections;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ApplicantControllar extends Controller
 {
@@ -23,13 +26,17 @@ class ApplicantControllar extends Controller
         $user_id = Auth::user()->id;
 
         $sections = MultiSections::where('user_id', $user_id)->get();
-
-        return view('applicant.add_order', compact('sections'));
+        $projects = projects::where('status_id', 6)->get();
+        return view('applicant.add_order', compact('sections', 'projects'));
     }
 
     public function ApplicantStore(Request $request) {
 
         $request->validate([
+            'project_name' => 'required',
+            'item_name' => 'required',
+            'item_value' => 'required',
+            'remaining_value' => 'required',
             'date' => 'required',
             'section_name' => 'required',
             'price' => 'required',
@@ -40,9 +47,13 @@ class ApplicantControllar extends Controller
             'payment_date' => 'required',
             'order_name' => 'required',
         ],[
+            'project_name.required' => 'اسم المشروع مطلوب',
+            'item_name.required' => 'بند الصرف مطلوب',
+            'item_value.required' => 'القيمة مطلوب',
+            'remaining_value.required' => 'المبلغ المتبقي مطلوب',
             'date.required' => 'التاريخ مطلوب',
             'section_name.required' => 'اسم القسم مطلوب',
-            'price.required' => 'المبلغ مطلوب',
+            'price.required' => 'المبلغ يجب ان يكون اقل من المبلغ المتبقي',
             'priority_level.required' => 'مستوى الاولوية مطلوب',
             'account_number.required' => 'رقم الحساب مطلوب',
             'bank_name.required' => 'اسم البنك مطلوب',
@@ -131,9 +142,13 @@ class ApplicantControllar extends Controller
 
     public function ApplicantUpdate(Request $request, $id) {
         $request->validate([
+            'project_name' => 'required',
+            'item_name' => 'required',
+            'item_value' => 'required',
+            'remaining_value' => 'required',
             'date' => 'required',
             'section_name' => 'required',
-            'price' => 'required',
+            'price' => 'required|price_less_than_remaining',
             'priority_level' => 'required',
             'account_number' => 'required',
             'bank_name' => 'required',
@@ -141,9 +156,13 @@ class ApplicantControllar extends Controller
             'payment_date' => 'required',
             'order_name' => 'required',
         ],[
+            'project_name.required' => 'اسم المشروع مطلوب',
+            'item_name.required' => 'بند الصرف مطلوب',
+            'item_value.required' => 'القيمة مطلوب',
+            'remaining_value.required' => 'المبلغ المتبقي مطلوب',
             'date.required' => 'التاريخ مطلوب',
             'section_name.required' => 'اسم القسم مطلوب',
-            'price.required' => 'المبلغ مطلوب',
+            'price.price_less_than_remaining' => 'الملاغ يجب ان يكون اقل من المبلغ المتبقي',
             'priority_level.required' => 'مستوى الاولوية مطلوب',
             'account_number.required' => 'رقم الحساب مطلوب',
             'bank_name.required' => 'اسم البنك مطلوب',
@@ -226,6 +245,37 @@ class ApplicantControllar extends Controller
         return redirect('/applicant/view');
     }
 
+    public function getItems($projectId)
+    {
+        $items = MultiProject::where('project_id', $projectId)->pluck('item_name', 'item_name');
+        $options = '<option value="" selected="" disabled="">اختر البند</option>';
+        foreach ($items as $itemName) {
+            $options .= "<option value='$itemName'>$itemName</option>";
+        }
+        return response()->json(['options' => $options]);
+    }
+
+    public function getItemValue($itemName, Request $request)
+    {
+        $projectId = $request->input('project_name');
+
+        $itemValue = MultiProject::where('project_id', $projectId)
+            ->where('item_name', $itemName)
+            ->value('item_value');
+
+        return response()->json($itemValue);
+    }
+
+    public function getRemainingValue($itemName, Request $request)
+    {
+        $projectId = $request->input('project_name');
+
+        $remainingValue = MultiProject::where('project_id', $projectId)
+            ->where('item_name', $itemName)
+            ->value('remaining_value');
+
+        return response()->json($remainingValue);
+    }
 
 
 }

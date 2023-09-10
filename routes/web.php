@@ -37,6 +37,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/applicant/edit/{id}', [ApplicantControllar::class, 'ApplicantEdit'])->name('applicant.edit');
     Route::post('/applicant/update/{id}', [ApplicantControllar::class, 'ApplicantUpdate'])->name('applicant.update');
     Route::get('/applicant/delete/{id}', [ApplicantControllar::class, 'applicantDelete'])->name('applicant.delete');
+    Route::get('/get-items/{projectId}', [ApplicantControllar::class, 'getItems']);
+    Route::get('/get-item-value/{itemName}', [ApplicantControllar::class, 'getItemValue']);
+    Route::get('/get-remaining-value/{itemName}', [ApplicantControllar::class, 'getRemainingValue']);
+
 // End
 
 // All Section Route
@@ -55,9 +59,18 @@ Route::middleware('auth')->group(function () {
     });
 // End
 
-// All Users Route
+// All Project Route
     Route::get('/project/view', [ProjectsController::class, 'ProjectView'])->name('project.view');
     Route::get('/add/project', [ProjectsController::class, 'AddProject'])->name('add.project');
+    Route::post('/project/store', [ProjectsController::class, 'ProjectStore'])->name('project.store');
+    Route::get('/project/edit/{id}', [ProjectsController::class, 'ProjectEdit'])->name('project.edit');
+    Route::post('/project/update/{id}', [ProjectsController::class, 'ProjectUpdate'])->name('project.update');
+    Route::get('/project/approved/view', [ProjectsController::class, 'ProjectApprovedView'])->name('project.approved');
+    Route::get('/project/sure/{id}', [ProjectsController::class, 'ProjectSure'])->name('project.sure');
+    Route::get('/project/eye/{id}', [ProjectsController::class, 'ProjectEye'])->name('project.eye');
+    Route::get('/project/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
+    Route::get('/project/back', [ProjectsController::class, 'ProjectBack'])->name('project.back');
+
 // End
 });
 

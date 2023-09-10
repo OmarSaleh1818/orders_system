@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->integer('user_id');
             $table->date('date');
+            $table->string('project_name');
             $table->string('section_name');
+            $table->string('item_name');
+            $table->decimal('item_value');
             $table->decimal('price');
             $table->string('price_name');
             $table->string('order_name');
@@ -23,7 +26,6 @@ return new class extends Migration
             $table->string('bank_name');
             $table->string('bank_name_account');
             $table->string('contract_number')->nullable();
-            $table->string('project_name')->nullable();
             $table->date('payment_date');
             $table->string('priority_level');
             $table->string('stage_name')->nullable();

@@ -16,9 +16,64 @@
 @section('content')
     <form method="post" action="{{ route('applicant.store') }}">
         @csrf
-
         <div class="row">
-
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="project_name">اختيار المشروع </label><span style="color: red;">  *</span>
+                    <select name="project_name" class="form-control" id="project_name">
+                        <option value="" selected="" disabled="">اختيار المشروع</option>
+                        @foreach ($projects as $project)
+                            <option value="{{ $project->id }}">{{ $project->project_name }}</option>
+                        @endforeach
+                    </select>
+                    @error('project_name')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group" id="section_name_div">
+                    <label for="section_name">اسم القسم</label><span style="color: red;">  *</span>
+                    <input type="text" name="section_name" class="form-control" id="section_name" readonly>
+                    @error('section_name')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="item_name">اختيار البند</label></label><span style="color: red;">  *</span>
+                    <select name="item_name" class="form-control" id="item_name">
+                        <option value="" selected="" disabled="">اختيار البند</option>
+                        <!-- Options for item_name will be populated dynamically with JavaScript -->
+                    </select>
+                    @error('item_name')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="item_value">قيمة البند</label>
+                    <input type="text" class="form-control" name="item_value" id="item_value" readonly>
+                    @error('item_value')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="remaining_value"> المتبقي من قيمة البند</label>
+                    <input type="text" class="form-control" name="remaining_value" id="remaining_value" readonly>
+                    @error('remaining_value')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label>التاريخ</label><span style="color: red;">  *</span>
@@ -32,38 +87,19 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>اختيار القسم </label><span class="text-danger">*</span>
-                    <div class="controls">
-                        <select name="section_name" class="form-control">
-                            <option value="" selected="" disabled="">اختيار القسم </option>
-                            @foreach($sections as $item)
-                                <option value="{{ $item->section_name }}">{{ $item->section_name }}</option>
-                            @endforeach
-
-                        </select>
-                        @error('section_name')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
                     <label>المبلغ</label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" required name="price" placeholder="المبلغ...">
+                    <input type="text" class="form-control" required name="price" id="price" placeholder="المبلغ...">
                     @error('price')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>اختيار مستوى الاولوية </label><span class="text-danger">*</span>
                     <div class="controls">
                         <select name="priority_level" class="form-control">
-                            <option value="" selected="" disabled="">اختيار مستوى الاولوية </option>
+                            <option value="" selected="" disabled="">   </option>
                             <option value="مهم">مهم</option>
                             <option value="منخفض"> منخفض</option>
                             <option value="عاجل">عاجل</option>
@@ -72,15 +108,6 @@
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>رقم الحساب</label><span class="text-danger">*</span>
-                    <input type="text" class="form-control" name="account_number" placeholder="رقم الحساب...">
-                    @error('account_number')
-                    <span class="text-danger"> {{ $message }}</span>
-                    @enderror
                 </div>
             </div>
         </div>
@@ -107,18 +134,18 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>رقم العقد</label>
-                    <input type="text" class="form-control" name="contract_number" placeholder="رقم العقد...">
-                    @error('contract_number')
+                    <label>رقم الحساب</label><span class="text-danger">*</span>
+                    <input type="text" class="form-control" name="account_number" placeholder="رقم الحساب...">
+                    @error('account_number')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>اسم المشروع</label>
-                    <input type="text" class="form-control" name="project_name" placeholder="اسم المشروع...">
-                    @error('project_name')
+                    <label>رقم العقد</label>
+                    <input type="text" class="form-control" name="contract_number" placeholder="رقم العقد...">
+                    @error('contract_number')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
                 </div>
@@ -163,7 +190,69 @@
         <br>
     </form>
 
+
     <script>
+        $('#project_name').change(function () {
+            var projectId = $(this).val();
+
+            $.ajax({
+                url: '/get-items/' + projectId,
+                method: 'GET',
+                success: function (data) {
+                    $('#item_name').html(data.options);
+
+                    // Check if the selected project has a section name
+                    var selectedProject = {!! json_encode($projects) !!}.find(project => project.id == projectId);
+
+                    if (selectedProject) {
+                        $('#section_name').val(selectedProject.section_name);
+                        $('#section_name_div').show();
+                    } else {
+                        $('#section_name').val('');
+                        $('#section_name_div').hide();
+                    }
+                }
+            });
+        });
+
+        $('#item_name').change(function () {
+            var itemName = $(this).val();
+            var projectId = $('#project_name').val(); // Get the selected project ID
+
+            // Fetch and display the item_value for the selected item_name
+            $.ajax({
+                url: '/get-item-value/' + itemName,
+                method: 'GET',
+                data: { project_name: projectId }, // Send the project_name as a parameter
+                success: function (data) {
+                    $('#item_value').val(data);
+                }
+            });
+
+            $.ajax({
+                url: '/get-remaining-value/' + itemName,
+                method: 'GET',
+                data: { project_name: projectId }, // Send the project_name as a parameter
+                success: function (data) {
+                    $('#remaining_value').val(data);
+                }
+            });
+        });
+
+        // Function to check if price is greater than remaining value
+        function checkPrice() {
+            var priceInput = document.getElementById("price").value;
+            var remainingValueInput = document.getElementById("remaining_value").value;
+
+            if (parseFloat(priceInput) > parseFloat(remainingValueInput)) {
+                alert("المبلغ اكبر من المتبقي من قيمة البند");
+                document.getElementById("price").value = ""; // Clear the price input
+            }
+        }
+
+        // Attach the checkPrice function to the "blur" event of the price input
+        document.getElementById("price").addEventListener("blur", checkPrice);
+
         // Select the input field
         var input = document.getElementById('dateInput');
 

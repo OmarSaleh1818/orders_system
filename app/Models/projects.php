@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class projects extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
+
+    public function multiProjects()
+    {
+        return $this->hasMany(MultiProject::class);
+    }
 }

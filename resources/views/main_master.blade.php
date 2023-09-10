@@ -153,7 +153,57 @@
                     )
                 }
             })
+        });
 
+        $(document).on('click','#sure',function(e){
+            e.preventDefault();
+            var link = $(this).attr("href");
+
+            Swal.fire({
+                title: 'هل انت متأكد ؟',
+                text: "من اعتماد المشروع ؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم, اعتمد المشروع !',
+                cancelButtonText: 'إلغاء'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = link
+                    Swal.fire(
+                        'اعتمد المشروع!',
+                        'تم اعتماد المشروع بنجاح.',
+                        'success'
+                    )
+                }
+            })
+
+        });
+
+        $(document).on('click','#reject',function(e){
+            e.preventDefault();
+            var link = $(this).attr("href");
+
+            Swal.fire({
+                title: 'هل انت متأكد ؟',
+                text: "من عدم اعتماد المشروع ؟",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم, لا تعتمد المشروع !',
+                cancelButtonText: 'إلغاء'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = link
+                    Swal.fire(
+                        'اعتمد المشروع!',
+                        'لم يتم اعتماد المشروع بنجاح.',
+                        'danger'
+                    )
+                }
+            })
         });
 
     });

@@ -17,7 +17,9 @@ return new class extends Migration
             $table->date('date');
             $table->string('project_name');
             $table->decimal('total');
+            $table->decimal('remaining_value');
             $table->string('section_name');
+            $table->integer('status_id')->default(1);
             $table->timestamps();
         });
     }

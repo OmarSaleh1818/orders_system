@@ -75,7 +75,6 @@ class RegisteredUserController extends Controller
         $selectedSections = $request->input('section_name');
 
         foreach ($selectedSections as $selectedSection) {
-            // Create a new database record for each selected section
             MultiSections::insert([
                 'user_id' => $user_id,
                 'section_name' => $selectedSection
