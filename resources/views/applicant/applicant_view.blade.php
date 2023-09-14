@@ -35,8 +35,10 @@
                         <tr>
                             <th>#</th>
                             <th>التاريخ</th>
+                            <th>البند</th>
                             <th>القسم</th>
                             <th>المبلغ</th>
+                            <th>المبلغ كتابة</th>
                             <th>مستوى الأولوية</th>
                             <th>الحالة</th>
                         </tr>
@@ -46,18 +48,24 @@
                         <tr>
                             <td>{{ $key+1 }}</td>
                             <td>{{ $item->date }}</td>
+                            <td>{{ $item->item_name }}</td>
                             <td>{{ $item->section_name }}</td>
                             <td>{{ $item->price }}</td>
+                            <td>{{ $item->price_name }}</td>
                             <td>{{ $item->priority_level }}</td>
                             <td>
                                 @if($item->status_id == 1)
-                                    <button class="btn btn-primary" disabled>تم الارسال</button>
+                                    <a href="{{ route('applicant.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                    <button class="btn btn-secondary" disabled> في الانتظار <i class="far fa-clock" aria-hidden="true"></i></button>
                                 @elseif($item->status_id == 2)
-                                    <button class="btn btn-warning" disabled>تم رفض الطلب</button>
-                                    <a href="{{ route('applicant.edit', $item->id) }}" class="btn btn-info"> تعديل <i class="fa fa-pen"></i>  </a>
+                                    <a href="{{ route('applicant.edit', $item->id) }}" class="btn btn-warning"> تعديل <i class="fa fa-pen"></i></a>
+                                    <button class="btn btn-danger" disabled>  غير معتمد <i class="fa fa-times-circle" aria-hidden="true"></i></button>
                                 @elseif($item->status_id == 3)
-                                <button class="btn btn-secondary" disabled>تم اعتماد الطلب</button>
-
+                                    <a href="{{ route('applicant.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                    <button class="btn btn-success" disabled>  تم اعتماد الطلب <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                @elseif($item->status_id == 4)
+                                    <a href="{{ route('applicant.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                    <button class="btn btn-secondary" disabled>تم تنفيذ الطلب</button>
 {{--                                <a href="{{ route('applicant.delete', $item->id) }}" class="btn btn-danger" id="delete"> حذف <i class="fa fa-trash"></i>  </a>--}}
                                 @endif
                             </td>

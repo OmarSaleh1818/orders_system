@@ -19,7 +19,7 @@ class ProjectsController extends Controller
     public function ProjectView() {
 
         $user_id = Auth::user()->id;
-        $projects = projects::where('user_id', $user_id)->get();
+        $projects = projects::all();
         return view('project.project_view', compact('projects'));
     }
 
@@ -162,7 +162,7 @@ class ProjectsController extends Controller
     public function ProjectApprovedView() {
 
         $user_id = Auth::user()->id;
-        $projects = projects::where('user_id', $user_id)->get();
+        $projects = projects::all();
         return view('project.project_approved' , compact('projects'));
     }
 

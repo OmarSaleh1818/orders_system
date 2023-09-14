@@ -46,7 +46,7 @@
                 </li>
                 <li class="nav-header">مدير الموظف</li>
                 <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link {{ ($route == '#')? 'active' : '' }}">
+                    <a href="{{ route('applicant.manager.view') }}" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             معتمد الطلب
@@ -55,7 +55,7 @@
                 </li>
                 <li class="nav-header">المدير المالي</li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link {{ ($route == '#')? 'active' : '' }}">
+                    <a href="{{ route('finance.manager.view') }}" class="nav-link {{ ($route == 'finance.manager.view')? 'active' : '' }}">
                         <i class="nav-icon fas fa-file"></i>
                         <p>معتمد الصرف</p>
                     </a>

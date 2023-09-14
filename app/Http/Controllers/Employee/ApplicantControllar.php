@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Employee;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\MultiProject;
+use App\Models\MultiStep;
 use App\Models\projects;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MultiSections;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ApplicantControllar extends Controller
@@ -45,7 +47,6 @@ class ApplicantControllar extends Controller
             'bank_name' => 'required',
             'bank_name_account' => 'required',
             'payment_date' => 'required',
-            'order_name' => 'required',
         ],[
             'project_name.required' => 'اسم المشروع مطلوب',
             'item_name.required' => 'بند الصرف مطلوب',
@@ -59,7 +60,6 @@ class ApplicantControllar extends Controller
             'bank_name.required' => 'اسم البنك مطلوب',
             'bank_name_account.required' => 'اسم صاحب الحساب البنكي مطلوب',
             'payment_date.required' => 'تاريخ استحقاق الدفعة مطلوب',
-            'order_name.required' => 'البيان مطلوب',
         ]);
         $url = 'https://ahsibli.com/wp-admin/admin-ajax.php?action=date_numbers_1';
         $data = 'number='.$request->price;
@@ -108,11 +108,17 @@ class ApplicantControllar extends Controller
         } else {
             echo 'Error';
         }
+        $remainingValue = $request->remaining_value - $request->price;
         $user_id = Auth::user()->id;
         Applicant::insert([
             'user_id' =>  $user_id,
+            'project_name' => $request->project_name,
+            'step_name' => $request->step_name,
             'date' => $request->date,
             'section_name' => $request->section_name,
+            'item_name' => $request->item_name,
+            'item_value' => $request->item_value,
+            'remaining_value' => $remainingValue,
             'price' => $request->price,
             'price_name' => $result,
             'priority_level' => $request->priority_level,
@@ -120,14 +126,20 @@ class ApplicantControllar extends Controller
             'bank_name' => $request->bank_name,
             'bank_name_account' => $request->bank_name_account,
             'payment_date' => $request->payment_date,
-            'order_name' => $request->order_name,
+            'description' => $request->description,
             'contract_number' => $request->contract_number,
-            'project_name' => $request->project_name,
-            'stage_name' => $request->stage_name,
             'created_at' => Carbon::now(),
         ]);
 
-        $request->session()->flash('status', 'تم اضافة طلبك بنجاح');
+        DB::table('projects')
+            ->where('id', $request->project_name)
+            ->decrement('remaining_value', $request->price);
+
+        DB::table('multi_projects')
+            ->where('item_name', $request->item_name)
+            ->decrement('remaining_value', $request->price);
+
+        $request->session()->flash('status', 'تم إرسال طلبك بنجاح');
         return redirect('/applicant/view');
 
     }
@@ -154,7 +166,6 @@ class ApplicantControllar extends Controller
             'bank_name' => 'required',
             'bank_name_account' => 'required',
             'payment_date' => 'required',
-            'order_name' => 'required',
         ],[
             'project_name.required' => 'اسم المشروع مطلوب',
             'item_name.required' => 'بند الصرف مطلوب',
@@ -168,7 +179,6 @@ class ApplicantControllar extends Controller
             'bank_name.required' => 'اسم البنك مطلوب',
             'bank_name_account.required' => 'اسم صاحب الحساب البنكي مطلوب',
             'payment_date.required' => 'تاريخ استحقاق الدفعة مطلوب',
-            'order_name.required' => 'البيان مطلوب',
         ]);
         $url = 'https://ahsibli.com/wp-admin/admin-ajax.php?action=date_numbers_1';
         $data = 'number='.$request->price;
@@ -245,14 +255,31 @@ class ApplicantControllar extends Controller
         return redirect('/applicant/view');
     }
 
-    public function getItems($projectId)
+    public function getSectionName($project_id)
     {
-        $items = MultiProject::where('project_id', $projectId)->pluck('item_name', 'item_name');
-        $options = '<option value="" selected="" disabled="">اختر البند</option>';
-        foreach ($items as $itemName) {
-            $options .= "<option value='$itemName'>$itemName</option>";
+        $project = projects::find($project_id);
+
+        return response()->json(['section_name' => $project->section_name]);
+    }
+
+    public function getStepNames($project_id)
+    {
+        $steps = MultiStep::where('project_id', $project_id)->pluck('step_name');
+
+        return response()->json(['step_names' => $steps]);
+    }
+
+    public function getItemNames($step_name)
+    {
+        $step = MultiStep::where('step_name', $step_name)->first();
+
+        if ($step) {
+            $items = MultiProject::where('step_id', $step->id)->pluck('item_name');
+            return response()->json(['item_names' => $items]);
         }
-        return response()->json(['options' => $options]);
+
+        // Handle the case where the step doesn't exist
+        return response()->json(['item_names' => []]);
     }
 
     public function getItemValue($itemName, Request $request)
@@ -275,6 +302,18 @@ class ApplicantControllar extends Controller
             ->value('remaining_value');
 
         return response()->json($remainingValue);
+    }
+
+    public function ApplicantEye($id) {
+        $user_id = Auth::user()->id;
+
+        $sections = MultiSections::where('user_id', $user_id)->get();
+        $applicant = Applicant::find($id);
+        return view('applicant.applicant_eye', compact('sections', 'applicant'));
+    }
+
+    public function applicantBack() {
+        return redirect('/applicant/view');
     }
 
 

@@ -44,9 +44,21 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="item_name">اختيار البند</label></label><span style="color: red;">  *</span>
+                    <label for="step_name">اختر المرحلة</label><span style="color: red;">  *</span>
+                    <select name="step_name" class="form-control" id="step_name">
+                        <option value="" selected="" disabled=""> اختر المرحلة...</option>
+                        <!-- Options for item_name will be populated dynamically with JavaScript -->
+                    </select>
+                    @error('step_name')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="item_name">اختر البند</label><span style="color: red;">  *</span>
                     <select name="item_name" class="form-control" id="item_name">
-                        <option value="" selected="" disabled="">اختيار البند</option>
+                        <option value="" selected="" disabled="">اختر البند...</option>
                         <!-- Options for item_name will be populated dynamically with JavaScript -->
                     </select>
                     @error('item_name')
@@ -54,6 +66,8 @@
                     @enderror
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="item_value">قيمة البند</label>
@@ -63,8 +77,6 @@
                     @enderror
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="remaining_value"> المتبقي من قيمة البند</label>
@@ -74,6 +86,8 @@
                     @enderror
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>التاريخ</label><span style="color: red;">  *</span>
@@ -83,8 +97,6 @@
                     @enderror
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>المبلغ</label><span style="color: red;">  *</span>
@@ -94,12 +106,14 @@
                     @enderror
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>اختيار مستوى الاولوية </label><span class="text-danger">*</span>
                     <div class="controls">
                         <select name="priority_level" class="form-control">
-                            <option value="" selected="" disabled="">   </option>
+                            <option value="" selected="" disabled="">اختر مستوى الأولوية...</option>
                             <option value="مهم">مهم</option>
                             <option value="منخفض"> منخفض</option>
                             <option value="عاجل">عاجل</option>
@@ -110,8 +124,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>اسم البنك</label><span class="text-danger">*</span>
@@ -121,6 +133,8 @@
                     @enderror
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>اسم صاحب الحساب البنكي</label><span class="text-danger">*</span>
@@ -130,8 +144,6 @@
                     @enderror
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>رقم الحساب</label><span class="text-danger">*</span>
@@ -141,6 +153,8 @@
                     @enderror
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>رقم العقد</label>
@@ -150,8 +164,6 @@
                     @enderror
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label>تاريخ استحقاق الدفعة</label><span class="text-danger">*</span>
@@ -162,22 +174,13 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>رقم أو اسم المرحلة</label>
-                    <input type="text" class="form-control" name="stage_name" placeholder="رقم او اسم المرحلة...">
-                    @error('stage_name')
-                    <span class="text-danger"> {{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <div class="form-group">
-                        <label for="order_name">البيان</label><span class="text-danger">*</span>
-                        <textarea id="description" name="order_name"  class="form-control" placeholder="البيان..."></textarea>
+                        <label for="order_name">البيان</label>
+                        <textarea id="description" name="description"  class="form-control" placeholder="البيان..."></textarea>
                     </div>
                 </div>
             </div>
@@ -192,50 +195,62 @@
 
 
     <script>
-        $('#project_name').change(function () {
-            var projectId = $(this).val();
+        $(document).ready(function () {
+            // Handle project name selection
+            $('#project_name').change(function () {
+                var projectId = $(this).val();
 
-            $.ajax({
-                url: '/get-items/' + projectId,
-                method: 'GET',
-                success: function (data) {
-                    $('#item_name').html(data.options);
+                // Make an AJAX request to get the section name
+                $.get('/get-section-name/' + projectId, function (data) {
+                    $('#section_name').val(data.section_name);
+                });
 
-                    // Check if the selected project has a section name
-                    var selectedProject = {!! json_encode($projects) !!}.find(project => project.id == projectId);
+                // Make an AJAX request to get the step names
+                $.get('/get-step-names/' + projectId, function (data) {
+                    $('#step_name').empty().append('<option value="" selected="" disabled="">اختر المرحلة</option>');
 
-                    if (selectedProject) {
-                        $('#section_name').val(selectedProject.section_name);
-                        $('#section_name_div').show();
-                    } else {
-                        $('#section_name').val('');
-                        $('#section_name_div').hide();
+                    $.each(data.step_names, function (index, stepName) {
+                        $('#step_name').append('<option value="' + stepName + '">' + stepName + '</option>');
+                    });
+                });
+            });
+
+            // Handle step name selection
+            $('#step_name').change(function () {
+                var stepName = $(this).val(); // Get the selected step name
+
+                // Make an AJAX request to get the item names based on step name
+                $.get('/get-item-names/' + encodeURIComponent(stepName), function (data) {
+                    $('#item_name').empty().append('<option value="" selected="" disabled="">اختر البند</option>');
+
+                    $.each(data.item_names, function (index, itemName) {
+                        $('#item_name').append('<option value="' + itemName + '">' + itemName + '</option>');
+                    });
+                });
+            });
+
+            $('#item_name').change(function () {
+                var itemName = $(this).val();
+                var projectId = $('#project_name').val(); // Get the selected project ID
+
+                // Fetch and display the item_value for the selected item_name
+                $.ajax({
+                    url: '/get-item-value/' + itemName,
+                    method: 'GET',
+                    data: { project_name: projectId }, // Send the project_name as a parameter
+                    success: function (data) {
+                        $('#item_value').val(data);
                     }
-                }
-            });
-        });
+                });
 
-        $('#item_name').change(function () {
-            var itemName = $(this).val();
-            var projectId = $('#project_name').val(); // Get the selected project ID
-
-            // Fetch and display the item_value for the selected item_name
-            $.ajax({
-                url: '/get-item-value/' + itemName,
-                method: 'GET',
-                data: { project_name: projectId }, // Send the project_name as a parameter
-                success: function (data) {
-                    $('#item_value').val(data);
-                }
-            });
-
-            $.ajax({
-                url: '/get-remaining-value/' + itemName,
-                method: 'GET',
-                data: { project_name: projectId }, // Send the project_name as a parameter
-                success: function (data) {
-                    $('#remaining_value').val(data);
-                }
+                $.ajax({
+                    url: '/get-remaining-value/' + itemName,
+                    method: 'GET',
+                    data: { project_name: projectId }, // Send the project_name as a parameter
+                    success: function (data) {
+                        $('#remaining_value').val(data);
+                    }
+                });
             });
         });
 

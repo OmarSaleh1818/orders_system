@@ -161,19 +161,19 @@
 
             Swal.fire({
                 title: 'هل انت متأكد ؟',
-                text: "من اعتماد المشروع ؟",
+                text: "من الاعتماد ؟",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'نعم, اعتمد المشروع !',
+                confirmButtonText: 'نعم, اعتمد !',
                 cancelButtonText: 'إلغاء'
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = link
                     Swal.fire(
-                        'اعتمد المشروع!',
-                        'تم اعتماد المشروع بنجاح.',
+                        'تم الاعتماد!',
+                        'تم الاعتماد بنجاح.',
                         'success'
                     )
                 }
@@ -187,19 +187,19 @@
 
             Swal.fire({
                 title: 'هل انت متأكد ؟',
-                text: "من عدم اعتماد المشروع ؟",
+                text: "من عدم الاعتماد ؟",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'نعم, لا تعتمد المشروع !',
+                confirmButtonText: 'نعم, لا تعتمد !',
                 cancelButtonText: 'إلغاء'
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = link
                     Swal.fire(
-                        'اعتمد المشروع!',
-                        'لم يتم اعتماد المشروع بنجاح.',
+                        'لم يتم الاعتماد!',
+                        'لم يتم الاعتماد بنجاح.',
                         'danger'
                     )
                 }

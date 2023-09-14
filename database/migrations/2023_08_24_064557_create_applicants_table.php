@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('project_name');
             $table->string('section_name');
             $table->string('item_name');
-            $table->decimal('item_value');
+            $table->string('item_value');
+            $table->decimal('remaining_value');
             $table->decimal('price');
             $table->string('price_name');
             $table->string('order_name');
@@ -28,7 +29,8 @@ return new class extends Migration
             $table->string('contract_number')->nullable();
             $table->date('payment_date');
             $table->string('priority_level');
-            $table->string('stage_name')->nullable();
+            $table->string('step_name');
+            $table->text('description');
             $table->integer('status_id')->default(1);
             $table->timestamps();
         });

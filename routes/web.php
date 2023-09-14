@@ -6,7 +6,8 @@ use App\Http\Controllers\Employee\ApplicantControllar;
 use App\Http\Controllers\Setting\SectionsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Setting\ProjectsController;
-
+use App\Http\Controllers\Employee\ApplicantManagerController;
+use App\Http\Controllers\Employee\FinanceManagerController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -37,12 +38,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/applicant/edit/{id}', [ApplicantControllar::class, 'ApplicantEdit'])->name('applicant.edit');
     Route::post('/applicant/update/{id}', [ApplicantControllar::class, 'ApplicantUpdate'])->name('applicant.update');
     Route::get('/applicant/delete/{id}', [ApplicantControllar::class, 'applicantDelete'])->name('applicant.delete');
-    Route::get('/get-items/{projectId}', [ApplicantControllar::class, 'getItems']);
+    Route::get('/get-section-name/{project_id}', [ApplicantControllar::class, 'getSectionName']);
+    Route::get('/get-step-names/{project_id}', [ApplicantControllar::class, 'getStepNames']);
+    Route::get('/get-item-names/{step_name}', [ApplicantControllar::class, 'getItemNames']);
     Route::get('/get-item-value/{itemName}', [ApplicantControllar::class, 'getItemValue']);
     Route::get('/get-remaining-value/{itemName}', [ApplicantControllar::class, 'getRemainingValue']);
+    Route::get('/applicant/eye/{id}', [ApplicantControllar::class, 'ApplicantEye'])->name('applicant.eye');
+    Route::get('/applicant/back', [ApplicantControllar::class, 'applicantBack'])->name('applicant.back');
 
 // End
 
+// All Applicant Manager Route
+    Route::get('/applicant/manager/view', [ApplicantManagerController::class, 'applicantManagerView'])->name('applicant.manager.view');
+    Route::get('/applicant/manager/eye/{id}', [ApplicantManagerController::class, 'ApplicantManagerEye'])->name('applicant.manager.eye');
+    Route::get('/applicant/manager/sure/{id}', [ApplicantManagerController::class, 'ApplicantManagerSure'])->name('applicant.manager.sure');
+    Route::get('/applicant/manager/reject/{id}', [ApplicantManagerController::class, 'ApplicantManagerReject'])->name('applicant.manager.reject');
+    Route::get('/applicant/manager/back', [ApplicantManagerController::class, 'ApplicantManagerBack'])->name('applicant.manager.back');
+
+// End
+
+// All Applicant Manager Route
+    Route::get('/finance/manager/view', [FinanceManagerController::class, 'FinanceManagerView'])->name('finance.manager.view');
+    Route::get('/finance/manager/eye/{id}', [FinanceManagerController::class, 'FinanceManagerEye'])->name('finance.manager.eye');
+
+// End
 // All Section Route
     Route::get('/section/view', [SectionsController::class, 'SectionView'])->name('sections');
     Route::post('/section/store', [SectionsController::class, 'SectionStore'])->name('section.store');
