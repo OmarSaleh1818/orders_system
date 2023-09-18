@@ -20,7 +20,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="project_name">اسم المشروع </label><span style="color: red;">  *</span>
-                    <input type="text" name="project_name" class="form-control" value="{{ $applicant->project_name }}" readonly>
+                    <input type="text" name="project_name" class="form-control" value="{{ $applicant['project']['project_name'] }}" readonly>
                     @error('project_name')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
@@ -169,7 +169,7 @@
         </div>
         <br>
 
-        <div class="d-flex" style="text-align: center; gap: 1rem;">
+        <div class="d-flex justify-content-center" style="gap: 1rem;">
             @if($applicant->status_id == 1)
                 <td> <button class="btn btn-secondary" disabled> في الانتظار <i class="far fa-clock" aria-hidden="true"></i> </button></td>
                 <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
@@ -177,10 +177,86 @@
                 <td> <button class="btn btn-danger" disabled> غير معتمد</button></td>
                 <a href="{{ route('applicant.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @elseif($applicant->status_id == 3)
-                <td> <button class="btn btn-success" disabled> تم الاعتماد</button></td>
+                <td> <button class="btn btn-success" disabled> تم اعتماد الطلب</button></td>
+                <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            @elseif($applicant->status_id == 4)
+                <td> <button class="btn btn-success" disabled> تم اعتماد الصرف </button></td>
+                <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            @elseif($applicant->status_id == 8)
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#m_modal_1">
+                    رد على الاستفسار     <i class="fa fa-pencil-square-o"></i>
+                </button>
+                {{--                                    <a href="{{ route('applicant.reply.inquiry', $item->id) }}" class="btn btn-primary"> رد على الاستفسار <i class="fa fa-pencil-square-o"></i></a>--}}
+                <div class="modal fade" id="m_modal_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="exampleModalLabel"><strong> الرد على الاستفسار</strong></h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            @php
+                                $reply = App\Models\FinanceManager::where('applicant_id',$applicant->id)->first();
+                            @endphp
+                            <form method="post" action="{{ route('applicant.reply.inquiry', $applicant->id) }}">
+                                @csrf
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>الاستفسار</label><span style="color: red;">  *</span>
+                                        <textarea id="description" name="inquiry" required class="form-control" readonly>{{$reply->inquiry}}</textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>الرد على الاستفسار</label><span style="color: red;">  *</span>
+                                        <textarea id="description" name="reply_inquiry" required class="form-control" placeholder="الرد..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                                    <button type="submit" class="btn btn-primary">إرسال</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            @elseif($applicant->status_id == 9)
+                <button class="btn btn-dark" disabled>تم إرسال الرد   <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            @elseif($applicant->status_id == 10)
+                <form method="post" action="{{ route('applicant.return.date', $applicant->id) }}">
+                    @csrf
+                    <input type="hidden" name="payment_date" id="dateInput">
+                    <button type="submit" class="btn btn-secondary"> إعادة الإرسال <i class="fa fa-retweet"></i></button>
+                </form>
+                <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            @elseif($applicant->status_id == 11)
+                <button class="btn btn-dark" disabled>تم إعادة الإرسال   <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            @elseif($applicant->status_id == 12)
+                <button class="btn btn-danger" disabled>  لم يتم اعتماد الصرف <i class="fa fa-times-circle" aria-hidden="true"></i></button>
                 <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @endif
         </div>
         <br>
+<script>
+    var input = document.getElementById('dateInput');
 
+    // Create a new Date object for the current date
+    var currentDate = new Date();
+
+    // Format the date as YYYY-MM-DD for the input value
+    var formattedDate = currentDate.toISOString().split('T')[0];
+
+    // Set the initial value of the input field to the current date
+    input.value = formattedDate;
+
+    // Add an event listener to allow the user to change the date
+    input.addEventListener('input', function(event) {
+        var selectedDate = event.target.value;
+        console.log(selectedDate); // Output the selected date
+    });
+</script>
 @endsection

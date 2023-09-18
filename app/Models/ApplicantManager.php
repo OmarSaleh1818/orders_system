@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Applicant extends Model
+class ApplicantManager extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    public function project() {
+    public function applicant() {
 
-        return $this->belongsTo(projects::class, 'project_name','id');
+        return $this->belongsTo(Applicant::class, 'applicant_id','id');
 
     }
 

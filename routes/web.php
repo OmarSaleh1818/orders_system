@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Setting\ProjectsController;
 use App\Http\Controllers\Employee\ApplicantManagerController;
 use App\Http\Controllers\Employee\FinanceManagerController;
+use App\Http\Controllers\Employee\FinanceController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,6 +47,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-remaining-value/{itemName}', [ApplicantControllar::class, 'getRemainingValue']);
     Route::get('/applicant/eye/{id}', [ApplicantControllar::class, 'ApplicantEye'])->name('applicant.eye');
     Route::get('/applicant/back', [ApplicantControllar::class, 'applicantBack'])->name('applicant.back');
+    Route::post('/applicant/reply/inquiry/{id}', [ApplicantControllar::class, 'ApplicantReplyInquiry'])->name('applicant.reply.inquiry');
+    Route::post('/applicant/return/date/{id}', [ApplicantControllar::class, 'ApplicantReturnDate'])->name('applicant.return.date');
 
 // End
 
@@ -52,14 +56,24 @@ Route::middleware('auth')->group(function () {
     Route::get('/applicant/manager/view', [ApplicantManagerController::class, 'applicantManagerView'])->name('applicant.manager.view');
     Route::get('/applicant/manager/eye/{id}', [ApplicantManagerController::class, 'ApplicantManagerEye'])->name('applicant.manager.eye');
     Route::get('/applicant/manager/sure/{id}', [ApplicantManagerController::class, 'ApplicantManagerSure'])->name('applicant.manager.sure');
-    Route::get('/applicant/manager/reject/{id}', [ApplicantManagerController::class, 'ApplicantManagerReject'])->name('applicant.manager.reject');
+    Route::post('/applicant/manager/reject/{id}', [ApplicantManagerController::class, 'ApplicantManagerReject'])->name('applicant.manager.reject');
     Route::get('/applicant/manager/back', [ApplicantManagerController::class, 'ApplicantManagerBack'])->name('applicant.manager.back');
 
 // End
 
-// All Applicant Manager Route
+// All Finance Manager Route
     Route::get('/finance/manager/view', [FinanceManagerController::class, 'FinanceManagerView'])->name('finance.manager.view');
     Route::get('/finance/manager/eye/{id}', [FinanceManagerController::class, 'FinanceManagerEye'])->name('finance.manager.eye');
+    Route::post('/finance/manager/inquiry/{id}', [FinanceManagerController::class, 'FinanceManagerInquiry'])->name('finance.manager.inquiry');
+    Route::get('/finance/manager/back', [FinanceManagerController::class, 'FinanceManagerBack'])->name('finance.manager.back');
+    Route::post('/proposed/date/{id}', [FinanceManagerController::class, 'ProposedDate'])->name('proposed.date');
+    Route::post('/finance/manager/reject/{id}', [FinanceManagerController::class, 'FinanceManagerReject'])->name('finance.manager.reject');
+    Route::get('/finance/manager/sure/{id}', [FinanceManagerController::class, 'FinanceManagerSure'])->name('finance.manager.sure');
+
+// End
+
+// All Finance Manager Route
+    Route::get('/finance/view', [FinanceController::class, 'FinanceView'])->name('finance.view');
 
 // End
 // All Section Route

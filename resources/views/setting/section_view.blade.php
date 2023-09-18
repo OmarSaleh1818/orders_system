@@ -40,7 +40,7 @@
                             <td>{{ $key+1 }}</td>
                             <td>{{ $item->section_name }}</td>
                             <td>
-                                <a href="{{ route('section.edit', $item->id) }}" class="btn btn-info"> تعديل <i class="fa fa-pen"></i>  </a>
+                                <a href="{{ route('section.edit', $item->id) }}" class="btn btn-info"> تعديل <i class="fa fa-pencil"></i>  </a>
                                 <a href="{{ route('section.delete', $item->id) }}" class="btn btn-danger" id="delete"> حذف <i class="fa fa-trash"></i>  </a>
                             </td>
                         </tr>

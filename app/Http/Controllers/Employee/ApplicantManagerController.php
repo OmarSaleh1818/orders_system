@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
+use App\Models\ApplicantManager;
 use App\Models\MultiSections;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +38,26 @@ class ApplicantManagerController extends Controller
         return redirect('/applicant/manager/view');
     }
 
-    public function ApplicantManagerReject($id) {
+    public function ApplicantManagerReject(Request $request, $id) {
+
+        $request->validate([
+            'manager_reason'=> 'required'
+        ],[
+           'manager_reason.required' => 'السبب مطلوب'
+        ]);
+        $existingRecord = ApplicantManager::where('applicant_id', $id)->first();
+        if ($existingRecord) {
+            $existingRecord->update([
+                'manager_reason' => $request->manager_reason,
+                'created_at' => Carbon::now(),
+            ]);
+        } else {
+            ApplicantManager::insert([
+                'applicant_id' => $id,
+                'manager_reason' => $request->manager_reason,
+                'created_at' => Carbon::now(),
+            ]);
+        }
         DB::table('applicants')
             ->where('id', $id)
             ->update(['status_id' => 2]);

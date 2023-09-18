@@ -58,7 +58,7 @@
                                     <a href="{{ route('project.edit', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
                                     <button class="btn btn-success" disabled>  معتمد <i class="fa fa-check-circle" aria-hidden="true"></i></button>
                                 @elseif($item->status_id == 2)
-                                    <a href="{{ route('project.edit', $item->id) }}" class="btn btn-warning"> تعديل <i class="fa fa-pen"></i></a>
+                                    <a href="{{ route('project.edit', $item->id) }}" class="btn btn-warning"> تعديل <i class="fa fa-pencil"></i></a>
                                     <button class="btn btn-danger" disabled>  غير معتمد <i class="fa fa-times-circle" aria-hidden="true"></i></button>
                                 @endif
                                 </td>

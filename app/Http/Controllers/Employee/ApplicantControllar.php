@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
+use App\Models\ApplicantManager;
+use App\Models\FinanceManager;
 use App\Models\MultiProject;
 use App\Models\MultiStep;
 use App\Models\projects;
@@ -21,6 +23,7 @@ class ApplicantControllar extends Controller
 
         $user_id = Auth::user()->id;
         $applicants = Applicant::where('user_id', $user_id)->get();
+
         return view('applicant.applicant_view', compact('applicants'));
     }
 
@@ -108,7 +111,7 @@ class ApplicantControllar extends Controller
         } else {
             echo 'Error';
         }
-        $remainingValue = $request->remaining_value - $request->price;
+
         $user_id = Auth::user()->id;
         Applicant::insert([
             'user_id' =>  $user_id,
@@ -118,7 +121,7 @@ class ApplicantControllar extends Controller
             'section_name' => $request->section_name,
             'item_name' => $request->item_name,
             'item_value' => $request->item_value,
-            'remaining_value' => $remainingValue,
+            'remaining_value' => $request->remaining_value,
             'price' => $request->price,
             'price_name' => $result,
             'priority_level' => $request->priority_level,
@@ -131,13 +134,13 @@ class ApplicantControllar extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        DB::table('projects')
-            ->where('id', $request->project_name)
-            ->decrement('remaining_value', $request->price);
-
-        DB::table('multi_projects')
-            ->where('item_name', $request->item_name)
-            ->decrement('remaining_value', $request->price);
+//        DB::table('projects')
+//            ->where('id', $request->project_name)
+//            ->decrement('remaining_value', $request->price);
+//
+//        DB::table('multi_projects')
+//            ->where('item_name', $request->item_name)
+//            ->decrement('remaining_value', $request->price);
 
         $request->session()->flash('status', 'تم إرسال طلبك بنجاح');
         return redirect('/applicant/view');
@@ -149,7 +152,10 @@ class ApplicantControllar extends Controller
 
         $sections = MultiSections::where('user_id', $user_id)->get();
         $applicant = Applicant::find($id);
-        return view('applicant.edit_order', compact('sections', 'applicant'));
+        $projects = projects::where('status_id', 6)->get();
+        $applicantManager = ApplicantManager::where('applicant_id', $id)->first();
+        $financeManager = FinanceManager::where('applicant_id', $id)->first();
+        return view('applicant.edit_order', compact('sections', 'applicant', 'applicantManager', 'financeManager', 'projects'));
     }
 
     public function ApplicantUpdate(Request $request, $id) {
@@ -160,7 +166,7 @@ class ApplicantControllar extends Controller
             'remaining_value' => 'required',
             'date' => 'required',
             'section_name' => 'required',
-            'price' => 'required|price_less_than_remaining',
+            'price' => 'required',
             'priority_level' => 'required',
             'account_number' => 'required',
             'bank_name' => 'required',
@@ -173,7 +179,7 @@ class ApplicantControllar extends Controller
             'remaining_value.required' => 'المبلغ المتبقي مطلوب',
             'date.required' => 'التاريخ مطلوب',
             'section_name.required' => 'اسم القسم مطلوب',
-            'price.price_less_than_remaining' => 'الملاغ يجب ان يكون اقل من المبلغ المتبقي',
+            'price.required' => 'المبلغ يجب ان يكون اقل من المبلغ المتبقي',
             'priority_level.required' => 'مستوى الاولوية مطلوب',
             'account_number.required' => 'رقم الحساب مطلوب',
             'bank_name.required' => 'اسم البنك مطلوب',
@@ -228,8 +234,13 @@ class ApplicantControllar extends Controller
             echo 'Error';
         }
         Applicant::findOrFail($id)->update([
+            'project_name' => $request->project_name,
+            'step_name' => $request->step_name,
             'date' => $request->date,
             'section_name' => $request->section_name,
+            'item_name' => $request->item_name,
+            'item_value' => $request->item_value,
+            'remaining_value' => $request->remaining_value,
             'price' => $request->price,
             'price_name' => $result,
             'priority_level' => $request->priority_level,
@@ -237,10 +248,9 @@ class ApplicantControllar extends Controller
             'bank_name' => $request->bank_name,
             'bank_name_account' => $request->bank_name_account,
             'payment_date' => $request->payment_date,
-            'order_name' => $request->order_name,
+            'description' => $request->description,
             'contract_number' => $request->contract_number,
-            'project_name' => $request->project_name,
-            'stage_name' => $request->stage_name,
+            'status_id' => 1,
             'created_at' => Carbon::now(),
         ]);
 
@@ -309,10 +319,45 @@ class ApplicantControllar extends Controller
 
         $sections = MultiSections::where('user_id', $user_id)->get();
         $applicant = Applicant::find($id);
-        return view('applicant.applicant_eye', compact('sections', 'applicant'));
+        $reply = FinanceManager::first();
+        return view('applicant.applicant_eye', compact('sections', 'applicant', 'reply'));
     }
 
     public function applicantBack() {
+        return redirect('/applicant/view');
+    }
+
+    public function ApplicantReplyInquiry(Request $request, $id) {
+
+        $request->validate([
+            'inquiry'=> 'required',
+            'reply_inquiry' => 'required'
+        ],[
+            'inquiry.required' => 'الاستفسار مطلوب',
+            'reply_inquiry.required' => ' الرد على الاستفسار مطلوب',
+        ]);
+
+        FinanceManager::where('applicant_id', $id)->update([
+            'inquiry' => $request->inquiry,
+            'reply_inquiry' => $request->reply_inquiry,
+            'created_at' => Carbon::now(),
+        ]);
+
+        DB::table('applicants')
+            ->where('id', $id)
+            ->update(['status_id' => 9]);
+        Session()->flash('status', 'تم إرسال الرد بنجاح');
+        return redirect('/applicant/view');
+    }
+
+    public function ApplicantReturnDate(Request $request, $id) {
+        Applicant::findOrFail($id)->update([
+            'payment_date' => $request->payment_date,
+            'status_id' => 11,
+            'created_at' => Carbon::now(),
+        ]);
+
+        Session()->flash('status', 'تم  إعادة الإرسال بنجاح');
         return redirect('/applicant/view');
     }
 

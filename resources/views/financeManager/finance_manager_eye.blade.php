@@ -20,7 +20,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="project_name">اسم المشروع </label><span style="color: red;">  *</span>
-                <input type="text" name="project_name" class="form-control" value="{{ $applicant->project_name }}" readonly>
+                <input type="text" name="project_name" class="form-control" value="{{ $applicant['project']['project_name'] }}" readonly>
                 @error('project_name')
                 <span class="text-danger"> {{ $message }}</span>
                 @enderror
@@ -171,21 +171,62 @@
 
     <div class="d-flex justify-content-center" style="gap: 1rem;">
         @if($applicant->status_id == 1)
-            <td> <button class="btn btn-success" disabled> تم الاعتماد</button></td>
-            <a href="{{ route('applicant.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+             <button class="btn btn-success" disabled> تم الاعتماد</button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 2)
-            <td> <button class="btn btn-danger" disabled> غير معتمد</button></td>
-            <a href="{{ route('applicant.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+             <button class="btn btn-danger" disabled> غير معتمد</button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 3)
-            <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
-            <a href="{{ route('applicant.manager.reject', $applicant->id) }}" class="btn btn-danger" id="reject"> غير معتمد </a>
+            <a href="{{ route('finance.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_3">
+                غير معتمد
+            </button>
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#m_modal_2">
                 تأجيل
             </button>
             <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_1">
                 استفسار
             </button>
-            <a href="{{ route('applicant.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 8)
+            <td> <button class="btn btn-dark" disabled> تم إرسال الاستفسار</button></td>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 9)
+            <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_3">
+                غير معتمد
+            </button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#m_modal_2">
+                تأجيل
+            </button>
+            <button class="btn btn-dark" disabled> تم إرسال الاستفسار</button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 10)
+            <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_3">
+                غير معتمد
+            </button>
+            <button class="btn btn-secondary" disabled> تم التأجيل</button>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_1">
+                استفسار
+            </button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 11)
+            <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_3">
+                غير معتمد
+            </button>
+            <button class="btn btn-secondary" disabled> تم إعادة الإرسال</button>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_1">
+                استفسار
+            </button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 12)
+            <button class="btn btn-danger" disabled>  لم يتم اعتماد الصرف <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 4)
+            <button class="btn btn-success" disabled>  تم اعتماد الصرف <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @endif
     </div>
     <br>
@@ -198,15 +239,16 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="" method="">
+                <form method="post" action="{{ route('finance.manager.inquiry', $applicant->id) }}">
+                    @csrf
                     <div class="modal-body">
                         <div class="form-group">
                             <label>الاستفسار</label><span style="color: red;">  *</span>
-                            <input type="text" class="form-control" name="" placeholder="...">
+                            <textarea id="description" name="inquiry"  class="form-control" placeholder="الاستفسار..."></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
                         <button type="submit" class="btn btn-primary">إرسال</button>
                     </div>
                 </form>
@@ -217,21 +259,47 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLabel"><strong> التاريخ</strong></h3>
+                    <h3 class="modal-title" id="exampleModalLabel"><strong> التاريخ المقترح</strong></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="" method="">
+                <form method="post" action="{{ route('proposed.date', $applicant->id) }}">
+                    @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>التاريخ</label><span style="color: red;">  *</span>
-                            <input type="text" class="form-control" name="" placeholder="...">
+                            <label> التاريخ المقترح</label><span style="color: red;">  *</span>
+                            <input type="date" class="form-control" name="payment_date" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
-                        <button type="submit" class="btn btn-primary">إرسال</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                        <button type="submit" class="btn btn-primary">تأجيل</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="m_modal_3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel"><strong> سبب عدم الاعتماد</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{{ route('finance.manager.reject', $applicant->id) }}">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>السبب</label><span style="color: red;">  *</span>
+                            <textarea id="description" name="finance_reason" required class="form-control" placeholder="السبب..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                        <button type="submit" class="btn btn-primary">عدم الاعتماد</button>
                     </div>
                 </form>
             </div>
