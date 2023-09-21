@@ -50,13 +50,13 @@
                                 <td>{{ $item->remaining_value }}</td>
                                 <td>
                                     @if($item->status_id == 1 )
-                                         <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض  <i class="fa fa-eye"></i>  </a>
+                                         <a href="{{ route('project.manager.eye', $item->id) }}" class="btn btn-info"> عرض  <i class="fa fa-eye"></i>  </a>
                                          <button class="btn btn-secondary" disabled>  في الانتظار <i class="far fa-clock" aria-hidden="true"></i></button>
                                     @elseif($item->status_id == 6)
-                                         <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض  <i class="fa fa-eye"></i>  </a>
+                                         <a href="{{ route('project.manager.eye', $item->id) }}" class="btn btn-info"> عرض  <i class="fa fa-eye"></i>  </a>
                                          <button class="btn btn-success" disabled> معتمد <i class="fa fa-check-circle" aria-hidden="true"></i> </button>
                                     @elseif($item->status_id == 2)
-                                        <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض  <i class="fa fa-eye"></i>  </a>
+                                        <a href="{{ route('project.manager.eye', $item->id) }}" class="btn btn-info"> عرض  <i class="fa fa-eye"></i>  </a>
                                         <button class="btn btn-danger" disabled>  غير معتمد <i class="fa fa-times-circle" aria-hidden="true"></i></button>
                                     @endif
                                 </td>

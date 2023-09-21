@@ -177,16 +177,23 @@
             </button>
             <a href="{{ route('applicant.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 2)
-            <td> <button class="btn btn-danger" disabled> غير معتمد</button></td>
+            <button class="btn btn-danger" disabled> غير معتمد</button>
             <a href="{{ route('applicant.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 3)
-            <td> <button class="btn btn-success" disabled> تم اعتماد الطلب </button></td>
+            <button class="btn btn-success" disabled> تم اعتماد الطلب </button>
             <a href="{{ route('applicant.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 4)
-            <td> <button class="btn btn-success" disabled> تم اعتماد الصرف </button></td>
+             <button class="btn btn-success" disabled> تم اعتماد الصرف </button>
+            <a href="{{ route('applicant.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 5)
+            @php
+                $attachment = App\Models\Finance::where('applicant_id',$applicant->id)->first();
+            @endphp
+            <button class="btn btn-success" disabled> تم تنفيذ الطلب </button>
+            <a href="{{ asset($attachment->attachment) }}" class="btn btn-primary">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
             <a href="{{ route('applicant.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 8)
-            <td> <button class="btn btn-dark" disabled> تم إرسال الاستفسار</button></td>
+            <button class="btn btn-dark" disabled> تم إرسال الاستفسار</button>
             <a href="{{ route('applicant.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 9)
             <button class="btn btn-dark" disabled>تم إرسال الرد   <i class="fa fa-check-circle" aria-hidden="true"></i></button>
@@ -214,9 +221,11 @@
                 </div>
                 <form method="post" action="{{ route('applicant.manager.reject', $applicant->id) }}">
                     @csrf
+                    <input type="hidden" name="value" value="{{ $applicant->value }}">
+                    <input type="hidden" name="project_name" value="{{ $applicant->project_name }}">
+                    <input type="hidden" name="item_name" value="{{ $applicant->item_name }}">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>السبب</label><span style="color: red;">  *</span>
                             <textarea id="description" name="manager_reason" required class="form-control" placeholder="السبب..."></textarea>
                         </div>
                     </div>

@@ -170,6 +170,23 @@
                                         <button class="btn btn-success" disabled>  تم اعتماد الصرف <i class="fa fa-check-circle" aria-hidden="true"></i></button>
                                     </td>
                                 </tr>
+                            @elseif($item->status_id == 5)
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{ $item->date }}</td>
+                                    <td>{{ $item->item_name }}</td>
+                                    <td>{{ $item->section_name }}</td>
+                                    <td>{{ $item->price }}</td>
+                                    <td>{{ $item->priority_level }}</td>
+                                    <td>
+                                        @php
+                                            $attachment = App\Models\Finance::where('applicant_id',$item->id)->first();
+                                        @endphp
+                                        <a href="{{ route('finance.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                        <button class="btn btn-success" disabled>  تم تنفيذ الطلب <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        <a href="{{ asset($attachment->attachment) }}" class="btn btn-primary">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
+                                    </td>
+                                </tr>
                             @endif
                         @endforeach
                         </tbody>

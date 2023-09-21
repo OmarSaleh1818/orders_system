@@ -48,7 +48,7 @@
                                 <td>{{ $item->email }} </td>
                                 <td> </td>
                                 <td>
-                                    <a href="#" class="btn btn-info"> تعديل <i class="fa fa-pen"></i>  </a>
+                                    <a href="#" class="btn btn-info"> تعديل <i class="fa fa-pencil"></i>  </a>
                                     <a href="#" class="btn btn-danger" id="delete"> حذف <i class="fa fa-trash"></i>  </a>
                                 </td>
                             </tr>

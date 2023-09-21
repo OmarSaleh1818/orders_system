@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('section_name');
             $table->string('item_name');
             $table->string('item_value');
+            $table->decimal('value');
             $table->decimal('remaining_value');
             $table->decimal('price');
             $table->string('price_name');

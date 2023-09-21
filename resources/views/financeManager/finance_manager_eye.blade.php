@@ -188,8 +188,26 @@
                 استفسار
             </button>
             <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 4)
+            <button class="btn btn-success" disabled>  تم اعتماد الصرف <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_4" data-inquiry-id="{{ $applicant->id }}">
+                عرض الاستفسار     <i class="fa fa-eye-slash"></i>
+            </button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        @elseif($applicant->status_id == 5)
+            @php
+                $attachment = App\Models\Finance::where('applicant_id',$applicant->id)->first();
+            @endphp
+            <button class="btn btn-success" disabled>  تم تنفيذ الطلب <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+            <a href="{{ asset($attachment->attachment) }}" class="btn btn-primary">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_4" data-inquiry-id="{{ $applicant->id }}">
+                عرض الاستفسار     <i class="fa fa-eye-slash"></i>
+            </button>
+            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 8)
-            <td> <button class="btn btn-dark" disabled> تم إرسال الاستفسار</button></td>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_4" data-inquiry-id="{{ $applicant->id }}">
+                عرض الاستفسار     <i class="fa fa-eye-slash"></i>
+            </button>
             <a href="{{ route('finance.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 9)
             <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
@@ -199,7 +217,9 @@
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#m_modal_2">
                 تأجيل
             </button>
-            <button class="btn btn-dark" disabled> تم إرسال الاستفسار</button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#m_modal_4" data-inquiry-id="{{ $applicant->id }}">
+                عرض الاستفسار     <i class="fa fa-eye-slash"></i>
+            </button>
             <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 10)
             <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
@@ -224,17 +244,49 @@
         @elseif($applicant->status_id == 12)
             <button class="btn btn-danger" disabled>  لم يتم اعتماد الصرف <i class="fa fa-times-circle" aria-hidden="true"></i></button>
             <a href="{{ route('finance.manager.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-        @elseif($applicant->status_id == 4)
-            <button class="btn btn-success" disabled>  تم اعتماد الصرف <i class="fa fa-check-circle" aria-hidden="true"></i></button>
-            <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @endif
     </div>
     <br>
+    <div class="modal fade" id="m_modal_4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel"><strong> عرض الاستفسار</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @php
+                    $reply = App\Models\FinanceManager::where('applicant_id',$applicant->id)->first();
+                @endphp
+                <form method="post" action="{{ route('applicant.reply.inquiry', $applicant->id) }}">
+                    @csrf
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>الاستفسار</label><span style="color: red;">  *</span>
+                            <textarea id="description" name="inquiry" required class="form-control" readonly>{{$reply->inquiry}}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>الرد على الاستفسار</label><span style="color: red;">  *</span>
+                            <textarea id="description" name="reply_inquiry" required class="form-control"readonly>{{$reply->reply_inquiry}}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                        {{--                                                            <button type="submit" class="btn btn-primary">ارسال</button>--}}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="m_modal_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLabel"><strong>اضافة استفسار</strong></h3>
+                    <h3 class="modal-title" id="exampleModalLabel"><strong>إضافة استفسار</strong></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -291,6 +343,9 @@
                 </div>
                 <form method="post" action="{{ route('finance.manager.reject', $applicant->id) }}">
                     @csrf
+                    <input type="hidden" name="value" value="{{ $applicant->value }}">
+                    <input type="hidden" name="project_name" value="{{ $applicant->project_name }}">
+                    <input type="hidden" name="item_name" value="{{ $applicant->item_name }}">
                     <div class="modal-body">
                         <div class="form-group">
                             <label>السبب</label><span style="color: red;">  *</span>

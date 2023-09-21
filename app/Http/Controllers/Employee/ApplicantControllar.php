@@ -22,7 +22,7 @@ class ApplicantControllar extends Controller
     public function applicantView() {
 
         $user_id = Auth::user()->id;
-        $applicants = Applicant::where('user_id', $user_id)->get();
+        $applicants = Applicant::where('user_id', $user_id)->orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
 
         return view('applicant.applicant_view', compact('applicants'));
     }
@@ -113,6 +113,7 @@ class ApplicantControllar extends Controller
         }
 
         $user_id = Auth::user()->id;
+        $remaining = $request->remaining_value - $request->price;
         Applicant::insert([
             'user_id' =>  $user_id,
             'project_name' => $request->project_name,
@@ -121,7 +122,8 @@ class ApplicantControllar extends Controller
             'section_name' => $request->section_name,
             'item_name' => $request->item_name,
             'item_value' => $request->item_value,
-            'remaining_value' => $request->remaining_value,
+            'value' => $request->item_value,
+            'remaining_value' => $remaining,
             'price' => $request->price,
             'price_name' => $result,
             'priority_level' => $request->priority_level,
@@ -134,13 +136,13 @@ class ApplicantControllar extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-//        DB::table('projects')
-//            ->where('id', $request->project_name)
-//            ->decrement('remaining_value', $request->price);
-//
-//        DB::table('multi_projects')
-//            ->where('item_name', $request->item_name)
-//            ->decrement('remaining_value', $request->price);
+        DB::table('projects')
+            ->where('id', $request->project_name)
+            ->decrement('remaining_value', $request->price);
+
+        DB::table('multi_projects')
+            ->where('item_name', $request->item_name)
+            ->decrement('remaining_value', $request->price);
 
         $request->session()->flash('status', 'تم إرسال طلبك بنجاح');
         return redirect('/applicant/view');
@@ -233,6 +235,7 @@ class ApplicantControllar extends Controller
         } else {
             echo 'Error';
         }
+        $remaining = $request->remaining_value - $request->price;
         Applicant::findOrFail($id)->update([
             'project_name' => $request->project_name,
             'step_name' => $request->step_name,
@@ -240,7 +243,7 @@ class ApplicantControllar extends Controller
             'section_name' => $request->section_name,
             'item_name' => $request->item_name,
             'item_value' => $request->item_value,
-            'remaining_value' => $request->remaining_value,
+            'remaining_value' => $remaining,
             'price' => $request->price,
             'price_name' => $result,
             'priority_level' => $request->priority_level,
@@ -253,6 +256,14 @@ class ApplicantControllar extends Controller
             'status_id' => 1,
             'created_at' => Carbon::now(),
         ]);
+
+        DB::table('projects')
+            ->where('id', $request->project_name)
+            ->decrement('remaining_value', $request->price);
+
+        DB::table('multi_projects')
+            ->where('item_name', $request->item_name)
+            ->decrement('remaining_value', $request->price);
 
         $request->session()->flash('status', 'تم تعديل طلبك بنجاح');
         return redirect('/applicant/view');

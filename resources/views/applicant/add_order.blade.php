@@ -22,9 +22,16 @@
                     <label for="project_name">اختيار المشروع </label><span style="color: red;">  *</span>
                     <select name="project_name" class="form-control" id="project_name">
                         <option value="" selected="" disabled="">اختيار المشروع</option>
-                        @foreach ($projects as $project)
-                            <option value="{{ $project->id }}">{{ $project->project_name }}</option>
-                        @endforeach
+                        @php
+                            use Illuminate\Support\Facades\Auth;
+                                $user = Auth::user()->name;
+                                $user_name = App\Models\project_users::where('user_name', $user)->first();
+                        @endphp
+                        @if($user_name)
+                            @foreach ($projects as $project)
+                                <option value="{{ $project->id }}">{{ $project->project_name }}</option>
+                            @endforeach
+                        @endif
                     </select>
                     @error('project_name')
                     <span class="text-danger"> {{ $message }}</span>

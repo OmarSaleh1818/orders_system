@@ -74,27 +74,31 @@ Route::middleware('auth')->group(function () {
 
 // All Finance Manager Route
     Route::get('/finance/view', [FinanceController::class, 'FinanceView'])->name('finance.view');
+    Route::get('/finance/eye/{id}', [FinanceController::class, 'FinanceEye'])->name('finance.eye');
+    Route::get('/finance/back', [FinanceController::class, 'FinanceBack'])->name('finance.back');
+    Route::post('/finance/attachment/{id}', [FinanceController::class, 'FinanceAttachment'])->name('finance.attachment');
 
-// End
-// All Section Route
-    Route::get('/section/view', [SectionsController::class, 'SectionView'])->name('sections');
-    Route::post('/section/store', [SectionsController::class, 'SectionStore'])->name('section.store');
-    Route::get('/section/edit/{id}', [SectionsController::class, 'SectionEdit'])->name('section.edit');
-    Route::post('/section/update/{id}', [SectionsController::class, 'SectionUpdate'])->name('section.update');
-    Route::get('/section/delete/{id}', [SectionsController::class, 'SectionDelete'])->name('section.delete');
 // End
 
 // All Users Route
     Route::prefix('users')->group(function() {
-    Route::get('/view', [RegisteredUserController::class, 'create'])->name('users');
-    Route::get('/create', [RegisteredUserController::class, 'UsersCreate'])->name('users_create');
-    Route::post('/store', [RegisteredUserController::class, 'UsersStore'])->name('users.store');
+        Route::get('/view', [RegisteredUserController::class, 'create'])->name('users');
+        Route::get('/create', [RegisteredUserController::class, 'UsersCreate'])->name('users_create');
+        Route::post('/store', [RegisteredUserController::class, 'UsersStore'])->name('users.store');
+        // All Section Route
+        Route::get('/section/view', [SectionsController::class, 'SectionView'])->name('sections');
+        Route::post('/section/store', [SectionsController::class, 'SectionStore'])->name('section.store');
+        Route::get('/section/edit/{id}', [SectionsController::class, 'SectionEdit'])->name('section.edit');
+        Route::post('/section/update/{id}', [SectionsController::class, 'SectionUpdate'])->name('section.update');
+        Route::get('/section/delete/{id}', [SectionsController::class, 'SectionDelete'])->name('section.delete');
+        // End
     });
 // End
 
 // All Project Route
     Route::get('/project/view', [ProjectsController::class, 'ProjectView'])->name('project.view');
     Route::get('/add/project', [ProjectsController::class, 'AddProject'])->name('add.project');
+    Route::get('/get-users-by-section', [ProjectsController::class, 'getUsersBySection']);
     Route::post('/project/store', [ProjectsController::class, 'ProjectStore'])->name('project.store');
     Route::get('/project/edit/{id}', [ProjectsController::class, 'ProjectEdit'])->name('project.edit');
     Route::post('/project/update/{id}', [ProjectsController::class, 'ProjectUpdate'])->name('project.update');
@@ -103,6 +107,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/project/eye/{id}', [ProjectsController::class, 'ProjectEye'])->name('project.eye');
     Route::get('/project/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
     Route::get('/project/back', [ProjectsController::class, 'ProjectBack'])->name('project.back');
+    Route::get('/project/manager/eye/{id}', [ProjectsController::class, 'ProjectManagerEye'])->name('project.manager.eye');
+    Route::get('/back', [ProjectsController::class, 'Back'])->name('back');
 
 // End
 });

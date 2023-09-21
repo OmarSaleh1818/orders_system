@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Setting;
 use App\Http\Controllers\Controller;
 use App\Models\MultiProject;
 use App\Models\MultiStep;
+use App\Models\project_users;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MultiSections;
@@ -30,6 +31,17 @@ class ProjectsController extends Controller
         return view('project.add_project', compact('sections'));
     }
 
+    public function getUsersBySection(Request $request)
+    {
+        $sectionName = $request->input('section_name');
+
+        $users = MultiSections::where('section_name', $sectionName)
+            ->join('users', 'multi_sections.user_id', '=', 'users.id')
+            ->pluck('users.name', 'multi_sections.user_id');
+
+        return response()->json($users);
+    }
+
     public function ProjectStore(Request $request) {
 
         $request->validate([
@@ -40,6 +52,7 @@ class ProjectsController extends Controller
             'item_value' => 'required',
             'total' => 'required',
             'section_name' => 'required',
+            'user_name' => 'required',
         ],[
             'date.required' => 'التاريخ مطلوب',
             'project_name.required' => 'اسم المشروع مطلوب',
@@ -48,6 +61,7 @@ class ProjectsController extends Controller
             'item_value.required' => 'قيمة البند  مطلوب',
             'total.required' => 'المجموع  مطلوب',
             'section_name.required' => 'اسم القسم مطلوب',
+            'user_name.required' => 'اختيار الموظفين مطلوب'
         ]);
 
         $user_id = Auth::user()->id;
@@ -66,6 +80,7 @@ class ProjectsController extends Controller
         $item_name = $request->item_name;
         $item_value = $request->item_value;
         $due_date = $request->due_date;
+        $user_name = $request->input('user_name');
         foreach ($step_name as $step) {
             $p_name = $step;
             $step_id = MultiStep::insertGetId([
@@ -90,8 +105,15 @@ class ProjectsController extends Controller
                 ]);
             }
         }
+        foreach ($user_name as $user) {
+            project_users::insert([
+                'project_id' => $project_id,
+                'user_name' => $user,
+                'created_at' => Carbon::now(),
+            ]);
+        }
 
-        $request->session()->flash('status', 'تم اضافة المشروع بنجاح');
+        $request->session()->flash('status', 'تم إضافة المشروع بنجاح');
         return redirect('/project/view');
 
     }
@@ -100,10 +122,12 @@ class ProjectsController extends Controller
 
         $user_id = Auth::user()->id;
 
-        $sections = MultiSections::where('user_id', $user_id)->get();
+        $steps = MultiStep::where('project_id', $id)->get();
         $multi_project = MultiProject::where('project_id', $id)->get();
+        $project_users = project_users::where('project_id', $id)->get();
         $project = projects::find($id);
-        return view('project.edit_project', compact('sections', 'project', 'multi_project'));
+        $sections = MultiSections::where('user_id', $user_id)->get();
+        return view('project.edit_project', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
     }
 
     public function ProjectUpdate(Request $request, $id) {
@@ -143,9 +167,18 @@ class ProjectsController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
+        $stepIds = $request->input('step');
+        $step_name = $request->input('step_name');
         $multiIds = $request->input('multi');
         $item_name = $request->input('item_name');
         $item_value = $request->input('item_value');
+        $user_name = $request->input('user_name');
+        foreach ($stepIds as $key => $stepId) {
+            $data = [
+                'step_name' => $step_name[$key],
+            ];
+           MultiStep::where('id', $stepId)->update($data);
+        }
         foreach ($multiIds as $key => $multiId) {
             $data = [
                 'item_name' => $item_name[$key],
@@ -153,6 +186,12 @@ class ProjectsController extends Controller
                 'remaining_value' => $item_value[$key],
             ];
             MultiProject::where('id', $multiId)->update($data);
+        }
+        foreach ($user_name as $key => $name) {
+            $data = [
+                'user_name' => $name[$key],
+            ];
+            project_users::where('id', $stepId)->update($data);
         }
 
         $request->session()->flash('status', 'تم تعديل المشروع بنجاح');
@@ -172,16 +211,18 @@ class ProjectsController extends Controller
             ->where('id', $id)
             ->update(['status_id' => 6]);
         Session()->flash('status', 'تم اعتماد المشروع بنجاح');
-        return redirect()->back();
+        return redirect('/project/approved/view');
     }
 
     public function ProjectEye($id) {
         $user_id = Auth::user()->id;
 
+        $steps = MultiStep::where('project_id', $id)->get();
         $sections = MultiSections::where('user_id', $user_id)->get();
         $multi_project = MultiProject::where('project_id', $id)->get();
+        $project_users = project_users::where('project_id', $id)->get();
         $project = projects::find($id);
-        return view('project.eye_project', compact('sections', 'project', 'multi_project'));
+        return view('project.eye_project', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
     }
 
     public function ProjectReject($id) {
@@ -194,6 +235,21 @@ class ProjectsController extends Controller
 
     public function ProjectBack() {
         return redirect('/project/approved/view');
+    }
+
+    public function Back() {
+        return redirect('/project/view');
+    }
+
+    public function ProjectManagerEye($id) {
+        $user_id = Auth::user()->id;
+
+        $steps = MultiStep::where('project_id', $id)->get();
+        $sections = MultiSections::where('user_id', $user_id)->get();
+        $multi_project = MultiProject::where('project_id', $id)->get();
+        $project_users = project_users::where('project_id', $id)->get();
+        $project = projects::find($id);
+        return view('project.manager_eye', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
     }
 
 

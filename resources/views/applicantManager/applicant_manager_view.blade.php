@@ -61,8 +61,14 @@
                                         <button class="btn btn-success" disabled>  تم اعتماد الطلب <i class="fa fa-check-circle" aria-hidden="true"></i></button>
                                     @elseif($item->status_id == 4)
                                         <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-dark" disabled>تم اعتماد الصرف </button>
-                                        {{--                                <a href="{{ route('applicant.delete', $item->id) }}" class="btn btn-danger" id="delete"> حذف <i class="fa fa-trash"></i>  </a>--}}
+                                        <button class="btn btn-success" disabled>تم اعتماد الصرف  <i class="fa fa-check-circle" aria-hidden="true"></i> </button>
+                                    @elseif($item->status_id == 5)
+                                        @php
+                                            $attachment = App\Models\Finance::where('applicant_id',$item->id)->first();
+                                        @endphp
+                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                        <button class="btn btn-success" disabled>تم تنفيذ الطلب  <i class="fa fa-check-circle" aria-hidden="true"></i> </button>
+                                        <a href="{{ asset($attachment->attachment) }}" class="btn btn-primary">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
                                     @elseif($item->status_id == 8)
                                         <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
                                         <button class="btn btn-dark" disabled> تم إرسال استفسار <i class="fa fa-check-circle" aria-hidden="true"></i>  </button>

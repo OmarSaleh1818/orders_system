@@ -117,6 +117,22 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <h5>اختيار الموظفين <span class="text-danger">*</span></h5>
+                    <div class="controls">
+                        <select name="user_name[]" multiple="multiple" class="form-control">
+                            <option value="" selected="" disabled="">اختيار الموظفين</option>
+
+                        </select>
+                        @error('users_name')
+                        <span class="text-danger"> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
 {{--        <div class="row">--}}
 {{--            <div class="col-md-12">--}}
 {{--                <div class="form-group">--}}
@@ -131,7 +147,7 @@
         <br>
 
         <div class="d-flex justify-content-between">
-            <input type="submit" class="btn btn-info" value=" تأكيد">
+            <input type="submit" class="btn btn-info" value=" حفظ وإرسال">
         </div>
         <br>
     </form>
@@ -276,6 +292,36 @@
             });
             $('#total').val(total);
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('select[name="section_name"]').on('change', function() {
+                var selectedSection = $(this).val();
+                var usersDropdown = $('select[name="user_name[]"]');
+
+                // Make an AJAX request to fetch related user names
+                $.ajax({
+                    url: '/get-users-by-section',
+                    type: 'GET',
+                    data: { section_name: selectedSection },
+                    success: function(data) {
+                        // Clear existing options
+                        usersDropdown.empty();
+
+                        // Add new options based on the response
+                        $.each(data, function(index, username) {
+                            usersDropdown.append($('<option>', {
+                                value: username,
+                                text: username
+                            }));
+                        });
+                    },
+                    error: function() {
+                        console.log('Error fetching data.');
+                    }
+                });
+            });
+        });
     </script>
 
 @endsection

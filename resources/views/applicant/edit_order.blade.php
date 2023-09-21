@@ -103,7 +103,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="remaining_value"> المتبقي من قيمة البند</label>
-                    <input type="text" class="form-control" name="remaining_value" value="{{ $applicant->remaining_value }}" id="remaining_value" readonly>
+                    <input type="text" class="form-control" name="remaining_value" value="{{ $applicant->value }}" id="remaining_value" readonly>
                     @error('remaining_value')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror

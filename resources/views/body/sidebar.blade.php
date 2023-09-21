@@ -2,7 +2,13 @@
     $prefix = Request::route()->getPrefix();
     $route = Route::current()->getName();
 @endphp
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<style>
+    .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active {
+        background: #8F7055;
+        color: #fff;
+    }
+</style>
+<aside class="main-sidebar sidebar-dark-primary elevation-4" style="background: #004653">
     <!-- Brand Logo -->
     <a href="{{ url('/') }}" class="brand-link">
         <img src="{{ asset('assets/dist/img/logo_ryadh.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
@@ -44,14 +50,29 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-header">مدير الموظف</li>
+                <li class="nav-header">مدير المشاريع</li>
                 <li class="nav-item has-treeview">
-                    <a href="{{ route('applicant.manager.view') }}" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
-                        <i class="nav-icon fas fa-th"></i>
+                    <a href="#" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
+                        <i class="nav-icon fa fa-address-card" aria-hidden="true"></i>
                         <p>
-                            معتمد الطلب
+                            مدير المشروع
+                            <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('applicant.manager.view') }}" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
+                                <i class="fa fa-opera nav-icon"></i>
+                                <p>اعتماد الطلبات</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('project.view') }}" class="nav-link {{ ($route == 'project.view')? 'active' : '' }}">
+                                <i class="fa fa-product-hunt nav-icon"></i>
+                                <p>المشاريع </p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-header">المدير المالي</li>
                 <li class="nav-item">
@@ -75,7 +96,7 @@
                 </li>
                 <li class="nav-header">الاعدادات</li>
                 <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link { ($prefix == '/users')? 'active':'' }}">
+                    <a href="#" class="nav-link {{ ($prefix == '/users')? 'active':'' }}">
                         <i class="nav-icon fa fa-cog" aria-hidden="true"></i>
                         <p>
                             الاعدادات
@@ -103,30 +124,30 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header">مدير المشروع</li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link { ($prefix == '/users')? 'active':'' }}">
-                        <i class="nav-icon fa fa-address-card" aria-hidden="true"></i>
-                        <p>
-                            مدير المشروع
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('project.view') }}" class="nav-link {{ ($route == 'project.view')? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>المشاريع </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('users') }}" class="nav-link {{ ($route == 'users')? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>التقارير</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+{{--                <li class="nav-header">مدير المشروع</li>--}}
+{{--                <li class="nav-item has-treeview">--}}
+{{--                    <a href="#" class="nav-link { ($prefix == '/users')? 'active':'' }}">--}}
+{{--                        <i class="nav-icon fa fa-address-card" aria-hidden="true"></i>--}}
+{{--                        <p>--}}
+{{--                            مدير المشروع--}}
+{{--                            <i class="fas fa-angle-left right"></i>--}}
+{{--                        </p>--}}
+{{--                    </a>--}}
+{{--                    <ul class="nav nav-treeview">--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{ route('project.view') }}" class="nav-link {{ ($route == 'project.view')? 'active' : '' }}">--}}
+{{--                                <i class="far fa-circle nav-icon"></i>--}}
+{{--                                <p>المشاريع </p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a href="{{ route('users') }}" class="nav-link {{ ($route == 'users')? 'active' : '' }}">--}}
+{{--                                <i class="far fa-circle nav-icon"></i>--}}
+{{--                                <p>التقارير</p>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </li>--}}
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

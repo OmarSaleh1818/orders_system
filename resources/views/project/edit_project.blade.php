@@ -38,30 +38,47 @@
             </div>
         </div>
         <hr>
-        @foreach($multi_project as $key => $multi)
-            <input type="hidden" name="multi[]" value="{{$multi->id }}">
+        @foreach($steps as $key => $step)
+            <input type="hidden" name="step[]" value="{{$step->id }}">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>بند الصرف</label><span style="color: red;">  *</span>
-                        <input type="text" class="form-control" required name="item_name[]"  value="{{ $multi->item_name }}" placeholder="بند الصرف...">
-                        @error('item_name')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>قيمة البند</label><span class="text-danger">*</span>
-                        <input type="text" class="form-control item-value" name="item_value[]" value="{{ $multi->item_value }}" placeholder=" قيمة البند...">
-                        @error('item_value')
+                        <label>اسم المرحلة</label><span style="color: red;">  *</span>
+                        <input type="text" class="form-control" required name="step_name[]" value="{{ $step->step_name }}">
+                        @error('step_name')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
                     </div>
                 </div>
             </div>
+            @foreach($multi_project as $key => $multi)
+                @if($multi->step_id == $step->id)
+                    <input type="hidden" name="multi[]" value="{{$multi->id }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>بند الصرف</label><span style="color: red;">  *</span>
+                                <input type="text" class="form-control" required name="item_name[]"  value="{{ $multi->item_name }}">
+                                @error('item_name')
+                                <span class="text-danger"> {{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>قيمة البند</label><span class="text-danger">*</span>
+                                <input type="text" class="form-control item-value" name="item_value[]" value="{{ $multi->item_value }}">
+                                @error('item_value')
+                                <span class="text-danger"> {{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+            @endforeach
+            <hr>
         @endforeach
-        <hr>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -76,7 +93,7 @@
                 <div class="form-group">
                     <label>اختيار القسم </label><span class="text-danger">*</span>
                     <div class="controls">
-                        <select name="section_name" class="form-control">
+                        <select name="section_name" class="form-control" id="section_name">
                             <option value="" selected="" disabled="">اختيار القسم </option>
                             @foreach($sections as $item)
                                 <option value="{{ $item->section_name }}" {{ $item->section_name == $project->section_name
@@ -91,18 +108,41 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>اختيار الموظفين </label><span class="text-danger">*</span>
+                    <div class="controls">
+                        <select name="user_name[]" multiple="multiple" class="form-control">
+                            <option value="" selected="" disabled="">اختيار الموظفين </option>
+                            @foreach($project_users as $users)
+                                <option value="{{ $users->user_name }}" selected>{{ $users->user_name }}</option>
+                            @endforeach
+                            @php
+                                $users = App\Models\MultiSections::where('section_name', $project->section_name)->get();
+                            @endphp
+                            @foreach($users as $item)
+                                <option value="{{ $item['sections']['name'] }}">{{ $item['sections']['name'] }}</option>
+                            @endforeach
+                        </select>
+                        @error('section_name')
+                        <span class="text-danger"> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <br>
 
-        <div class="d-flex justify-content-between">
-            <input type="submit" class="btn btn-info" value=" تأكيد">
+        <div class="d-flex justify-content-center" style="gap: 1rem;">
+            <input type="submit" class="btn btn-success" value=" حفظ و إرسال">
+            <a href="{{ route('back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         </div>
         <br>
     </form>
 
-
     <script>
-
         // Calculate total when an item_value input changes
         $(document).on('input', '.item-value', function () {
             updateTotal();
@@ -120,5 +160,36 @@
             $('#total').val(total);
         }
     </script>
+    <script>
+        $(document).ready(function() {
+            $('select[name="section_name"]').on('change', function() {
+                var selectedSection = $(this).val();
+                var usersDropdown = $('select[name="user_name[]"]');
+
+                // Make an AJAX request to fetch related user names
+                $.ajax({
+                    url: '/get-users-by-section',
+                    type: 'GET',
+                    data: { section_name: selectedSection },
+                    success: function(data) {
+                        // Clear existing options
+                        usersDropdown.empty();
+
+                        // Add new options based on the response
+                        $.each(data, function(index, username) {
+                            usersDropdown.append($('<option>', {
+                                value: username,
+                                text: username
+                            }));
+                        });
+                    },
+                    error: function() {
+                        console.log('Error fetching data.');
+                    }
+                });
+            });
+        });
+    </script>
+
 
 @endsection

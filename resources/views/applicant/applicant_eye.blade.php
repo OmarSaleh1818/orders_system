@@ -182,6 +182,13 @@
             @elseif($applicant->status_id == 4)
                 <td> <button class="btn btn-success" disabled> تم اعتماد الصرف </button></td>
                 <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            @elseif($applicant->status_id == 5)
+                @php
+                    $attachment = App\Models\Finance::where('applicant_id',$applicant->id)->first();
+                @endphp
+                <td> <button class="btn btn-success" disabled> تم تنفيذ الطلب </button></td>
+                <a href="{{ asset($attachment->attachment) }}" class="btn btn-primary">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
+                <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @elseif($applicant->status_id == 8)
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#m_modal_1">
                     رد على الاستفسار     <i class="fa fa-pencil-square-o"></i>

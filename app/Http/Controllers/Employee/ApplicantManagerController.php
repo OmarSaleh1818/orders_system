@@ -17,7 +17,7 @@ class ApplicantManagerController extends Controller
     public function applicantManagerView() {
 
         $user_id = Auth::user()->id;
-        $applicants = Applicant::where('user_id', $user_id)->get();
+        $applicants = Applicant::where('user_id', $user_id)->orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
         return view('applicantManager.applicant_manager_view', compact('applicants'));
     }
 
@@ -60,7 +60,15 @@ class ApplicantManagerController extends Controller
         }
         DB::table('applicants')
             ->where('id', $id)
-            ->update(['status_id' => 2]);
+            ->update(['status_id' => 2, 'remaining_value' => $request->value]);
+
+        DB::table('projects')
+            ->where('id', $request->project_name)
+            ->update(['remaining_value' => $request->value]);
+
+        DB::table('multi_projects')
+            ->where('item_name', $request->item_name)
+            ->update(['remaining_value' => $request->value]);
         Session()->flash('status', 'لم يتم اعتماد الطلب بنجاح');
         return redirect('/applicant/manager/view');
     }

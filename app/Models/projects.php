@@ -15,4 +15,12 @@ class projects extends Model
     {
         return $this->hasMany(MultiProject::class);
     }
+
+    public function projects() {
+
+        return $this->belongsTo(User::class, 'user_id', 'id');
+
+    }
+
+
 }
