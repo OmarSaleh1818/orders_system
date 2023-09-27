@@ -13,20 +13,25 @@ use Illuminate\Support\Facades\DB;
 
 class FinanceManagerController extends Controller
 {
+    function __construct()
+    {
+
+        $this->middleware('permission:المدير المالي', ['only' => ['FinanceManagerView']]);
+        $this->middleware('permission:معتمد الصرف', ['only' => ['FinanceManagerEye','FinanceManagerInquiry']]);
+        $this->middleware('permission:معتمد الصرف', ['only' => ['FinanceManagerReject','FinanceManagerSure']]);
+
+    }
 
     public function FinanceManagerView() {
 
-        $user_id = Auth::user()->id;
-        $applicants = Applicant::where('user_id', $user_id)->orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
+        $applicants = Applicant::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
         return view('financeManager.finance_manager_view', compact('applicants'));
     }
 
     public function FinanceManagerEye($id) {
-        $user_id = Auth::user()->id;
 
-        $sections = MultiSections::where('user_id', $user_id)->get();
         $applicant = Applicant::find($id);
-        return view('financeManager.finance_manager_eye', compact('sections', 'applicant'));
+        return view('financeManager.finance_manager_eye', compact( 'applicant'));
     }
 
     public function FinanceManagerInquiry(Request $request, $id) {
@@ -116,6 +121,7 @@ class FinanceManagerController extends Controller
         DB::table('applicants')
             ->where('id', $id)
             ->update(['status_id' => 4]);
+
         Session()->flash('status', 'تم اعتماد الصرف بنجاح');
         return redirect('/finance/manager/view');
     }

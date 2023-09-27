@@ -33,7 +33,6 @@
                         <tr>
                             <th>#</th>
                             <th>التاريخ</th>
-                            <th>البند</th>
                             <th>القسم</th>
                             <th>المبلغ</th>
                             <th>مستوى الأولوية</th>
@@ -46,7 +45,6 @@
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->date }}</td>
-                                    <td>{{ $item->item_name }}</td>
                                     <td>{{ $item->section_name }}</td>
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->priority_level }}</td>

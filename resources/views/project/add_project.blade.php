@@ -146,7 +146,7 @@
 
         <br>
 
-        <div class="d-flex justify-content-between">
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <input type="submit" class="btn btn-info" value=" حفظ وإرسال">
         </div>
         <br>

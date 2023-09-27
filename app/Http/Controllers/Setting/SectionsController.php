@@ -9,7 +9,12 @@ use App\Models\Sections;
 
 class SectionsController extends Controller
 {
+    function __construct()
+    {
 
+        $this->middleware('permission:الأقسام', ['only' => ['SectionView','SectionStore', 'SectionEdit', 'SectionUpdate', 'SectionDelete']]);
+
+    }
     public function SectionView() {
 
         $sections = Sections::all();
@@ -27,7 +32,7 @@ class SectionsController extends Controller
             'section_name' => $request->section_name,
             'created_at' => Carbon::now(),
         ]);
-        $request->session()->flash('status', 'تم ادخال اسم الفرع بنجاح');
+        $request->session()->flash('status', 'تم ادخال اسم القسم بنجاح');
         return redirect()->back();
     }
 
@@ -41,7 +46,7 @@ class SectionsController extends Controller
         $request->validate([
             'section_name' => 'required',
         ],[
-            'section.required' => 'اسم الفرع مطلوب',
+            'section.required' => 'اسم القسم مطلوب',
         ]);
 
         Sections::findOrFail($id)->update([
@@ -55,7 +60,7 @@ class SectionsController extends Controller
 
     public function SectionDelete($id) {
         Sections::findOrFail($id)->delete();
-        Session()->flash('status', 'تم حذف القسم بنجاح');
+        Session()->flash('status', 'تم حذف القسم !');
         return redirect('/section/view');
     }
 

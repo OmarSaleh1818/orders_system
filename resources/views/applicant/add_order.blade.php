@@ -186,7 +186,7 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <div class="form-group">
-                        <label for="order_name">البيان</label>
+                        <label for="order_name">البيان</label><span style="color: red;">  *</span>
                         <textarea id="description" name="description"  class="form-control" placeholder="البيان..."></textarea>
                     </div>
                 </div>

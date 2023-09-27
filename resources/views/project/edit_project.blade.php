@@ -16,7 +16,18 @@
 @section('content')
     <form method="post" action="{{ route('project.update', $project->id) }}">
         @csrf
-
+        <div class="row">
+            @if($project->status_id == 2)
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="order_name">السبب من عدم اعتماد المدير</label>
+                            <textarea id="description" name="manager_reason"  class="form-control"  readonly>{{ $projectManager->manager_reason }}</textarea>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">

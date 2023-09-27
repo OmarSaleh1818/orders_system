@@ -7,7 +7,7 @@
         <link href="{{ asset('assets/dist/img/logo_ryadh.png') }}" rel="icon">
         <link href="{{ asset('assets/dist/img/logo_ryadh.png') }}" rel="apple-touch-icon">
 
-        <title>طلبات الصرف</title>
+        <title>إجراء</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

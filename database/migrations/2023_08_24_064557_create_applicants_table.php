@@ -18,12 +18,11 @@ return new class extends Migration
             $table->string('project_name');
             $table->string('section_name');
             $table->string('item_name');
-            $table->string('item_value');
-            $table->decimal('value');
+            $table->string('item_value')->nullable();
+            $table->decimal('value')->nullable();
             $table->decimal('remaining_value');
             $table->decimal('price');
             $table->string('price_name');
-            $table->string('order_name');
             $table->string('account_number');
             $table->string('bank_name');
             $table->string('bank_name_account');

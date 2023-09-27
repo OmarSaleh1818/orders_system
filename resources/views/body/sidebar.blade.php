@@ -41,6 +41,7 @@
                         </p>
                     </a>
                 </li>
+                @can('مقدم الطلب')
                 <li class="nav-header">الموظف</li>
                 <li class="nav-item">
                     <a href="{{ route('applicant.view') }}" class="nav-link {{ ($route == 'applicant.view')? 'active' : '' }}">
@@ -50,43 +51,57 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-header">مدير المشاريع</li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
-                        <i class="nav-icon fa fa-address-card" aria-hidden="true"></i>
-                        <p>
-                            مدير المشروع
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('applicant.manager.view') }}" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
-                                <i class="fa fa-opera nav-icon"></i>
-                                <p>اعتماد الطلبات</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('project.view') }}" class="nav-link {{ ($route == 'project.view')? 'active' : '' }}">
-                                <i class="fa fa-product-hunt nav-icon"></i>
-                                <p>المشاريع </p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="nav-header">المدير المالي</li>
-                <li class="nav-item">
-                    <a href="{{ route('finance.manager.view') }}" class="nav-link {{ ($route == 'finance.manager.view')? 'active' : '' }}">
-                        <i class="nav-icon fas fa-file"></i>
-                        <p>معتمد الصرف</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('project.approved') }}" class="nav-link {{ ($route == 'project.approved')? 'active' : '' }}">
-                        <i class="nav-icon fa fa-tasks" aria-hidden="true"></i>
-                        <p>معتمد المشروع</p>
-                    </a>
-                </li>
+                @endcan
+                @can('مدير المشروع')
+                    <li class="nav-header">مدير المشاريع</li>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
+                            <i class="nav-icon fa fa-address-card" aria-hidden="true"></i>
+                            <p>
+                                مدير المشروع
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @can('اعتماد الطلبات')
+                            <li class="nav-item">
+                                <a href="{{ route('applicant.manager.view') }}" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
+                                    <i class="fa fa-opera nav-icon"></i>
+                                    <p>اعتماد الطلبات</p>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('المشاريع')
+                            <li class="nav-item">
+                                <a href="{{ route('project.view') }}" class="nav-link {{ ($route == 'project.view')? 'active' : '' }}">
+                                    <i class="fa fa-product-hunt nav-icon"></i>
+                                    <p>المشاريع </p>
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcan
+                @can('المدير المالي')
+                    <li class="nav-header">المدير المالي</li>
+                    @can('معتمد الصرف')
+                    <li class="nav-item">
+                        <a href="{{ route('finance.manager.view') }}" class="nav-link {{ ($route == 'finance.manager.view')? 'active' : '' }}">
+                            <i class="nav-icon fas fa-file"></i>
+                            <p>معتمد الصرف</p>
+                        </a>
+                    </li>
+                    @endcan
+                    @can('معتمد المشروع')
+                    <li class="nav-item">
+                        <a href="{{ route('project.approved') }}" class="nav-link {{ ($route == 'project.approved')? 'active' : '' }}">
+                            <i class="nav-icon fa fa-tasks" aria-hidden="true"></i>
+                            <p>معتمد المشروع</p>
+                        </a>
+                    </li>
+                    @endcan
+                @endcan
+                @can('منفذ الطلب')
                 <li class="nav-header">المحاسب</li>
                 <li class="nav-item">
                     <a href="{{ route('finance.view') }}" class="nav-link {{ ($route == 'finance.view')? 'active' : '' }}">
@@ -94,36 +109,45 @@
                         <p class="text">منفذ الطلب</p>
                     </a>
                 </li>
-                <li class="nav-header">الاعدادات</li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link {{ ($prefix == '/users')? 'active':'' }}">
-                        <i class="nav-icon fa fa-cog" aria-hidden="true"></i>
-                        <p>
-                            الاعدادات
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('sections') }}" class="nav-link {{ ($route == 'sections')? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>الأقسام</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('users') }}" class="nav-link {{ ($route == 'users')? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>المستخدمين</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ ($route == '#')? 'active' : '' }}">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>صلاحيات المستخدمين</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                @endcan
+                @can('الإعدادات')
+                    <li class="nav-header">الاعدادات</li>
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link {{ ($prefix == '/users')? 'active':'' }}">
+                            <i class="nav-icon fa fa-cog" aria-hidden="true"></i>
+                            <p>
+                                الاعدادات
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @can('الأقسام')
+                            <li class="nav-item">
+                                <a href="{{ route('sections') }}" class="nav-link {{ ($route == 'sections')? 'active' : '' }}">
+                                    <i class="fa fa-puzzle-piece nav-icon"></i>
+                                    <p>الأقسام</p>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('قائمة المستخدمين')
+                            <li class="nav-item">
+                                <a href="{{ url('/users') }}" class="nav-link {{ ($route == 'users')? 'active' : '' }}">
+                                    <i class="fa fa-user nav-icon"></i>
+                                    <p>قائمة المستخدمين</p>
+                                </a>
+                            </li>
+                            @endcan
+                            @can('صلاحيات المستخدمين')
+                            <li class="nav-item">
+                                <a href="{{ url('/roles') }}" class="nav-link {{ ($route == 'roles')? 'active' : '' }}">
+                                    <i class="fa fa-cube nav-icon"></i>
+                                    <p>صلاحيات المستخدمين</p>
+                                </a>
+                            </li>
+                            @endcan
+                        </ul>
+                    </li>
+                @endcan
 {{--                <li class="nav-header">مدير المشروع</li>--}}
 {{--                <li class="nav-item has-treeview">--}}
 {{--                    <a href="#" class="nav-link { ($prefix == '/users')? 'active':'' }}">--}}

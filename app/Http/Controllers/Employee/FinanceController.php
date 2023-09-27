@@ -12,11 +12,16 @@ use Illuminate\Support\Facades\DB;
 
 class FinanceController extends Controller
 {
+    function __construct()
+    {
 
+        $this->middleware('permission:المحاسب', ['only' => ['FinanceView']]);
+        $this->middleware('permission:منفذ الطلب', ['only' => ['FinanceEye']]);
+
+    }
     public function FinanceView() {
 
-        $user_id = Auth::user()->id;
-        $applicants = Applicant::where('user_id', $user_id)->orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
+        $applicants = Applicant::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
         return view('finance.finance_view', compact('applicants'));
     }
 

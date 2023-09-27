@@ -14,6 +14,14 @@
 @endsection
 
 @section('content')
+    @if(Session()->has('status'))
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>{{ Session()->get('status') }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
@@ -106,14 +114,31 @@
         </div>
     </div>
     <div class="row">
+        @php
+            $project_user = App\Models\projects::groupBy('user_id')->pluck('user_id');
+        @endphp
         <div class="col-md-6">
-            <div class="form-group">
-                <label>مدير المشروع</label><span style="color: red;">  *</span>
-                <input type="text" class="form-control" required name="project_manager" id="total" value="{{ $project['projects']['name'] }}" readonly>
-                @error('project_manager')
-                <span class="text-danger"> {{ $message }}</span>
-                @enderror
-            </div>
+            <form method="post" action="{{ route('project.update.manager', $project->id) }}">
+                @csrf
+                <div class="form-group">
+                    <label for="project_name">مدير المشروع </label><span style="color: red;"> *</span>
+                    <select name="user_id" class="form-control">
+                        <option value="" selected="" disabled="">مدير المشروع</option>
+                        @foreach ($project_user as $user_id)
+                            @php
+                                $user = App\Models\User::find($user_id);
+                            @endphp
+                            <option value="{{ $user->id }}" {{ $user->id == $project->user_id ? 'selected' : ''}}>
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('user_id')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+                <input type="submit" class="btn btn-primary" value=" إسناد المشروع">
+            </form>
         </div>
         <div class="col-md-6">
             <div class="form-group">
@@ -136,7 +161,9 @@
     <div class="d-flex justify-content-center" style="gap: 1rem;">
         @if($project->status_id == 1)
             <a href="{{ route('project.sure', $project->id) }}" class="btn btn-success" id="sure"> معتمد </a>
-            <a href="{{ route('project.reject', $project->id) }}" class="btn btn-danger" id="reject"> غير معتمد </a>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_1">
+                غير معتمد
+            </button>
             <a href="{{ route('project.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 2)
             <td> <button class="btn btn-danger" disabled> غير معتمد</button></td>
@@ -147,6 +174,31 @@
         @endif
     </div>
     <br>
+    <div class="modal fade" id="m_modal_1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel"><strong> سبب عدم الاعتماد</strong></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="{{ route('project.reject', $project->id) }}">
+                    @csrf
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <textarea id="description" name="manager_reason" required class="form-control" placeholder="السبب..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إغلاق</button>
+                        <button type="submit" class="btn btn-primary">عدم الاعتماد</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script>
 

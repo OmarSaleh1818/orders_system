@@ -9,6 +9,8 @@ use App\Http\Controllers\Setting\ProjectsController;
 use App\Http\Controllers\Employee\ApplicantManagerController;
 use App\Http\Controllers\Employee\FinanceManagerController;
 use App\Http\Controllers\Employee\FinanceController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,9 +84,9 @@ Route::middleware('auth')->group(function () {
 
 // All Users Route
     Route::prefix('users')->group(function() {
-        Route::get('/view', [RegisteredUserController::class, 'create'])->name('users');
-        Route::get('/create', [RegisteredUserController::class, 'UsersCreate'])->name('users_create');
-        Route::post('/store', [RegisteredUserController::class, 'UsersStore'])->name('users.store');
+//        Route::get('/view', [RegisteredUserController::class, 'create'])->name('users');
+//        Route::get('/create', [RegisteredUserController::class, 'UsersCreate'])->name('users_create');
+//        Route::post('/store', [RegisteredUserController::class, 'UsersStore'])->name('users.store');
         // All Section Route
         Route::get('/section/view', [SectionsController::class, 'SectionView'])->name('sections');
         Route::post('/section/store', [SectionsController::class, 'SectionStore'])->name('section.store');
@@ -105,12 +107,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/project/approved/view', [ProjectsController::class, 'ProjectApprovedView'])->name('project.approved');
     Route::get('/project/sure/{id}', [ProjectsController::class, 'ProjectSure'])->name('project.sure');
     Route::get('/project/eye/{id}', [ProjectsController::class, 'ProjectEye'])->name('project.eye');
-    Route::get('/project/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
+    Route::post('/project/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
     Route::get('/project/back', [ProjectsController::class, 'ProjectBack'])->name('project.back');
     Route::get('/project/manager/eye/{id}', [ProjectsController::class, 'ProjectManagerEye'])->name('project.manager.eye');
     Route::get('/back', [ProjectsController::class, 'Back'])->name('back');
+    Route::post('/project/update/manager/{id}', [ProjectsController::class, 'ProjectUpdateManager'])->name('project.update.manager');
 
 // End
+});
+
+Route::group(['middleware' => ['auth']], function() {
+
+    Route::resource('roles',RoleController::class);
+
+    Route::resource('users', UserController::class);
+
 });
 
 require __DIR__.'/auth.php';

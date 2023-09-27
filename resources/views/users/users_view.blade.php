@@ -25,7 +25,7 @@
             <div class="card">
                 <div class="card-header pb-lg-3">
                     <div class="d-flex justify-content-between">
-                        <a href="{{ route('users_create') }}" class="btn btn-primary">اضافة مستخدم</a>
+                        <a href="{{ route('users_create') }}" class="btn btn-primary">إضافة مستخدم</a>
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -35,7 +35,7 @@
                         <tr>
                             <th>#</th>
                             <th>اسم المستخدم</th>
-                            <th>البريد الالكتروني</th>
+                            <th>البريد الإلكتروني</th>
                             <th> نوع المستخدم</th>
                             <th> الحالة</th>
                         </tr>

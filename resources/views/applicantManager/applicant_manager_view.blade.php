@@ -33,7 +33,6 @@
                         <tr>
                             <th>#</th>
                             <th>التاريخ</th>
-                            <th>البند</th>
                             <th>القسم</th>
                             <th>المبلغ</th>
                             <th>مستوى الأولوية</th>
@@ -42,51 +41,56 @@
                         </thead>
                         <tbody>
                         @foreach($applicants as $key => $item)
-                            <tr>
-                                <td>{{ $key+1 }}</td>
-                                <td>{{ $item->date }}</td>
-                                <td>{{ $item->item_name }}</td>
-                                <td>{{ $item->section_name }}</td>
-                                <td>{{ $item->price }}</td>
-                                <td>{{ $item->priority_level }}</td>
-                                <td>
-                                    @if($item->status_id == 1)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-secondary" disabled> في الانتظار <i class="far fa-clock" aria-hidden="true"></i></button>
-                                    @elseif($item->status_id == 2)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-danger" disabled>  غير معتمد <i class="fa fa-times-circle" aria-hidden="true"></i></button>
-                                    @elseif($item->status_id == 3)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-success" disabled>  تم اعتماد الطلب <i class="fa fa-check-circle" aria-hidden="true"></i></button>
-                                    @elseif($item->status_id == 4)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-success" disabled>تم اعتماد الصرف  <i class="fa fa-check-circle" aria-hidden="true"></i> </button>
-                                    @elseif($item->status_id == 5)
-                                        @php
-                                            $attachment = App\Models\Finance::where('applicant_id',$item->id)->first();
-                                        @endphp
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-success" disabled>تم تنفيذ الطلب  <i class="fa fa-check-circle" aria-hidden="true"></i> </button>
-                                        <a href="{{ asset($attachment->attachment) }}" class="btn btn-primary">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
-                                    @elseif($item->status_id == 8)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-dark" disabled> تم إرسال استفسار <i class="fa fa-check-circle" aria-hidden="true"></i>  </button>
-                                    @elseif($item->status_id == 9)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-dark" disabled>تم إرسال الرد   <i class="fa fa-check-circle" aria-hidden="true"></i></button>
-                                    @elseif($item->status_id == 10)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-dark" disabled>تم التأجيل   <i class="fa fa-dot-circle-o" aria-hidden="true"></i></button>
-                                    @elseif($item->status_id == 11)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-dark" disabled>تم إعادة الإرسال   <i class="fa fa-dot-circle-o" aria-hidden="true"></i></button>
-                                    @elseif($item->status_id == 12)
-                                        <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-danger" disabled>  لم يتم اعتماد الصرف <i class="fa fa-times-circle" aria-hidden="true"></i></button>
-                                    @endif
-                                </td>
-                            </tr>
+                            @php
+                                $user_id = Auth::user()->id;
+                                $manager = App\Models\projects::where('id', $item->project_name)->where('user_id', $user_id)->first();
+                            @endphp
+                            @if($manager)
+                                <tr>
+                                    <td>{{ $key+0 }}</td>
+                                    <td>{{ $item->date }}</td>
+                                    <td>{{ $item->section_name }}</td>
+                                    <td>{{ $item->price }}</td>
+                                    <td>{{ $item->priority_level }}</td>
+                                    <td>
+                                        @if($item->status_id == 1)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-secondary" disabled> في الانتظار <i class="far fa-clock" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 2)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-danger" disabled>  غير معتمد <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 3)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-success" disabled>  تم اعتماد الطلب <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 4)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-success" disabled>تم اعتماد الصرف  <i class="fa fa-check-circle" aria-hidden="true"></i> </button>
+                                        @elseif($item->status_id == 5)
+                                            @php
+                                                $attachment = App\Models\Finance::where('applicant_id',$item->id)->first();
+                                            @endphp
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-success" disabled>تم تنفيذ الطلب  <i class="fa fa-check-circle" aria-hidden="true"></i> </button>
+                                            <a href="{{ asset($attachment->attachment) }}" class="btn btn-primary">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
+                                        @elseif($item->status_id == 8)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-dark" disabled> تم إرسال استفسار <i class="fa fa-check-circle" aria-hidden="true"></i>  </button>
+                                        @elseif($item->status_id == 9)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-dark" disabled>تم إرسال الرد   <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 10)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-dark" disabled>تم التأجيل   <i class="fa fa-dot-circle-o" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 11)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-dark" disabled>تم إعادة الإرسال   <i class="fa fa-dot-circle-o" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 12)
+                                            <a href="{{ route('applicant.manager.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-danger" disabled>  لم يتم اعتماد الصرف <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                         </tbody>
                     </table>

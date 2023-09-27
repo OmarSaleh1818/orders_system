@@ -18,7 +18,15 @@ use Illuminate\Support\Facades\Validator;
 
 class ApplicantControllar extends Controller
 {
+    function __construct()
+    {
 
+        $this->middleware('permission:مقدم الطلب', ['only' => ['applicantView', 'applicantEye']]);
+        $this->middleware('permission:مقدم الطلب', ['only' => ['AddOrder','ApplicantStore']]);
+        $this->middleware('permission:مقدم الطلب', ['only' => ['ApplicantEdit','ApplicantUpdate']]);
+        $this->middleware('permission:مقدم الطلب', ['only' => ['applicantDelete']]);
+
+    }
     public function applicantView() {
 
         $user_id = Auth::user()->id;

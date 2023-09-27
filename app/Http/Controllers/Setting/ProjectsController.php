@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MultiProject;
 use App\Models\MultiStep;
 use App\Models\project_users;
+use App\Models\ProjectManager;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MultiSections;
@@ -16,10 +17,17 @@ use Illuminate\Validation\Rule;
 
 class ProjectsController extends Controller
 {
+    function __construct()
+    {
 
+        $this->middleware('permission:المشاريع', ['only' => ['ProjectView', 'ProjectEye']]);
+        $this->middleware('permission:المشاريع', ['only' => ['AddProject','ProjectStore', 'ProjectEdit', 'ProjectUpdate']]);
+        $this->middleware('permission:معتمد المشروع', ['only' => ['ProjectApprovedView','ProjectSure']]);
+        $this->middleware('permission:قائمة المستخدمين', ['only' => ['ProjectReject', 'ProjectManagerEye']]);
+
+    }
     public function ProjectView() {
 
-        $user_id = Auth::user()->id;
         $projects = projects::all();
         return view('project.project_view', compact('projects'));
     }
@@ -125,9 +133,11 @@ class ProjectsController extends Controller
         $steps = MultiStep::where('project_id', $id)->get();
         $multi_project = MultiProject::where('project_id', $id)->get();
         $project_users = project_users::where('project_id', $id)->get();
+        $projectManager = ProjectManager::where('project_id', $id)->first();
         $project = projects::find($id);
         $sections = MultiSections::where('user_id', $user_id)->get();
-        return view('project.edit_project', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
+        return view('project.edit_project', compact('sections', 'project',
+            'multi_project', 'steps', 'project_users', 'projectManager'));
     }
 
     public function ProjectUpdate(Request $request, $id) {
@@ -172,7 +182,7 @@ class ProjectsController extends Controller
         $multiIds = $request->input('multi');
         $item_name = $request->input('item_name');
         $item_value = $request->input('item_value');
-        $user_name = $request->input('user_name');
+        $user_names = $request->input('user_name');
         foreach ($stepIds as $key => $stepId) {
             $data = [
                 'step_name' => $step_name[$key],
@@ -187,12 +197,25 @@ class ProjectsController extends Controller
             ];
             MultiProject::where('id', $multiId)->update($data);
         }
-        foreach ($user_name as $key => $name) {
-            $data = [
-                'user_name' => $name[$key],
-            ];
-            project_users::where('id', $stepId)->update($data);
+        if (!empty($user_names)) {
+            foreach ($user_names as $user_name) {
+                $existingUser = project_users::where('project_id', $id)->where('user_name', $user_name)->first();
+                if ($existingUser) {
+
+                    $data = ['user_name' => $user_name];
+                    project_users::where('id', $existingUser->id)->update($data);
+                } else {
+
+                    project_users::create([
+                        'project_id' => $id,
+                        'user_name' => $user_name
+                    ]);
+                }
+            }
         }
+        DB::table('projects')
+            ->where('id', $id)
+            ->update(['status_id' => 1]);
 
         $request->session()->flash('status', 'تم تعديل المشروع بنجاح');
         return redirect('/project/view');
@@ -225,11 +248,29 @@ class ProjectsController extends Controller
         return view('project.eye_project', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
     }
 
-    public function ProjectReject($id) {
+    public function ProjectReject(Request $request , $id) {
+        $request->validate([
+            'manager_reason'=> 'required'
+        ],[
+            'manager_reason.required' => 'السبب مطلوب'
+        ]);
+        $existingRecord = ProjectManager::where('project_id', $id)->first();
+        if ($existingRecord) {
+            $existingRecord->update([
+                'manager_reason' => $request->manager_reason,
+                'created_at' => Carbon::now(),
+            ]);
+        } else {
+            ProjectManager::insert([
+                'project_id' => $id,
+                'manager_reason' => $request->manager_reason,
+                'created_at' => Carbon::now(),
+            ]);
+        }
         DB::table('projects')
             ->where('id', $id)
             ->update(['status_id' => 2]);
-        Session()->flash('status', 'لم يتم اعتماد المشروع بنجاح');
+        Session()->flash('status', 'لم يتم اعتماد المشروع ');
         return redirect('/project/approved/view');
     }
 
@@ -250,6 +291,15 @@ class ProjectsController extends Controller
         $project_users = project_users::where('project_id', $id)->get();
         $project = projects::find($id);
         return view('project.manager_eye', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
+    }
+
+    public function ProjectUpdateManager(Request $request, $id) {
+        projects::findOrFail($id)->update([
+           'user_id' => $request->user_id
+        ]);
+
+        $request->session()->flash('status', 'تم تغيير مدير المشروع بنجاح');
+        return redirect()->back();
     }
 
 

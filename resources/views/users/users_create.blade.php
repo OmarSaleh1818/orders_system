@@ -6,7 +6,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto p-4">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">الاعدادات</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/  المستخدمين </span>
+                <h4 class="content-title mb-0 my-auto">الإعدادات</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/  المستخدمين </span>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>البريد الالكتروني</label><span style="color: red;">  *</span>
-                    <input type="email" class="form-control" required name="email" placeholder=" البريد الالكتروني ...">
+                    <input type="email" class="form-control" required name="email" placeholder=" البريد الإلكتروني ...">
                     @error('name')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror

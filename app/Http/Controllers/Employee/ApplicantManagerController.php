@@ -13,11 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class ApplicantManagerController extends Controller
 {
+    function __construct()
+    {
 
+        $this->middleware('permission:اعتماد الطلبات', ['only' => ['applicantManagerView', 'ApplicantManagerEye']]);
+        $this->middleware('permission:اعتماد الطلبات', ['only' => ['ApplicantManagerSure','ApplicantManagerReject']]);
+
+    }
     public function applicantManagerView() {
 
-        $user_id = Auth::user()->id;
-        $applicants = Applicant::where('user_id', $user_id)->orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
+        $applicants = Applicant::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
         return view('applicantManager.applicant_manager_view', compact('applicants'));
     }
 
