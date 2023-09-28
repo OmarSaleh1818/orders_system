@@ -6,7 +6,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto p-4">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">مدير الموظف</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ معتمد الطلب </span>
+                <h4 class="content-title mb-0 my-auto">مدير المشروع</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ معتمد الطلب </span>
             </div>
         </div>
     </div>
@@ -16,7 +16,7 @@
         <div class="alert alert-info alert-dismissible fade show" role="alert">
             <strong>{{ Session()->get('status') }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+
             </button>
         </div>
     @endif

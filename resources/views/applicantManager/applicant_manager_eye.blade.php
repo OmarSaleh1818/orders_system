@@ -6,7 +6,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto p-4">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">مدير الموظف</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ عرض الطلب </span>
+                <h4 class="content-title mb-0 my-auto">مدير المشروع</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ عرض الطلب </span>
             </div>
         </div>
 

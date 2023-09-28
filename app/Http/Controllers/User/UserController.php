@@ -74,8 +74,9 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = Role::pluck('name','name')->all();
+        $sections = MultiSections::where('user_id', $id)->get();
         $userRole = $user->roles->pluck('name','name')->all();
-        return view('users.edit',compact('user','roles','userRole'));
+        return view('users.edit',compact('user','roles','userRole', 'sections'));
     }
 
     public function update(Request $request, $id)
@@ -96,6 +97,23 @@ class UserController extends Controller
         $user->update($input);
         DB::table('model_has_roles')->where('model_id',$id)->delete();
         $user->assignRole($request->input('roles'));
+        $section_names = $request->input('section_name');
+        if (!empty($section_names)) {
+            foreach ($section_names as $section_name) {
+                $existingUser = MultiSections::where('user_id', $id)->where('section_name', $section_name)->first();
+                if ($existingUser) {
+
+                    $data = ['section_name' => $section_name];
+                    MultiSections::where('id', $existingUser->id)->update($data);
+                } else {
+
+                    MultiSections::create([
+                        'user_id' => $id,
+                        'section_name' => $section_name
+                    ]);
+                }
+            }
+        }
         return redirect()->route('users.index')
             ->with('success','تم تحديث معلومات المستخدم بنجاح');
     }

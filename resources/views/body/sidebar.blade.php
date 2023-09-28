@@ -44,7 +44,7 @@
                 @can('مقدم الطلب')
                 <li class="nav-header">الموظف</li>
                 <li class="nav-item">
-                    <a href="{{ route('applicant.view') }}" class="nav-link {{ ($route == 'applicant.view')? 'active' : '' }}">
+                    <a href="{{ route('applicant.view') }}" class="nav-link {{ ($prefix == '/applicant')? 'active':'' }}">
                         <i class="nav-icon far fa-plus-square"></i>
                         <p>
                             مقدم الطلب
@@ -55,7 +55,7 @@
                 @can('مدير المشروع')
                     <li class="nav-header">مدير المشاريع</li>
                     <li class="nav-item has-treeview">
-                        <a href="#" class="nav-link {{ ($route == 'applicant.manager.view')? 'active' : '' }}">
+                        <a href="#" class="nav-link {{ ($prefix == '/manager')? 'active':'' }}">
                             <i class="nav-icon fa fa-address-card" aria-hidden="true"></i>
                             <p>
                                 مدير المشروع
@@ -104,7 +104,7 @@
                 @can('منفذ الطلب')
                 <li class="nav-header">المحاسب</li>
                 <li class="nav-item">
-                    <a href="{{ route('finance.view') }}" class="nav-link {{ ($route == 'finance.view')? 'active' : '' }}">
+                    <a href="{{ route('finance.view') }}" class="nav-link {{ ($prefix == '/finance')? 'active':'' }}">
                         <i class="nav-icon fa fa-check-square" aria-hidden="true"></i>
                         <p class="text">منفذ الطلب</p>
                     </a>

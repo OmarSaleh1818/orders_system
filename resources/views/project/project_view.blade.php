@@ -46,7 +46,7 @@
                         @foreach($projects as $key => $item)
                             @php
                                 $user_id = Auth::user()->id;
-                                $manager = App\Models\projects::where('user_id', $user_id)->first();
+                                $manager = App\Models\projects::where('user_id', $user_id)->where('id', $item->id)->first();
                             @endphp
                             @if($manager)
                                 <tr>

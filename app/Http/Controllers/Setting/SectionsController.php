@@ -55,13 +55,13 @@ class SectionsController extends Controller
         ]);
 
         $request->session()->flash('status', 'تم تعديل اسم القسم بنجاح');
-        return redirect('/section/view');
+        return redirect('/users/section/view');
     }
 
     public function SectionDelete($id) {
         Sections::findOrFail($id)->delete();
         Session()->flash('status', 'تم حذف القسم !');
-        return redirect('/section/view');
+        return redirect('/users/section/view');
     }
 
 

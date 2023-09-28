@@ -96,7 +96,7 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <label>اختيار القسم </label><span class="text-danger">*</span>
+                <label> القسم </label><span class="text-danger">*</span>
                 <div class="controls">
                     <select name="section_name" class="form-control">
                         <option value="" selected="" disabled="">اختيار القسم </option>
@@ -146,7 +146,7 @@
                 <div class="controls">
                     <select name="user_name[]" multiple="multiple" class="form-control">
                         @foreach($project_users as $users)
-                            <option value="{{ $users->user_name }}" disabled="">{{ $users->user_name }}</option>
+                            <option value="{{ $users->user_name }}" disabled>{{ $users->user_name }}</option>
                         @endforeach
                     </select>
                     @error('section_name')

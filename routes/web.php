@@ -11,6 +11,7 @@ use App\Http\Controllers\Employee\FinanceManagerController;
 use App\Http\Controllers\Employee\FinanceController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\RoleController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,40 +28,49 @@ use App\Http\Controllers\User\RoleController;
 //    return view('welcome');
 //});
 
-Route::get('/', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [DashboardController::class, 'Dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 // All Applicant route
-    Route::get('/applicant/view', [ApplicantControllar::class, 'applicantView'])->name('applicant.view');
-    Route::get('/add/order', [ApplicantControllar::class, 'addOrder'])->name('add.order');
-    Route::post('/applicant/store', [ApplicantControllar::class, 'ApplicantStore'])->name('applicant.store');
-    Route::get('/applicant/edit/{id}', [ApplicantControllar::class, 'ApplicantEdit'])->name('applicant.edit');
-    Route::post('/applicant/update/{id}', [ApplicantControllar::class, 'ApplicantUpdate'])->name('applicant.update');
-    Route::get('/applicant/delete/{id}', [ApplicantControllar::class, 'applicantDelete'])->name('applicant.delete');
+    Route::prefix('applicant')->group(function() {
+        Route::get('/view', [ApplicantControllar::class, 'applicantView'])->name('applicant.view');
+        Route::get('/add/order', [ApplicantControllar::class, 'addOrder'])->name('add.order');
+        Route::post('/store', [ApplicantControllar::class, 'ApplicantStore'])->name('applicant.store');
+        Route::get('/edit/{id}', [ApplicantControllar::class, 'ApplicantEdit'])->name('applicant.edit');
+        Route::post('/update/{id}', [ApplicantControllar::class, 'ApplicantUpdate'])->name('applicant.update');
+        Route::get('/delete/{id}', [ApplicantControllar::class, 'applicantDelete'])->name('applicant.delete');
+        Route::get('/applicant/eye/{id}', [ApplicantControllar::class, 'ApplicantEye'])->name('applicant.eye');
+        Route::get('/back', [ApplicantControllar::class, 'applicantBack'])->name('applicant.back');
+        Route::post('/reply/inquiry/{id}', [ApplicantControllar::class, 'ApplicantReplyInquiry'])->name('applicant.reply.inquiry');
+        Route::post('/return/date/{id}', [ApplicantControllar::class, 'ApplicantReturnDate'])->name('applicant.return.date');
+    });
     Route::get('/get-section-name/{project_id}', [ApplicantControllar::class, 'getSectionName']);
     Route::get('/get-step-names/{project_id}', [ApplicantControllar::class, 'getStepNames']);
     Route::get('/get-item-names/{step_name}', [ApplicantControllar::class, 'getItemNames']);
     Route::get('/get-item-value/{itemName}', [ApplicantControllar::class, 'getItemValue']);
     Route::get('/get-remaining-value/{itemName}', [ApplicantControllar::class, 'getRemainingValue']);
-    Route::get('/applicant/eye/{id}', [ApplicantControllar::class, 'ApplicantEye'])->name('applicant.eye');
-    Route::get('/applicant/back', [ApplicantControllar::class, 'applicantBack'])->name('applicant.back');
-    Route::post('/applicant/reply/inquiry/{id}', [ApplicantControllar::class, 'ApplicantReplyInquiry'])->name('applicant.reply.inquiry');
-    Route::post('/applicant/return/date/{id}', [ApplicantControllar::class, 'ApplicantReturnDate'])->name('applicant.return.date');
-
 // End
 
 // All Applicant Manager Route
-    Route::get('/applicant/manager/view', [ApplicantManagerController::class, 'applicantManagerView'])->name('applicant.manager.view');
-    Route::get('/applicant/manager/eye/{id}', [ApplicantManagerController::class, 'ApplicantManagerEye'])->name('applicant.manager.eye');
-    Route::get('/applicant/manager/sure/{id}', [ApplicantManagerController::class, 'ApplicantManagerSure'])->name('applicant.manager.sure');
-    Route::post('/applicant/manager/reject/{id}', [ApplicantManagerController::class, 'ApplicantManagerReject'])->name('applicant.manager.reject');
-    Route::get('/applicant/manager/back', [ApplicantManagerController::class, 'ApplicantManagerBack'])->name('applicant.manager.back');
+    Route::prefix('manager')->group(function() {
+        Route::get('/applicant/view', [ApplicantManagerController::class, 'applicantManagerView'])->name('applicant.manager.view');
+        Route::get('/applicant/eye/{id}', [ApplicantManagerController::class, 'ApplicantManagerEye'])->name('applicant.manager.eye');
+        Route::get('/applicant/sure/{id}', [ApplicantManagerController::class, 'ApplicantManagerSure'])->name('applicant.manager.sure');
+        Route::post('/applicant/reject/{id}', [ApplicantManagerController::class, 'ApplicantManagerReject'])->name('applicant.manager.reject');
+        Route::get('/applicant/back', [ApplicantManagerController::class, 'ApplicantManagerBack'])->name('applicant.manager.back');
+        Route::get('/project/view', [ProjectsController::class, 'ProjectView'])->name('project.view');
+        Route::get('/add/project', [ProjectsController::class, 'AddProject'])->name('add.project');
 
+        Route::post('/project/store', [ProjectsController::class, 'ProjectStore'])->name('project.store');
+        Route::get('/project/edit/{id}', [ProjectsController::class, 'ProjectEdit'])->name('project.edit');
+        Route::post('/project/update/{id}', [ProjectsController::class, 'ProjectUpdate'])->name('project.update');
+        Route::get('/project/eye/{id}', [ProjectsController::class, 'ProjectEye'])->name('project.eye');
+        Route::get('/back', [ProjectsController::class, 'Back'])->name('back');
+    });
+    Route::get('/get-users-by-section', [ProjectsController::class, 'getUsersBySection']);
 // End
 
 // All Finance Manager Route
@@ -75,11 +85,12 @@ Route::middleware('auth')->group(function () {
 // End
 
 // All Finance Manager Route
-    Route::get('/finance/view', [FinanceController::class, 'FinanceView'])->name('finance.view');
-    Route::get('/finance/eye/{id}', [FinanceController::class, 'FinanceEye'])->name('finance.eye');
-    Route::get('/finance/back', [FinanceController::class, 'FinanceBack'])->name('finance.back');
-    Route::post('/finance/attachment/{id}', [FinanceController::class, 'FinanceAttachment'])->name('finance.attachment');
-
+    Route::prefix('finance')->group(function() {
+        Route::get('/view', [FinanceController::class, 'FinanceView'])->name('finance.view');
+        Route::get('/eye/{id}', [FinanceController::class, 'FinanceEye'])->name('finance.eye');
+        Route::get('/back', [FinanceController::class, 'FinanceBack'])->name('finance.back');
+        Route::post('/attachment/{id}', [FinanceController::class, 'FinanceAttachment'])->name('finance.attachment');
+    });
 // End
 
 // All Users Route
@@ -98,21 +109,12 @@ Route::middleware('auth')->group(function () {
 // End
 
 // All Project Route
-    Route::get('/project/view', [ProjectsController::class, 'ProjectView'])->name('project.view');
-    Route::get('/add/project', [ProjectsController::class, 'AddProject'])->name('add.project');
-    Route::get('/get-users-by-section', [ProjectsController::class, 'getUsersBySection']);
-    Route::post('/project/store', [ProjectsController::class, 'ProjectStore'])->name('project.store');
-    Route::get('/project/edit/{id}', [ProjectsController::class, 'ProjectEdit'])->name('project.edit');
-    Route::post('/project/update/{id}', [ProjectsController::class, 'ProjectUpdate'])->name('project.update');
     Route::get('/project/approved/view', [ProjectsController::class, 'ProjectApprovedView'])->name('project.approved');
     Route::get('/project/sure/{id}', [ProjectsController::class, 'ProjectSure'])->name('project.sure');
-    Route::get('/project/eye/{id}', [ProjectsController::class, 'ProjectEye'])->name('project.eye');
     Route::post('/project/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
     Route::get('/project/back', [ProjectsController::class, 'ProjectBack'])->name('project.back');
     Route::get('/project/manager/eye/{id}', [ProjectsController::class, 'ProjectManagerEye'])->name('project.manager.eye');
-    Route::get('/back', [ProjectsController::class, 'Back'])->name('back');
     Route::post('/project/update/manager/{id}', [ProjectsController::class, 'ProjectUpdateManager'])->name('project.update.manager');
-
 // End
 });
 

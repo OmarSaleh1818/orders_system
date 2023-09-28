@@ -28,7 +28,7 @@ class ProjectsController extends Controller
     }
     public function ProjectView() {
 
-        $projects = projects::all();
+        $projects = projects::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
         return view('project.project_view', compact('projects'));
     }
 
@@ -122,7 +122,7 @@ class ProjectsController extends Controller
         }
 
         $request->session()->flash('status', 'تم إضافة المشروع بنجاح');
-        return redirect('/project/view');
+        return redirect('/manager/project/view');
 
     }
 
@@ -218,13 +218,12 @@ class ProjectsController extends Controller
             ->update(['status_id' => 1]);
 
         $request->session()->flash('status', 'تم تعديل المشروع بنجاح');
-        return redirect('/project/view');
+        return redirect('/manager/project/view');
     }
 
     public function ProjectApprovedView() {
 
-        $user_id = Auth::user()->id;
-        $projects = projects::all();
+        $projects = projects::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
         return view('project.project_approved' , compact('projects'));
     }
 
@@ -279,7 +278,7 @@ class ProjectsController extends Controller
     }
 
     public function Back() {
-        return redirect('/project/view');
+        return redirect('/manager/project/view');
     }
 
     public function ProjectManagerEye($id) {

@@ -73,6 +73,28 @@
                                 <option value="غير مفعل">غير مفعل</option>
                             </select>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <h5>اختيار القسم <span class="text-danger">*</span></h5>
+                                <div class="controls">
+                                    <select name="section_name[]" multiple="multiple" class="form-control">
+                                        <option value="" selected="" disabled="">اختيار القسم</option>
+                                        @foreach($sections as $item)
+                                            <option value="{{ $item->section_name }}" {{ $item->user_id == $user->id  ? 'selected' : ''}}>{{ $item->section_name }}</option>
+                                        @endforeach
+                                        @php
+                                            $section = App\Models\Sections::all();
+                                        @endphp
+                                        @foreach($section as $item)
+                                            <option value="{{ $item->section_name }}">{{ $item->section_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('section_name')
+                                    <span class="text-danger"> {{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <br>
                     <div class="row">

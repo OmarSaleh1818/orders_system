@@ -40,7 +40,7 @@ class ApplicantManagerController extends Controller
             ->where('id', $id)
             ->update(['status_id' => 3]);
         Session()->flash('status', 'تم اعتماد الطلب بنجاح');
-        return redirect('/applicant/manager/view');
+        return redirect('/manager/applicant/view');
     }
 
     public function ApplicantManagerReject(Request $request, $id) {
@@ -75,11 +75,11 @@ class ApplicantManagerController extends Controller
             ->where('item_name', $request->item_name)
             ->update(['remaining_value' => $request->value]);
         Session()->flash('status', 'لم يتم اعتماد الطلب بنجاح');
-        return redirect('/applicant/manager/view');
+        return redirect('/manager/applicant/view');
     }
 
     public function ApplicantManagerBack() {
-        return redirect('/applicant/manager/view');
+        return redirect('/manager/applicant/view');
     }
 
 

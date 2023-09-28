@@ -16,7 +16,7 @@
         <div class="alert alert-info alert-dismissible fade show" role="alert">
             <strong>{{ Session()->get('status') }}</strong>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+
             </button>
         </div>
     @endif
@@ -33,7 +33,6 @@
                         <tr>
                             <th>#</th>
                             <th>التاريخ</th>
-                            <th>البند</th>
                             <th>القسم</th>
                             <th>المبلغ</th>
                             <th>مستوى الأولوية</th>
@@ -46,7 +45,6 @@
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->date }}</td>
-                                    <td>{{ $item->item_name }}</td>
                                     <td>{{ $item->section_name }}</td>
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->priority_level }}</td>
@@ -59,7 +57,6 @@
                                 <tr>
                                     <td>{{ $key+1 }}</td>
                                     <td>{{ $item->date }}</td>
-                                    <td>{{ $item->item_name }}</td>
                                     <td>{{ $item->section_name }}</td>
                                     <td>{{ $item->price }}</td>
                                     <td>{{ $item->priority_level }}</td>

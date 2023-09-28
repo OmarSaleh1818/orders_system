@@ -172,7 +172,7 @@
     <div class="d-flex justify-content-center" style="gap: 1rem;">
         @if($applicant->status_id == 4)
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#m_modal_1">
-                تم الصرف !
+                تم الصرف ؟
             </button>
             <a href="{{ route('finance.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 5)
