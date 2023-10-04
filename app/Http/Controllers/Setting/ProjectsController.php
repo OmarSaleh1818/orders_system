@@ -7,6 +7,7 @@ use App\Models\MultiProject;
 use App\Models\MultiStep;
 use App\Models\project_users;
 use App\Models\ProjectManager;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MultiSections;
@@ -14,6 +15,7 @@ use App\Models\projects;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
 
 class ProjectsController extends Controller
 {
@@ -23,7 +25,7 @@ class ProjectsController extends Controller
         $this->middleware('permission:المشاريع', ['only' => ['ProjectView', 'ProjectEye']]);
         $this->middleware('permission:المشاريع', ['only' => ['AddProject','ProjectStore', 'ProjectEdit', 'ProjectUpdate']]);
         $this->middleware('permission:معتمد المشروع', ['only' => ['ProjectApprovedView','ProjectSure']]);
-        $this->middleware('permission:قائمة المستخدمين', ['only' => ['ProjectReject', 'ProjectManagerEye']]);
+        $this->middleware('permission:معتمد المشروع', ['only' => ['ProjectReject', 'ProjectManagerEye']]);
 
     }
     public function ProjectView() {
@@ -71,7 +73,6 @@ class ProjectsController extends Controller
             'section_name.required' => 'اسم القسم مطلوب',
             'user_name.required' => 'اختيار الموظفين مطلوب'
         ]);
-
         $user_id = Auth::user()->id;
 
         $project_id = projects::insertGetId([
@@ -89,6 +90,10 @@ class ProjectsController extends Controller
         $item_value = $request->item_value;
         $due_date = $request->due_date;
         $user_name = $request->input('user_name');
+        $numberStepItems = $request->number_step;
+        $stepId = 0;
+        $itemOfEachStep = 0; // the value of index I should loop until each step
+        $startIndex = 0; // the value of index I should loop until each step
         foreach ($step_name as $step) {
             $p_name = $step;
             $step_id = MultiStep::insertGetId([
@@ -96,11 +101,13 @@ class ProjectsController extends Controller
                 'step_name' => $p_name,
                 'created_at' => Carbon::now(),
             ]);
-
-            foreach ($item_name as $index => $item) {
-                $s_name = $item;
-                $s_value = $item_value[$index];
-                $s_date = $due_date[$index];
+            $numberOfStepItem = $numberStepItems[$stepId];
+            $stepId++;
+            $itemOfEachStep = $itemOfEachStep+$numberOfStepItem;
+            for($i = $startIndex ; $i < $itemOfEachStep; $i++ ){
+                $s_name = $item_name[$i];
+                $s_value = $item_value[$i];
+                $s_date = $due_date[$i];
 
                 MultiProject::insert([
                     'project_id' => $project_id,
@@ -112,6 +119,22 @@ class ProjectsController extends Controller
                     'created_at' => Carbon::now(),
                 ]);
             }
+            $startIndex=+ $numberOfStepItem;
+/*                foreach ($item_name as $index => $item) {
+                    $s_name = $item;
+                    $s_value = $item_value[$index];
+                    $s_date = $due_date[$index];
+
+                    MultiProject::insert([
+                        'project_id' => $project_id,
+                        'step_id' => $step_id,
+                        'item_name' => $s_name,
+                        'item_value' => $s_value,
+                        'remaining_value' => $s_value,
+                        'due_date' => $s_date,
+                        'created_at' => Carbon::now(),
+                    ]);
+                }*/
         }
         foreach ($user_name as $user) {
             project_users::insert([
@@ -296,6 +319,14 @@ class ProjectsController extends Controller
         projects::findOrFail($id)->update([
            'user_id' => $request->user_id
         ]);
+        $user = User::findOrFail($request->user_id);
+
+        $managerRole = Role::where('name', 'مدير المشروع')->first();
+
+        if (!$user->roles()->where('name', 'مدير المشروع')->exists()) {
+            // Add the role "مدير المشروع" to the user's roles
+            $user->roles()->attach($managerRole);
+        }
 
         $request->session()->flash('status', 'تم تغيير مدير المشروع بنجاح');
         return redirect()->back();

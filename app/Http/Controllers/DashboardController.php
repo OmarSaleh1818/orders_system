@@ -11,8 +11,9 @@ class DashboardController extends Controller
     public function Dashboard() {
 
         $orders = Applicant::all()->count();
-        $reject = Applicant::where('status_id', 2)->count();
-        $wait = Applicant::where('status_id', 1)->orWhere('status_id', 3)->orWhere('status_id', 4)->count();
+        $reject = Applicant::where('status_id', 2)->orWhere('status_id', 12)->count();
+        $wait = Applicant::where('status_id', 1)->orWhere('status_id', 3)->orWhere('status_id', 4)
+            ->orWhere('status_id', 8)->orWhere('status_id', 9)->orWhere('status_id', 10)->orWhere('status_id', 11)->count();
         $done = Applicant::where('status_id', 5)->count();
 
         $chartjs = app()->chartjs
@@ -40,8 +41,8 @@ class DashboardController extends Controller
             ->labels(['المشاريع المعتمدة', ' المشاريع الغير معتمدة'])
             ->datasets([
                 [
-                    'backgroundColor' => ['#FF6384', '#36A2EB'],
-                    'hoverBackgroundColor' => ['#FF6384', '#36A2EB'],
+                    'backgroundColor' => ['#DDD', '#36A2EB'],
+                    'hoverBackgroundColor' => ['#DDD', '#36A2EB'],
                     'data' => [69, 59]
                 ]
             ])

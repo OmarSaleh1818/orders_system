@@ -1,6 +1,6 @@
 @extends('main_master')
 @section('title')
-    تعديل المشروع
+    عرض المشروع
 @endsection
 @section('page-header')
     <div class="breadcrumb-header justify-content-between">
@@ -70,7 +70,6 @@
                     </div>
                 </div>
             @endif
-
         @endforeach
         <hr>
     @endforeach
@@ -78,7 +77,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label>المجموع</label><span style="color: red;">  *</span>
-                <input type="text" class="form-control" required name="total" id="total" value="{{ $project->total }}" readonly>
+                <input type="text" class="form-control" required name="total"  value="{{ $project->total }}" readonly>
                 @error('total')
                 <span class="text-danger"> {{ $message }}</span>
                 @enderror

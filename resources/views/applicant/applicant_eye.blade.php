@@ -99,8 +99,8 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label> مستوى الاولوية </label><span class="text-danger">*</span>
-                    <input type="text" class="form-control" required name="priority_level" readonly value="{{ $applicant->priority_level }}" placeholder="مستوى الاولوية...">
+                    <label> مستوى الأولوية </label><span class="text-danger">*</span>
+                    <input type="text" class="form-control" required name="priority_level" readonly value="{{ $applicant->priority_level }}" placeholder="مستوى الأولوية...">
                         @error('priority_level')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror

@@ -297,7 +297,6 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>الاستفسار</label><span style="color: red;">  *</span>
                             <textarea id="description" name="inquiry"  class="form-control" placeholder="الاستفسار..."></textarea>
                         </div>
                     </div>
@@ -322,7 +321,6 @@
                     @csrf
                     <div class="modal-body">
                         <div class="form-group">
-                            <label> التاريخ المقترح</label><span style="color: red;">  *</span>
                             <input type="date" class="form-control" name="payment_date" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
                         </div>
                     </div>
@@ -350,7 +348,6 @@
                     <input type="hidden" name="item_name" value="{{ $applicant->item_name }}">
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>السبب</label><span style="color: red;">  *</span>
                             <textarea id="description" name="finance_reason" required class="form-control" placeholder="السبب..."></textarea>
                         </div>
                     </div>

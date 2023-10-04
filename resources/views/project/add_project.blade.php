@@ -37,56 +37,52 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>اسم المرحلة</label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" required name="step_name[]" placeholder="اسم المرحلة...">
-                    @error('step_name')
-                    <span class="text-danger"> {{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <h4>
-            <a href="javascript:void(0)" class="add-more-step float-right btn btn-primary">أضف مرحلة </a>
-        </h4>
-        <div class="main-form mt-3">
+        <div class="main-form">
+            <hr>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>بند الصرف</label><span style="color: red;">  *</span>
-                        <input type="text" class="form-control" required name="item_name[]" placeholder="بند الصرف...">
-                        @error('item_name')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
+                        <label>اسم المرحلة</label><span style="color: red;">  *</span>
+                        <input type="hidden" value="1" id="step1" name="number_step[]">
+                        <input type="text" class="form-control" required name="step_name[]" placeholder="اسم المرحلة...">
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label>قيمة البند</label><span class="text-danger">*</span>
-                        <input type="text" class="form-control item-value" name="item_value[]" placeholder=" قيمة البند...">
-                        @error('item_value')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
+            </div>
+            <h4>
+                <a href="javascript:void(0)" class="add-item float-right btn btn-primary" id="stepitemsclick,1" onclick="addItem(1)">أضف بند</a>
+            </h4>
+            <div class="items-container mt-5" id="stepitems1">
+                <div class="row" >
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>بند الصرف</label><span style="color: red;"> *</span>
+                            <input type="text" class="form-control" required name="item_name[]" placeholder="بند الصرف...">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label> تاريخ الاستحقاق</label>
-                        <input type="date" class="form-control" name="due_date[]" placeholder=" تاريخ الاستحقاق...">
-                        @error('due_date')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>قيمة البند</label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control item-value" name="item_value[]" placeholder="قيمة البند...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>تاريخ الاستحقاق</label>
+                            <input type="date" class="form-control" name="due_date[]"
+                                   min="{{ Carbon\Carbon::now()->format('Y-m-d') }}" placeholder="تاريخ الاستحقاق...">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <h4>
-            <a href="javascript:void(0)" class="add-more-form float-right btn btn-primary">أضف بند </a>
+            <a href="javascript:void(0)" class="add-more-step float-right btn btn-primary">أضف مرحلة</a>
         </h4>
         <br>
-        <div class="paste-new-forms"></div>
+        <div class="paste-new-forms">
+
+        </div>
+
         <br>
         <hr>
         <div class="row">
@@ -101,7 +97,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>اختيار القسم </label><span class="text-danger">*</span>
+                    <label>اختيار القسم </label><span class="text-danger"> *</span>
                     <div class="controls">
                         <select name="section_name" class="form-control">
                             <option value="" selected="" disabled="">اختيار القسم </option>
@@ -120,7 +116,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <h5>اختيار الموظفين <span class="text-danger">*</span></h5>
+                    <h5>اختيار الموظفين <span class="text-danger"> *</span></h5>
                     <div class="controls">
                         <select name="user_name[]" multiple="multiple" class="form-control">
                             <option value="" selected="" disabled="">اختيار الموظفين</option>
@@ -173,106 +169,69 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
-            $(document).on('click', '.remove-btn', function () {
-                $(this).closest('.main-form').remove();
-            });
-
-            $(document).on('click', '.add-more-form', function () {
-                $('.paste-new-forms').append('<div class="main-form mt-3">\
-                    <div class="row">\
-                        <div class="col-md-4">\
-                            <div class="form-group">\
-                                <label>بند الصرف</label><span style="color: red;">  *</span>\
-                                <input type="text" class="form-control" required name="item_name[]" placeholder="بند الصرف...">\
-                                @error('item_name')\
-                                    <span class="text-danger"> {{ $message }}</span>\
-                                @enderror\
-                            </div>\
-                        </div>\
-                         <div class="col-md-3">\
-                             <div class="form-group">\
-                                <label>قيمة البند</label><span class="text-danger">*</span>\
-                                <input type="text" class="form-control item-value" name="item_value[]" placeholder=" قيمة البند...">\
-                                @error('item_value')\
-                                    <span class="text-danger"> {{ $message }}</span>\
-                                @enderror\
-                            </div>\
-                        </div>\
-                        <div class="col-md-3">\
-                            <div class="form-group">\
-                                <label> تاريخ الاستحقاق</label><span class="text-danger">*</span>\
-                                <input type="date" class="form-control" name="due_date[]" placeholder=" تاريخ الاستحقاق...">\
-                                @error('due_date')\
-                                    <span class="text-danger"> {{ $message }}</span>\
-                                @enderror\
-                            </div>\
-                        </div>\
-                        <div class="col-md-2">\
-                            <div class="form-group">\
-                                <br>\
-                                <button type="button" class="remove-btn btn btn-danger">ازالة</button>\
-                            </div>\
-                        </div>\
-                    </div>\
-                </div>');
-            });
-
+            let a = 1;
             $(document).on('click', '.add-more-step', function () {
-                $('.paste-new-forms').append('<div class="main-form mt-3">\
-                    <div class="row border-top red">\
-                        <div class="col-md-4">\
-                             <div class="form-group">\
-                                <label>اسم المرحلة</label><span style="color: red;">  *</span>\
-                                <input type="text" class="form-control" required name="step_name[]" placeholder="اسم المرحلة...">\
-                                @error('step_name')\
-                                    <span class="text-danger"> {{ $message }}</span>\
-                                @enderror\
-                            </div>\
-                        </div>\
-                    </div>\
-                    <div class="row">\
-                        <div class="col-md-4">\
-                            <div class="form-group">\
-                                <label>بند الصرف</label><span style="color: red;">  *</span>\
-                                <input type="text" class="form-control" required name="item_name[]" placeholder="بند الصرف...">\
-                                @error('item_name')\
-                                    <span class="text-danger"> {{ $message }}</span>\
-                                @enderror\
-                            </div>\
-                        </div>\
-                         <div class="col-md-3">\
-                             <div class="form-group">\
-                                <label>قيمة البند</label><span class="text-danger">*</span>\
-                                <input type="text" class="form-control item-value" name="item_value[]" placeholder=" قيمة البند...">\
-                                @error('item_value')\
-                                    <span class="text-danger"> {{ $message }}</span>\
-                                @enderror\
-                            </div>\
-                        </div>\
-                        <div class="col-md-3">\
-                            <div class="form-group">\
-                                <label> تاريخ الاستحقاق</label><span class="text-danger">*</span>\
-                                <input type="date" class="form-control" name="due_date[]" placeholder=" تاريخ الاستحقاق...">\
-                                @error('due_date')\
-                                    <span class="text-danger"> {{ $message }}</span>\
-                                @enderror\
-                            </div>\
-                        </div>\
-                        <div class="col-md-2">\
-                            <div class="form-group">\
-                                <br>\
-                                <button type="button" class="remove-btn btn btn-danger">ازالة</button>\
-                            </div>\
-                        </div>\
-                    </div>\
-                    <h4>\
-                        <a href="javascript:void(0)" class="add-more-form float-right btn btn-primary">أضف بند </a>\
-                    </h4>\
-                    <br>\
-                </div>');
+                let stepCount = ++a;
+               let addStep = `
+                <div class="items-container mt-5" id="stepitems${stepCount}">
+                        <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>اسم المرحلة</label><span style="color: red;">  *</span>
+                                <input type="hidden" value="0" id="step${stepCount}" name="number_step[]">
+                                <input type="text" class="form-control" required name="step_name[]" placeholder="اسم المرحلة...">
+                            </div>
+                        </div>
+                    </div>
+                    <h4>
+                        <a href="javascript:void(0)" class="add-item float-right btn btn-primary" id="stepitemsclick,${stepCount}" onclick="addItem(${stepCount})">أضف بند</a>
+                    </h4>
+                </div>
+               `
+                $('.paste-new-forms').append(addStep);
+
             });
 
         });
+
+        function addItem(id){
+
+            let rowToAdd = `  <div class="row" >
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>بند الصرف</label><span style="color: red;"> *</span>
+                            <input type="text" class="form-control" required name="item_name[]" placeholder="بند الصرف...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>قيمة البند</label><span class="text-danger"> *</span>
+                            <input type="text" class="form-control item-value" name="item_value[]" placeholder="قيمة البند...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>تاريخ الاستحقاق</label>
+                            <input type="date" class="form-control" name="due_date[]"
+                                   min="{{ Carbon\Carbon::now()->format('Y-m-d') }}" placeholder="تاريخ الاستحقاق...">
+                        </div>
+                    </div>
+                                    <div class="col-md-2">
+                    <div class="form-group">
+                        <br>
+                        <button type="button" class="remove-btn btn btn-danger" onclick="removeItem(event)" id="btnremove${id}">إزالة</button>
+                    </div>
+                    <hr>
+                </div>
+                </div>`
+            $(`#stepitems${id}`).append(rowToAdd);
+            let itemNumber = +$(`#step${id}`).val();
+            $(`#step${id}`).val(itemNumber+= 1);
+        }
+
+        function removeItem(event){
+            event.target.parentNode.parentNode.parentNode.remove();
+        }
     </script>
     <script>
 

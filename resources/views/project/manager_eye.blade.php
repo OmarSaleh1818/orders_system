@@ -114,9 +114,6 @@
         </div>
     </div>
     <div class="row">
-        @php
-            $project_user = App\Models\projects::groupBy('user_id')->pluck('user_id');
-        @endphp
         <div class="col-md-6">
             <form method="post" action="{{ route('project.update.manager', $project->id) }}">
                 @csrf
@@ -124,12 +121,12 @@
                     <label for="project_name">مدير المشروع </label><span style="color: red;"> *</span>
                     <select name="user_id" class="form-control">
                         <option value="" selected="" disabled="">مدير المشروع</option>
-                        @foreach ($project_user as $user_id)
-                            @php
-                                $user = App\Models\User::find($user_id);
-                            @endphp
-                            <option value="{{ $user->id }}" {{ $user->id == $project->user_id ? 'selected' : ''}}>
-                                {{ $user->name }}
+                        @php
+                            $multisection = App\Models\MultiSections::where('section_name', $project->section_name)->get();
+                        @endphp
+                        @foreach ($multisection as $section)
+                            <option value="{{ $section->user_id }}" {{ $section->user_id == $project->user_id ? 'selected' : ''}}>
+                                {{ $section['sections']['name'] }}
                             </option>
                         @endforeach
                     </select>
