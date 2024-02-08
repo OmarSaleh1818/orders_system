@@ -35,10 +35,21 @@ class ProjectsController extends Controller
     }
 
     public function AddProject() {
+        $lastPriceNumber = projects::orderBy('id', 'desc')->value('price_number');
+
+        if ($lastPriceNumber === null) {
+            // If no previous entry exists, start with "0001"
+            $newPriceNumber = 1;
+        } else {
+            // Increment the last price number by 1
+            $newPriceNumber = $lastPriceNumber + 1;
+        }
+        // Format the new price number with leading zeros
+        $formattedPriceNumber = str_pad($newPriceNumber, 4, '0', STR_PAD_LEFT);
 
         $user_id = Auth::user()->id;
         $sections = MultiSections::where('user_id', $user_id)->get();
-        return view('project.add_project', compact('sections'));
+        return view('project.add_project', compact('sections', 'formattedPriceNumber'));
     }
 
     public function getUsersBySection(Request $request)
@@ -79,6 +90,14 @@ class ProjectsController extends Controller
             'user_id' =>  $user_id,
             'date' => $request->date,
             'project_name' => $request->project_name,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'project_days' => $request->project_days,
+            'price_number' => $request->price_number,
+            'customer_type' => $request->customer_type,
+            'customer_name' => $request->customer_name,
+            'benefit' => $request->benefit,
+            'project_code' => $request->project_code,
             'total' => $request->total,
             'remaining_value' => $request->total,
             'section_name' => $request->section_name,
@@ -170,17 +189,18 @@ class ProjectsController extends Controller
             'project_name' => 'required',
             'item_name' => 'required',
             'item_value' => 'required',
-            'total' => [
-            'required',
-            Rule::unique('projects')->ignore($id), // Ignore the current project when checking uniqueness
-            function ($attribute, $value, $fail) use ($id) {
-                $existingTotal = projects::findOrFail($id)->total;
-
-                if ($value > $existingTotal) {
-                    $fail('المجموع يجب ان يكون نفسه او اقل .');
-                }
-            },
-        ],
+            'total' => 'required',
+// [
+//            'required',
+//            Rule::unique('projects')->ignore($id), // Ignore the current project when checking uniqueness
+//            function ($attribute, $value, $fail) use ($id) {
+//                $existingTotal = projects::findOrFail($id)->total;
+//
+//                if ($value > $existingTotal) {
+//                    $fail('المجموع يجب ان يكون نفسه او اقل .');
+//                }
+//            },
+//        ],
             'section_name' => 'required',
         ],[
             'date.required' => 'التاريخ مطلوب',
@@ -194,6 +214,14 @@ class ProjectsController extends Controller
         projects::findOrFail($id)->update([
             'date' => $request->date,
             'project_name' => $request->project_name,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'project_days' => $request->project_days,
+            'price_number' => $request->price_number,
+            'customer_type' => $request->customer_type,
+            'customer_name' => $request->customer_name,
+            'benefit' => $request->benefit,
+            'project_code' => $request->project_code,
             'total' => $request->total,
             'remaining_value' => $request->total,
             'section_name' => $request->section_name,

@@ -144,10 +144,6 @@ class ApplicantControllar extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        DB::table('projects')
-            ->where('id', $request->project_name)
-            ->decrement('remaining_value', $request->price);
-
         DB::table('multi_projects')
             ->where('item_name', $request->item_name)
             ->decrement('remaining_value', $request->price);

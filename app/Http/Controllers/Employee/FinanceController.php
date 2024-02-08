@@ -56,10 +56,15 @@ class FinanceController extends Controller
                 ->where('id', $id)
                 ->update(['status_id' => 5, 'value' => $value]);
 
+            DB::table('projects')
+                ->where('id', $request->project_id)
+                ->decrement('remaining_value', $request->price);
+
+
             Session()->flash('status', 'تم تنفيذ الطلب بنجاح');
             return redirect('/finance/view');
         } else {
-            Session()->flash('status', 'لم يتم نقل الملف بنجاح');
+            Session()->flash('status', 'للأسف لم يتم نقل الملف');
             return redirect('/finance/view');
         }
 

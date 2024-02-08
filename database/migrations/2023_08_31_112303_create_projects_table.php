@@ -19,6 +19,14 @@ return new class extends Migration
             $table->decimal('total');
             $table->decimal('remaining_value');
             $table->string('section_name');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('project_days');
+            $table->integer('price_number');
+            $table->string('customer_type');
+            $table->string('customer_name');
+            $table->string('benefit');
+            $table->string('project_code');
             $table->integer('status_id')->default(1);
             $table->timestamps();
         });

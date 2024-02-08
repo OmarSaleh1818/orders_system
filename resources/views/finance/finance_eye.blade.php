@@ -192,6 +192,7 @@
                 </div>
                 <form method="post" action="{{ route('finance.attachment', $applicant->id) }}" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="project_id" value="{{ $applicant->project_name }}">
                     <input type="hidden" name="price" value="{{ $applicant->price }}">
                     <input type="hidden" name="value" value="{{ $applicant->value }}">
                     <div class="modal-body">

@@ -28,6 +28,13 @@
                 </div>
             @endif
         </div>
+        <hr>
+        <div class="row">
+            <div class="col text-center">
+                <h2>البيانات الرئيسية</h2>
+            </div>
+        </div>
+        <br>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -48,6 +55,144 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>تاريخ بداية المشروع</label><span style="color: red;"> *</span>
+                    <input type="date" class="form-control" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                           id="startDateInput" required name="start_date" value="{{ $project->start_date }}">
+                    @error('startDate')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>تاريخ نهاية المشروع</label><span style="color: red;"> *</span>
+                    <input type="date" class="form-control" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                           required name="end_date" id="endDateInput" value="{{ $project->end_date }}" onchange="validateEndDate()">
+                    @error('endDate')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>مدة المشروع بالأيام</label><span style="color: red;"> *</span>
+                    <input type="text" class="form-control" required name="project_days" value="{{ $project->project_days }}" id="daysInput" placeholder="مدة المشروع بالأيام ..."
+                           readonly>
+                    @error('days')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>رقم التسعيرة</label><span style="color: red;"> *</span>
+                    <input type="text" class="form-control" required name="price_number" id="priceNumberInput"
+                           placeholder="رقم التسعيرة ..." value="{{ $project->price_number }}" readonly>
+                    @error('price_number')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>نوع العميل</label><span style="color: red;">*</span>
+                    <div class="controls">
+                        <select name="customer_type" class="form-control" >
+                            <option value="" selected disabled>نوع العميل</option>
+                            <option value="مانح" {{ $project->customer_type === 'مانح' ? 'selected' : '' }}>مانح</option>
+                            <option value="حكومي" {{ $project->customer_type === 'حكومي' ? 'selected' : '' }}>حكومي</option>
+                            <option value="أهلي" {{ $project->customer_type === 'أهلي' ? 'selected' : '' }}>أهلي</option>
+                            <option value="أفراد" {{ $project->customer_type === 'أفراد' ? 'selected' : '' }}>أفراد</option>
+                        </select>
+                        @error('customer_type')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>اسم العميل</label>
+                    <input type="text" class="form-control" name="customer_name" value="{{ $project->customer_name }}" id="customerNameInput"
+                           placeholder="اسم العميل">
+                    @error('customer_name')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>الجهة المستفيدة</label>
+                    <input type="text" class="form-control" name="benefit" id="benefitInput"
+                           value="{{ $project->benefit }}" placeholder="الجهة المستفيدة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>اختيار القسم </label><span class="text-danger">*</span>
+                    <div class="controls">
+                        <select name="section_name" class="form-control" id="section_name">
+                            <option value="" selected="" disabled="">اختيار القسم </option>
+                            @foreach($sections as $item)
+                                <option value="{{ $item->section_name }}" {{ $item->section_name == $project->section_name
+                                         ? 'selected' : ''}}>{{ $item->section_name }}</option>
+                            @endforeach
+
+                        </select>
+                        @error('section_name')
+                        <span class="text-danger"> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label> كود المشروع</label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" required name="project_code" value="{{ $project->project_code }}"
+                           placeholder=" كود المشروع...">
+                    @error('project_code')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>اختيار الموظفين </label><span class="text-danger">*</span>
+                    <div class="controls">
+                        <select name="user_name[]" multiple="multiple" class="form-control">
+                            <option value="" selected="" disabled="">اختيار الموظفين </option>
+                            @foreach($project_users as $users)
+                                <option value="{{ $users->user_name }}" selected>{{ $users->user_name }}</option>
+                            @endforeach
+                            @php
+                                $users = App\Models\MultiSections::where('section_name', $project->section_name)->get();
+                            @endphp
+                            @foreach($users as $item)
+                                <option value="{{ $item['sections']['name'] }}">{{ $item['sections']['name'] }}</option>
+                            @endforeach
+                        </select>
+                        @error('section_name')
+                        <span class="text-danger"> {{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <hr>
         @foreach($steps as $key => $step)
             <input type="hidden" name="step[]" value="{{$step->id }}">
@@ -100,49 +245,9 @@
                     @enderror
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>اختيار القسم </label><span class="text-danger">*</span>
-                    <div class="controls">
-                        <select name="section_name" class="form-control" id="section_name">
-                            <option value="" selected="" disabled="">اختيار القسم </option>
-                            @foreach($sections as $item)
-                                <option value="{{ $item->section_name }}" {{ $item->section_name == $project->section_name
-                                         ? 'selected' : ''}}>{{ $item->section_name }}</option>
-                            @endforeach
 
-                        </select>
-                        @error('section_name')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>اختيار الموظفين </label><span class="text-danger">*</span>
-                    <div class="controls">
-                        <select name="user_name[]" multiple="multiple" class="form-control">
-                            <option value="" selected="" disabled="">اختيار الموظفين </option>
-                            @foreach($project_users as $users)
-                                <option value="{{ $users->user_name }}" selected>{{ $users->user_name }}</option>
-                            @endforeach
-                            @php
-                                $users = App\Models\MultiSections::where('section_name', $project->section_name)->get();
-                            @endphp
-                            @foreach($users as $item)
-                                <option value="{{ $item['sections']['name'] }}">{{ $item['sections']['name'] }}</option>
-                            @endforeach
-                        </select>
-                        @error('section_name')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <br>
 
@@ -153,6 +258,7 @@
         <br>
     </form>
 
+    <script src="{{ asset('assets/js/add_project.js') }}"></script>
     <script>
         // Calculate total when an item_value input changes
         $(document).on('input', '.item-value', function () {

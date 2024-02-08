@@ -115,7 +115,8 @@
 
                 <x-responsive-nav-link :href="route('logout')"
                                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                                        this.closest('form').submit();"
+                                        class="btn btn-info">
                     {{ __('تسجيل الخروج') }}
                 </x-responsive-nav-link>
             </form>

@@ -14,20 +14,26 @@
 @section('content')
 
     <div class="row">
-        @if(Session()->has('status'))
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <strong>{{ Session()->get('status') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
+        <div class="col-md-12">
+            @if(Session()->has('status'))
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>{{ Session()->get('status') }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+        </div>
+    </div>
+    <div class="row">
         <div class="col-12">
             <div class="card">
                 <div class="card-header pb-lg-3">
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ route('add.project') }}" class="btn btn-primary">اضافة مشروع</a>
-                    </div>
+                    @can('إضافة مشروع')
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('add.project') }}" class="btn btn-primary">إضافة مشروع</a>
+                        </div>
+                    @endcan
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">

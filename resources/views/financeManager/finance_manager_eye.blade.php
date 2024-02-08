@@ -237,8 +237,8 @@
                 غير معتمد
             </button>
             <button class="btn btn-secondary" disabled> تم إعادة الإرسال</button>
-            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_4" data-inquiry-id="{{ $applicant->id }}">
-                استفسار     <i class="fa fa-eye-slash"></i>
+            <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_1">
+                استفسار
             </button>
             <a href="{{ route('finance.manager.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($applicant->status_id == 12)
