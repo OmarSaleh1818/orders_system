@@ -109,7 +109,7 @@
                 <div class="form-group">
                     <label>اسم العميل</label>
                     <input type="text" class="form-control" name="customer_name" id="customerNameInput"
-                           placeholder="اسم العميل">
+                           placeholder="اسم العميل...">
                     @error('customer_name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -241,7 +241,199 @@
                 <h2> التكاليف الغير مباشرة</h2>
             </div>
         </div>
-
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> المصروفات الإدارية </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="management" id="management" required
+                           placeholder=" المصروفات الإدارية...">
+                    @error('management')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> التكاليف الغير مباشرة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="indirect_costs" id="indirect_costs" required readonly
+                           placeholder="  التكاليف الغير مباشرة...">
+                    @error('indirect_costs')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> إجمالي التكاليف المباشرة والغير مباشرة</label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="total_costs" id="total_costs" required readonly
+                           placeholder="إجمالي التكاليف المباشرة والغير مباشرة...">
+                    @error('total_costs')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  تكلفة التمويل </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" تكلفة التمويل...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> فائدة المرابحة الشهرية </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder="فائدة المرابحة الشهرية...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  الفترة بالشهر </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" الفترة بالشهر...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> إجمالي النسبة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder="إجمالي النسبة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> قيمة المرابحة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة المرابحة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> إجمالي تكاليف المشروع </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder="إجمالي تكاليف المشروع...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  نسبة الربح المستهدف  </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" نسبة الربح المستهدف...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> قيمة الربح المستهدف </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة الربح المستهدف...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  نسبة الربح الفعلية </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة المرابحة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> قيمة الربح الفعلية </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة الربح المستهدف...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  إجمالي قيمة المشروع  </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة المرابحة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> خصم خاص </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة الربح المستهدف...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> صافي قيمة المشروع قبل الضريبة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة المرابحة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> ضريبة القيمة المضافة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة الربح المستهدف...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> صافي قيمة المشروع بعد الضريبة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit" required
+                           placeholder=" قيمة المرابحة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="row">
             <div class="col-md-12">

@@ -73,6 +73,7 @@ class ProjectsController extends Controller
             'item_value' => 'required',
             'total' => 'required',
             'section_name' => 'required',
+            'customer_type'=> 'required',
             'user_name' => 'required',
         ],[
             'date.required' => 'التاريخ مطلوب',
@@ -82,6 +83,7 @@ class ProjectsController extends Controller
             'item_value.required' => 'قيمة البند  مطلوب',
             'total.required' => 'المجموع  مطلوب',
             'section_name.required' => 'اسم القسم مطلوب',
+            'customer_type.requied' => 'نوع العميل مطلوب',
             'user_name.required' => 'اختيار الموظفين مطلوب'
         ]);
         $user_id = Auth::user()->id;

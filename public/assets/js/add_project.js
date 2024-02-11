@@ -195,3 +195,34 @@ $(document).ready(function () {
         }
     });
 });
+
+
+// التكاليف الغير مباشرة
+
+// Wait for the DOM to load
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the input fields
+    var totalInput = document.getElementById('total');
+    var managementInput = document.getElementById('management');
+    var indirectCostsInput = document.getElementById('indirect_costs');
+    var totalCosts = document.getElementById('total_costs');
+    // Add an event listener to the management input field
+    managementInput.addEventListener('input', function() {
+        // Get the values from the input fields
+        var total = parseFloat(totalInput.value);
+        var managementPercentage = parseFloat(managementInput.value) / 100;
+
+        // Calculate the indirect_costs
+        var indirectCosts = total * managementPercentage;
+
+        // Check if the calculated value is a valid number
+        if (isNaN(indirectCosts)) {
+            // Display an error message or handle the error case
+            indirectCostsInput.value = 'Invalid input';
+        } else {
+            // Set the calculated value to the indirect_costs input field
+            indirectCostsInput.value = indirectCosts.toFixed(2);
+            totalCosts.value = (indirectCosts + total).toFixed(2);
+        }
+    });
+});
