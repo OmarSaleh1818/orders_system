@@ -8,6 +8,7 @@ use App\Models\MultiStep;
 use App\Models\project_users;
 use App\Models\ProjectManager;
 use App\Models\User;
+use App\Models\IndirectCosts;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\MultiSections;
@@ -75,6 +76,7 @@ class ProjectsController extends Controller
             'section_name' => 'required',
             'customer_type'=> 'required',
             'user_name' => 'required',
+            'total_project_costs' => 'required',
         ],[
             'date.required' => 'التاريخ مطلوب',
             'project_name.required' => 'اسم المشروع مطلوب',
@@ -84,7 +86,8 @@ class ProjectsController extends Controller
             'total.required' => 'المجموع  مطلوب',
             'section_name.required' => 'اسم القسم مطلوب',
             'customer_type.requied' => 'نوع العميل مطلوب',
-            'user_name.required' => 'اختيار الموظفين مطلوب'
+            'user_name.required' => 'اختيار الموظفين مطلوب',
+            'total_project_costs.required' => '  إجمالي تكلفة المشروع مطلوب'
         ]);
         $user_id = Auth::user()->id;
 
@@ -103,6 +106,30 @@ class ProjectsController extends Controller
             'total' => $request->total,
             'remaining_value' => $request->total,
             'section_name' => $request->section_name,
+            'description' => $request->description,
+            'created_at' => Carbon::now(),
+        ]);
+
+        IndirectCosts::insert([
+            'project_id' => $project_id,
+            'management' => $request->management,
+            'indirect_costs' => $request->indirect_costs,
+            'total_costs' => $request->total_costs,
+            'discount_value' => $request->discount_value,
+            'monthly_benefit' => $request->monthly_benefit,
+            'per_month' => $request->per_month,
+            'percentage_total' => $request->percentage_total,
+            'benefit_value' => $request->benefit_value,
+            'total_project_costs' => $request->total_project_costs,
+            'target_profit_percentage' => $request->target_profit_percentage,
+            'target_profit_value' => $request->target_profit_value,
+            'actual_profit_percentage' => $request->actual_profit_percentage,
+            'actual_profit_value' => $request->actual_profit_value,
+            'total_project_value' => $request->total_project_value,
+            'private_discount' => $request->private_discount,
+            'before_tax' => $request->before_tax,
+            'value_tax' => $request->value_tax,
+            'after_tax' => $request->after_tax,
             'created_at' => Carbon::now(),
         ]);
 
@@ -178,10 +205,11 @@ class ProjectsController extends Controller
         $multi_project = MultiProject::where('project_id', $id)->get();
         $project_users = project_users::where('project_id', $id)->get();
         $projectManager = ProjectManager::where('project_id', $id)->first();
+        $indirect_costs = IndirectCosts::where('project_id', $id)->first();
         $project = projects::find($id);
         $sections = MultiSections::where('user_id', $user_id)->get();
         return view('project.edit_project', compact('sections', 'project',
-            'multi_project', 'steps', 'project_users', 'projectManager'));
+            'multi_project', 'steps', 'project_users', 'projectManager', 'indirect_costs'));
     }
 
     public function ProjectUpdate(Request $request, $id) {
@@ -227,6 +255,29 @@ class ProjectsController extends Controller
             'total' => $request->total,
             'remaining_value' => $request->total,
             'section_name' => $request->section_name,
+            'description' => $request->description,
+            'created_at' => Carbon::now(),
+        ]);
+
+        IndirectCosts::where('project_id', $id)->update([
+            'management' => $request->management,
+            'indirect_costs' => $request->indirect_costs,
+            'total_costs' => $request->total_costs,
+            'discount_value' => $request->discount_value,
+            'monthly_benefit' => $request->monthly_benefit,
+            'per_month' => $request->per_month,
+            'percentage_total' => $request->percentage_total,
+            'benefit_value' => $request->benefit_value,
+            'total_project_costs' => $request->total_project_costs,
+            'target_profit_percentage' => $request->target_profit_percentage,
+            'target_profit_value' => $request->target_profit_value,
+            'actual_profit_percentage' => $request->actual_profit_percentage,
+            'actual_profit_value' => $request->actual_profit_value,
+            'total_project_value' => $request->total_project_value,
+            'private_discount' => $request->private_discount,
+            'before_tax' => $request->before_tax,
+            'value_tax' => $request->value_tax,
+            'after_tax' => $request->after_tax,
             'created_at' => Carbon::now(),
         ]);
 
@@ -296,8 +347,10 @@ class ProjectsController extends Controller
         $sections = MultiSections::where('user_id', $user_id)->get();
         $multi_project = MultiProject::where('project_id', $id)->get();
         $project_users = project_users::where('project_id', $id)->get();
+        $indirect_costs = IndirectCosts::where('project_id', $id)->first();
         $project = projects::find($id);
-        return view('project.eye_project', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
+        return view('project.eye_project', compact('sections', 'project',
+            'multi_project', 'steps', 'project_users', 'indirect_costs'));
     }
 
     public function ProjectReject(Request $request , $id) {
@@ -341,8 +394,10 @@ class ProjectsController extends Controller
         $sections = MultiSections::where('user_id', $user_id)->get();
         $multi_project = MultiProject::where('project_id', $id)->get();
         $project_users = project_users::where('project_id', $id)->get();
+        $indirect_costs = IndirectCosts::where('project_id', $id)->first();
         $project = projects::find($id);
-        return view('project.manager_eye', compact('sections', 'project', 'multi_project', 'steps', 'project_users'));
+        return view('project.manager_eye', compact('sections', 'project',
+            'multi_project', 'steps', 'project_users', 'indirect_costs'));
     }
 
     public function ProjectUpdateManager(Request $request, $id) {

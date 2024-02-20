@@ -104,7 +104,7 @@
                 <div class="form-group">
                     <label>نوع العميل</label><span style="color: red;">*</span>
                     <div class="controls">
-                        <select name="customer_type" class="form-control" >
+                        <select name="customer_type" class="form-control" id="customerTypeSelect">
                             <option value="" selected disabled>نوع العميل</option>
                             <option value="مانح" {{ $project->customer_type === 'مانح' ? 'selected' : '' }}>مانح</option>
                             <option value="حكومي" {{ $project->customer_type === 'حكومي' ? 'selected' : '' }}>حكومي</option>
@@ -120,8 +120,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>اسم العميل</label>
-                    <input type="text" class="form-control" name="customer_name" value="{{ $project->customer_name }}" id="customerNameInput"
-                           placeholder="اسم العميل">
+                    <input type="text" class="form-control" name="customer_name" id="customerNameInput"
+                           value="{{ $project->customer_name }}" placeholder="اسم العميل...">
                     @error('customer_name')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -194,6 +194,12 @@
         </div>
 
         <hr>
+        <div class="row">
+            <div class="col text-center">
+                <h2> التكاليف المباشرة</h2>
+            </div>
+        </div>
+        <br>
         @foreach($steps as $key => $step)
             <input type="hidden" name="step[]" value="{{$step->id }}">
             <div class="row">
@@ -245,9 +251,218 @@
                     @enderror
                 </div>
             </div>
-
         </div>
-
+        <hr>
+        <div class="row">
+            <div class="col text-center">
+                <h2> التكاليف الغير مباشرة</h2>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  المصروفات الإدارية (%) </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="management" id="management" required
+                           value="{{ $indirect_costs->management }}" placeholder=" المصروفات الإدارية...">
+                    @error('management')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> التكاليف الغير مباشرة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="indirect_costs" id="indirect_costs" required readonly
+                           value="{{ $indirect_costs->indirect_costs }}" placeholder="  التكاليف الغير مباشرة...">
+                    @error('indirect_costs')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> إجمالي التكاليف المباشرة والغير مباشرة</label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="total_costs" id="total_costs" required readonly
+                           value="{{ $indirect_costs->total_costs }}" placeholder="إجمالي التكاليف المباشرة والغير مباشرة...">
+                    @error('total_costs')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  تكلفة التمويل </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="cost_finance" required
+                           value="{{ $indirect_costs->discount_value }}" placeholder=" تكلفة التمويل...">
+                    @error('cost_finance')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> فائدة المرابحة الشهرية </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="monthly_benefit" required
+                           value="{{ $indirect_costs->monthly_benefit }}" placeholder="فائدة المرابحة الشهرية...">
+                    @error('monthly_benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  الفترة بالشهر </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="per_month" required
+                           value="{{ $indirect_costs->per_month }}" placeholder=" الفترة بالشهر...">
+                    @error('per_month')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> إجمالي النسبة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="percentage_total" required
+                           value="{{ $indirect_costs->percentage_total }}" placeholder="إجمالي النسبة...">
+                    @error('percentage_total')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> قيمة المرابحة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="benefit_value" required
+                           value="{{ $indirect_costs->benefit_value }}" placeholder=" قيمة المرابحة...">
+                    @error('benefit_value')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> إجمالي تكاليف المشروع </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="total_project_costs" required
+                           value="{{ $indirect_costs->total_project_costs }}" placeholder="إجمالي تكاليف المشروع...">
+                    @error('total_project_costs')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  نسبة الربح المستهدف  </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="target_profit_percentage" required
+                           value="{{ $indirect_costs->target_profit_percentage }}" placeholder=" نسبة الربح المستهدف...">
+                    @error('target_profit_percentage')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> قيمة الربح المستهدف </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="target_profit_value" required
+                           value="{{ $indirect_costs->target_profit_value }}" placeholder=" قيمة الربح المستهدف...">
+                    @error('target_profit_value')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  نسبة الربح الفعلية </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="actual_profit_percentage" required
+                           value="{{ $indirect_costs->actual_profit_percentage }}" placeholder="  نسبة الربح الفعلية...">
+                    @error('actual_profit_percentage')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> قيمة الربح الفعلية </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="actual_profit_value" required
+                           value="{{ $indirect_costs->actual_profit_value }}" placeholder=" قيمة الربح الفعلية...">
+                    @error('actual_profit_value')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  إجمالي قيمة المشروع  </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="total_project_value" required
+                           value="{{ $indirect_costs->total_project_value }}" placeholder="  إجمالي قيمة المشروع...">
+                    @error('total_project_value')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> خصم خاص </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="private_discount" required
+                           value="{{ $indirect_costs->private_discount }}" placeholder="   خصم خاص...">
+                    @error('private_discount')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> صافي قيمة المشروع قبل الضريبة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="before_tax" required
+                           value="{{ $indirect_costs->before_tax }}" placeholder="  قبل الضريبة...">
+                    @error('before_tax')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> ضريبة القيمة المضافة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="value_tax" required
+                           value="{{ $indirect_costs->value_tax }}" placeholder="   ضريبة القيمة المضافة...">
+                    @error('value_tax')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> صافي قيمة المشروع بعد الضريبة </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="after_tax" required
+                           value="{{ $indirect_costs->after_tax }}" placeholder="  بعد الضريبة...">
+                    @error('after_tax')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-group">
+                        <label for="order_name">ملاحظات</label>
+                        <textarea id="description" name="description"  class="form-control"
+                                  placeholder="ملاحظات...">{{ $project->description }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <br>
 

@@ -226,3 +226,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// تكلفة التمويل
+document.getElementById('per_month').addEventListener('input', updateValues);
+document.getElementById('monthly_benefit').addEventListener('input', updateValues);
+document.getElementById('target_profit_percentage').addEventListener('input', updateValues);
+document.getElementById('private_discount').addEventListener('input', updateValues);
+
+function updateValues() {
+    var perMonth = parseFloat(document.getElementById('per_month').value);
+    var monthlyBenefit = parseFloat(document.getElementById('monthly_benefit').value);
+    var totalCosts = parseFloat(document.getElementById('total_costs').value);
+    var targetProfitPercentage = parseFloat(document.getElementById('target_profit_percentage').value);
+    var privateDiscount = parseFloat(document.getElementById('private_discount').value);
+
+    // Check if the input is a valid number
+    if (!isNaN(perMonth) && !isNaN(monthlyBenefit) && !isNaN(totalCosts)) {
+        var percentageTotal = perMonth * (monthlyBenefit / 100);
+        var benefitValue = totalCosts * percentageTotal;
+        var totalProject = totalCosts + benefitValue;
+        var targetProfitValue = (targetProfitPercentage / 100) * totalProject;
+        var totalProjectValue = totalProject / (1 - (targetProfitPercentage / 100))
+        var discountValue = totalProjectValue * (privateDiscount / 100);
+        var beforeTax = totalProjectValue - discountValue;
+        var valueTax = beforeTax * (15 / 100);
+        var afterTax = beforeTax + valueTax;
+        var actualProfitValue = beforeTax - totalProject;
+        var actualProfitPercentage = (actualProfitValue / beforeTax) * 100;
+
+        document.getElementById('percentage_total').value = percentageTotal.toFixed(2);
+        document.getElementById('benefit_value').value = benefitValue.toFixed(2);
+        document.getElementById('total_project_costs').value = totalProject.toFixed(2);
+        document.getElementById('target_profit_value').value = targetProfitValue.toFixed(2);
+        document.getElementById('total_project_value').value = totalProjectValue.toFixed(2);
+        document.getElementById('discount_value').value = discountValue.toFixed(2);
+        document.getElementById('before_tax').value = beforeTax.toFixed(2);
+        document.getElementById('value_tax').value = valueTax.toFixed(2);
+        document.getElementById('after_tax').value = afterTax.toFixed(2);
+        document.getElementById('actual_profit_value').value = actualProfitValue.toFixed(2);
+        document.getElementById('actual_profit_percentage').value = actualProfitPercentage.toFixed(2);
+    } else {
+        // Handle invalid input, for example, set the output fields to empty
+        document.getElementById('percentage_total').value = '';
+        document.getElementById('benefit_value').value = '';
+        document.getElementById('total_project_costs').value = '';
+        document.getElementById('target_profit_value').value = '';
+        document.getElementById('total_project_value').value = '';
+        document.getElementById('discount_value').value = '';
+        document.getElementById('before_tax').value = '';
+        document.getElementById('value_tax').value = '';
+        document.getElementById('after_tax').value = '';
+        document.getElementById('actual_profit_value').value = '';
+        document.getElementById('actual_profit_percentage').value = '';
+    }
+}

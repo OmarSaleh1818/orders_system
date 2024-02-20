@@ -49,7 +49,7 @@
                     <label>تاريخ بداية المشروع</label><span style="color: red;"> *</span>
                     <input type="date" class="form-control" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                            id="startDateInput" required name="start_date">
-                    @error('startDate')
+                    @error('start_date')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
                 </div>
@@ -59,7 +59,7 @@
                     <label>تاريخ نهاية المشروع</label><span style="color: red;"> *</span>
                     <input type="date" class="form-control" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                            required name="end_date" id="endDateInput" onchange="validateEndDate()">
-                    @error('endDate')
+                    @error('end_date')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
                 </div>
@@ -71,7 +71,8 @@
                     <label>مدة المشروع بالأيام</label><span style="color: red;"> *</span>
                     <input type="text" class="form-control" required name="project_days" id="daysInput" placeholder="مدة المشروع بالأيام ..."
                            readonly>
-                    @error('days')
+                    @error('project_days
+')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
                 </div>
@@ -245,7 +246,7 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label> المصروفات الإدارية </label><span style="color: red;">  *</span>
+                    <label>  المصروفات الإدارية (%) </label><span style="color: red;">  *</span>
                     <input type="text" class="form-control" name="management" id="management" required
                            placeholder=" المصروفات الإدارية...">
                     @error('management')
@@ -274,33 +275,30 @@
                 </div>
             </div>
         </div>
+        <hr>
         <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>  تكلفة التمويل </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" تكلفة التمويل...">
-                    @error('benefit')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
+            <div class="col text-center">
+                <h2> تكلفة التمويل </h2>
             </div>
-            <div class="col-md-4">
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label> فائدة المرابحة الشهرية </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
+                    <label> فائدة المرابحة الشهرية (%) </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="monthly_benefit" id="monthly_benefit" required
                            placeholder="فائدة المرابحة الشهرية...">
-                    @error('benefit')
+                    @error('monthly_benefit')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label>  الفترة بالشهر </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
+                    <input type="text" class="form-control" name="per_month" id="per_month" required
                            placeholder=" الفترة بالشهر...">
-                    @error('benefit')
+                    @error('per_month')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -310,9 +308,9 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label> إجمالي النسبة </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder="إجمالي النسبة...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="percentage_total" id="percentage_total" required
+                           placeholder="إجمالي النسبة..." readonly>
+                    @error('percentage_total')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -320,9 +318,9 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label> قيمة المرابحة </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة المرابحة...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="benefit_value" id="benefit_value" required
+                           placeholder=" قيمة المرابحة..." readonly>
+                    @error('benefit_value')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -330,53 +328,60 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label> إجمالي تكاليف المشروع </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder="إجمالي تكاليف المشروع...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="total_project_costs" id="total_project_costs" required
+                           placeholder="إجمالي تكاليف المشروع..." readonly>
+                    @error('total_project_costs')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
         </div>
+        <hr>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col text-center">
+                <h2> الربحية </h2>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
                 <div class="form-group">
-                    <label>  نسبة الربح المستهدف  </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
+                    <label>  نسبة الربح المستهدف (%) </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="target_profit_percentage" id="target_profit_percentage" required
                            placeholder=" نسبة الربح المستهدف...">
-                    @error('benefit')
+                    @error('target_profit_percentage')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="form-group">
                     <label> قيمة الربح المستهدف </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة الربح المستهدف...">
-                    @error('benefit')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label>  نسبة الربح الفعلية </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة المرابحة...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="target_profit_value" id="target_profit_value" required
+                           placeholder=" قيمة الربح المستهدف..." readonly>
+                    @error('target_profit_value')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
         </div>
         <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>  نسبة الربح الفعلية (%) </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="actual_profit_percentage" id="actual_profit_percentage" required
+                           placeholder="  نسبة الربح الفعلية..." readonly>
+                    @error('actual_profit_percentage')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label> قيمة الربح الفعلية </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة الربح المستهدف...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="actual_profit_value" id="actual_profit_value" required
+                           placeholder=" قيمة الربح الفعلية..." readonly>
+                    @error('actual_profit_value')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -384,31 +389,57 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>  إجمالي قيمة المشروع  </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة المرابحة...">
-                    @error('benefit')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label> خصم خاص </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة الربح المستهدف...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="total_project_value" id="total_project_value" required
+                           placeholder="  إجمالي قيمة المشروع..." readonly>
+                    @error('total_project_value')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
         </div>
+        <hr>
+        <div class="row">
+            <div class="col text-center">
+                <h2> خصم خاص </h2>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label> نسبة الخصم (%) </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="private_discount" id="private_discount" required
+                           placeholder="    نسبة الخصم...">
+                    @error('private_discount')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label> قيمة الخصم </label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" name="discount_value" id="discount_value" required
+                           placeholder="   قيمة الخصم ..." readonly>
+                    @error('private_discount')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col text-center">
+                <h2> الصافي </h2>
+            </div>
+        </div>
+        <br>
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
                     <label> صافي قيمة المشروع قبل الضريبة </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة المرابحة...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="before_tax" id="before_tax" required
+                           placeholder="  قبل الضريبة..." readonly>
+                    @error('before_tax')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -416,9 +447,9 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label> ضريبة القيمة المضافة </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة الربح المستهدف...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="value_tax" id="value_tax" required
+                           placeholder="   ضريبة القيمة المضافة..." readonly>
+                    @error('value_tax')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
@@ -426,9 +457,9 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label> صافي قيمة المشروع بعد الضريبة </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit" required
-                           placeholder=" قيمة المرابحة...">
-                    @error('benefit')
+                    <input type="text" class="form-control" name="after_tax" id="after_tax" required
+                           placeholder="  بعد الضريبة..." readonly>
+                    @error('after_tax')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>

@@ -12,16 +12,20 @@
     </div>
 @endsection
 @section('content')
+    <div class="row">
+        <div class="col-md-12">
+            @if(Session()->has('status'))
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>{{ Session()->get('status') }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+        </div>
+    </div>
 
     <div class="row">
-        @if(Session()->has('status'))
-            <div class="alert alert-info alert-dismissible fade show" role="alert">
-                <strong>{{ Session()->get('status') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endif
         <div class="col-12">
             <div class="card">
                 <div class="card-header pb-lg-3">
