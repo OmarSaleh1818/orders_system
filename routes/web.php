@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-item-names/{step_name}', [ApplicantControllar::class, 'getItemNames']);
     Route::get('/get-item-value/{itemName}', [ApplicantControllar::class, 'getItemValue']);
     Route::get('/get-remaining-value/{itemName}', [ApplicantControllar::class, 'getRemainingValue']);
+
 // End
 
 // All Applicant Manager Route
@@ -117,6 +118,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/project/update/manager/{id}', [ProjectsController::class, 'ProjectUpdateManager'])->name('project.update.manager');
 // End
 });
+Route::get('/reload-captcha', [ApplicantControllar::class, 'ReloadCaptcha']);
 
 Route::group(['middleware' => ['auth']], function() {
 

@@ -376,5 +376,10 @@ class ApplicantControllar extends Controller
         return redirect('/applicant/view');
     }
 
+    public function ReloadCaptcha() {
+
+        return response()->json(['captcha'=>captcha_img('math')]);
+    }
+
 
 }

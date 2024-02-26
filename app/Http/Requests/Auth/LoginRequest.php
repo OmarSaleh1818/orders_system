@@ -29,8 +29,21 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'captcha' => ['required', 'captcha'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'email.required' => 'ادخل بريدك الإلكتروني من فضلك',
+            'email.email' => 'ادخل بريد إلكتروني صحيح من فضلك',
+            'password.required' => 'ادخل كلمة المرور من فضلك',
+            'captcha.required' => 'ادخل رمز التحقق',
+            'captcha.captcha' => 'رمز التحقق غير صحيح',
+        ];
+    }
+
 
     /**
      * Attempt to authenticate the request's credentials.
