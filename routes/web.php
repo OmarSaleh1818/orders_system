@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Setting\OpenPrejectController;
+use App\Http\Controllers\Setting\StartProjectControler;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employee\ApplicantControllar;
 use App\Http\Controllers\Setting\SectionsController;
@@ -29,6 +31,7 @@ use App\Http\Controllers\DashboardController;
 //});
 
 Route::get('/', [DashboardController::class, 'Dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'Dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -39,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/view', [ApplicantControllar::class, 'applicantView'])->name('applicant.view');
         Route::get('/add/order', [ApplicantControllar::class, 'addOrder'])->name('add.order');
         Route::post('/store', [ApplicantControllar::class, 'ApplicantStore'])->name('applicant.store');
+        Route::post('/international/store', [ApplicantControllar::class, 'ApplicantInternationalStore'])->name('applicant.international.store');
         Route::get('/edit/{id}', [ApplicantControllar::class, 'ApplicantEdit'])->name('applicant.edit');
         Route::post('/update/{id}', [ApplicantControllar::class, 'ApplicantUpdate'])->name('applicant.update');
         Route::get('/delete/{id}', [ApplicantControllar::class, 'applicantDelete'])->name('applicant.delete');
@@ -47,6 +51,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/reply/inquiry/{id}', [ApplicantControllar::class, 'ApplicantReplyInquiry'])->name('applicant.reply.inquiry');
         Route::post('/return/date/{id}', [ApplicantControllar::class, 'ApplicantReturnDate'])->name('applicant.return.date');
     });
+    Route::get('/get-order-number/{project_id}', [ApplicantControllar::class, 'getOrderNumber']);
+    Route::get('/get-last-order-number/{project_id}', [ApplicantControllar::class, 'getLastOrderNumber']);
     Route::get('/get-section-name/{project_id}', [ApplicantControllar::class, 'getSectionName']);
     Route::get('/get-step-names/{project_id}', [ApplicantControllar::class, 'getStepNames']);
     Route::get('/get-item-names/{step_name}', [ApplicantControllar::class, 'getItemNames']);
@@ -82,6 +88,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/proposed/date/{id}', [FinanceManagerController::class, 'ProposedDate'])->name('proposed.date');
     Route::post('/finance/manager/reject/{id}', [FinanceManagerController::class, 'FinanceManagerReject'])->name('finance.manager.reject');
     Route::get('/finance/manager/sure/{id}', [FinanceManagerController::class, 'FinanceManagerSure'])->name('finance.manager.sure');
+    Route::get('/finance/order/sure/{id}', [FinanceManagerController::class, 'FinanceOrderSure'])->name('finance.order.sure');
 
 // End
 
@@ -110,13 +117,32 @@ Route::middleware('auth')->group(function () {
 // End
 
 // All Project Route
-    Route::get('/project/approved/view', [ProjectsController::class, 'ProjectApprovedView'])->name('project.approved');
+    Route::get('/project/open/view', [OpenPrejectController::class, 'ProjectOpenView'])->name('project.open');
+    Route::get('/add/project/open/{id}', [OpenPrejectController::class, 'AddProjectOpen'])->name('add.project.open');
+    Route::post('/project/open/store/{id}', [OpenPrejectController::class, 'ProjectOpenStore'])->name('project.open.store');
     Route::get('/project/sure/{id}', [ProjectsController::class, 'ProjectSure'])->name('project.sure');
+    Route::get('/price/sure/{id}', [ProjectsController::class, 'PriceSure'])->name('price.sure');
     Route::post('/project/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
     Route::get('/project/back', [ProjectsController::class, 'ProjectBack'])->name('project.back');
-    Route::get('/project/manager/eye/{id}', [ProjectsController::class, 'ProjectManagerEye'])->name('project.manager.eye');
+    Route::get('/project/manager/eye/{id}', [OpenPrejectController::class, 'ProjectManagerEye'])->name('project.manager.eye');
+    Route::get('/open/project/sure/{id}', [OpenPrejectController::class, 'OpenProjectSure'])->name('open.project.sure');
+    Route::get('/open/project/Manager/sure/{id}', [OpenPrejectController::class, 'OpenProjectManagerSure'])->name('open.projectManager.sure');
+    Route::get('/open/project/back', [OpenPrejectController::class, 'OpenProjectBack'])->name('open.project.back');
+    Route::post('/open/project/reject/{id}', [OpenPrejectController::class, 'OpenProjectReject'])->name('open.project.reject');
+    Route::get('/open/project/edit/{id}', [OpenPrejectController::class, 'OpenProjectEdit'])->name('open.project.edit');
+    Route::post('/open/project/update/{id}', [OpenPrejectController::class, 'OpenProjectUpdate'])->name('project.open.update');
     Route::post('/project/update/manager/{id}', [ProjectsController::class, 'ProjectUpdateManager'])->name('project.update.manager');
-// End
+
+    Route::get('/add/project/start/{id}', [StartProjectControler::class, 'AddProjectStart'])->name('add.project.start');
+    Route::post('/project/start/store/{id}', [StartProjectControler::class, 'ProjectStartStore'])->name('project.start.store');
+    Route::get('/project/approved/eye/{id}', [StartProjectControler::class, 'ProjectApprovedEye'])->name('project.approved.eye');
+    Route::post('/project/approved/reject/{id}', [StartProjectControler::class, 'ProjectApprovedReject'])->name('project.approved.reject');
+    Route::get('/project/approved/edit/{id}', [StartProjectControler::class, 'ProjectApprovedEdit'])->name('project.approved.edit');
+    Route::post('/project/approved/update/{id}', [StartProjectControler::class, 'ProjectApprovedUpdate'])->name('project.approved.update');
+    Route::get('/project/approved/sure/{id}', [StartProjectControler::class, 'ProjectApprovedSure'])->name('project.approved.sure');
+    Route::get('/project/approved/Manager/sure/{id}', [StartProjectControler::class, 'ProjectApprovedManagerSure'])->name('project.approvedManager.sure');
+
+    // End
 });
 Route::get('/reload-captcha', [ApplicantControllar::class, 'ReloadCaptcha']);
 

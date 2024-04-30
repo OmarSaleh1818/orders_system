@@ -12,13 +12,13 @@ use Illuminate\Support\Facades\DB;
 
 class FinanceController extends Controller
 {
-    function __construct()
-    {
-
-        $this->middleware('permission:المحاسب', ['only' => ['FinanceView']]);
-        $this->middleware('permission:منفذ الطلب', ['only' => ['FinanceEye']]);
-
-    }
+//    function __construct()
+//    {
+//
+//        $this->middleware('permission:المحاسب', ['only' => ['FinanceView']]);
+//        $this->middleware('permission:منفذ الطلب', ['only' => ['FinanceEye']]);
+//
+//    }
     public function FinanceView() {
 
         $applicants = Applicant::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
@@ -62,10 +62,10 @@ class FinanceController extends Controller
 
 
             Session()->flash('status', 'تم تنفيذ الطلب بنجاح');
-            return redirect('/finance/view');
+            return redirect('/applicant/view');
         } else {
             Session()->flash('status', 'للأسف لم يتم نقل الملف');
-            return redirect('/finance/view');
+            return redirect('/applicant/view');
         }
 
     }

@@ -1,12 +1,12 @@
 @extends('main_master')
 @section('title')
-     المشاريع
+     تسعير المشاريع
 @endsection
 @section('page-header')
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto p-4">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto"> مدير المشروع </h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/  المشاريع </span>
+                <h4 class="content-title mb-0 my-auto"> تسعير المشاريع  </h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ تسعير المشاريع </span>
             </div>
         </div>
     </div>
@@ -29,9 +29,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header pb-lg-3">
-                    @can('إضافة مشروع')
+                    @can('إضافة تسعيرة')
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('add.project') }}" class="btn btn-primary">إضافة مشروع</a>
+                            <a href="{{ route('add.project') }}" class="btn btn-primary">إضافة تسعيرة</a>
                         </div>
                     @endcan
                 </div>
@@ -41,34 +41,77 @@
                         <thead>
                         <tr>
                             <th>#</th>
+                            <th>التاريخ</th>
                             <th>اسم المشروع</th>
                             <th>اسم القسم</th>
                             <th>المجموع</th>
-                            <th>المتبقي</th>
                             <th>الحالة</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($projects as $key => $item)
                             @php
-                                $user_id = Auth::user()->id;
-                                $manager = App\Models\projects::where('user_id', $user_id)->where('id', $item->id)->first();
+                                $canApprove = Gate::check('اعتماد المدير المالي للتسعيرة') || Gate::check('اعتماد المدير للتسعيرة');
+                                   $user_id = Auth::user()->id;
+                                   $manager = App\Models\projects::where('user_id', $user_id)->where('id', $item->id)->first();
                             @endphp
-                            @if($manager)
+                            @if($canApprove)
                                 <tr>
                                     <td>{{ $key+1 }}</td>
+                                    <td>{{ $item->date }}</td>
                                     <td>{{ $item->project_name }}</td>
                                     <td>{{ $item->section_name }}</td>
                                     <td>{{ $item->total }}</td>
-                                    <td>{{ $item->remaining_value }}</td>
+                                    <td>
+                                        @if($item->status_id == 1)
+                                            <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-secondary" disabled> في الانتظار <i class="far fa-clock" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 6)
+                                            <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-success" disabled>  تم اعتماد المدير المالي  <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 7)
+                                            <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-success" disabled>  تم اعتماد المدير لفتح المشروع <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 3)
+                                            <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-dark" disabled>  تم فتح مشروع  <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 13)
+                                            <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-success" disabled>  تم اعتماد المشروع  <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        @elseif($item->status_id == 2)
+                                            @if($manager)
+                                                <a href="{{ route('project.edit', $item->id) }}" class="btn btn-warning"> تعديل <i class="fa fa-pencil"></i></a>
+                                            @endif
+                                            <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                            <button class="btn btn-danger" disabled>  غير معتمد <i class="fa fa-times-circle" aria-hidden="true"></i></button>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @elseif($manager)
+                                <tr>
+                                    <td>{{ $key+1 }}</td>
+                                    <td>{{ $item->date }}</td>
+                                    <td>{{ $item->project_name }}</td>
+                                    <td>{{ $item->section_name }}</td>
+                                    <td>{{ $item->total }}</td>
                                     <td>
                                     @if($item->status_id == 1)
                                         <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
                                         <button class="btn btn-secondary" disabled> في الانتظار <i class="far fa-clock" aria-hidden="true"></i></button>
                                     @elseif($item->status_id == 6)
                                         <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-success" disabled>  معتمد <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                        <button class="btn btn-success" disabled>  تم اعتماد المدير المالي  <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                    @elseif($item->status_id == 7)
+                                        <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                        <button class="btn btn-success" disabled>  تم اعتماد المدير  <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                    @elseif($item->status_id == 3)
+                                        <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                        <button class="btn btn-dark" disabled>  تم فتح مشروع  <i class="fa fa-check-circle" aria-hidden="true"></i></button>
+                                    @elseif($item->status_id == 13)
+                                        <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
+                                        <button class="btn btn-success" disabled>  تم اعتماد المشروع  <i class="fa fa-check-circle" aria-hidden="true"></i></button>
                                     @elseif($item->status_id == 2)
+                                        <a href="{{ route('project.eye', $item->id) }}" class="btn btn-info"> عرض <i class="fa fa-eye"></i></a>
                                         <a href="{{ route('project.edit', $item->id) }}" class="btn btn-warning"> تعديل <i class="fa fa-pencil"></i></a>
                                         <button class="btn btn-danger" disabled>  غير معتمد <i class="fa fa-times-circle" aria-hidden="true"></i></button>
                                     @endif

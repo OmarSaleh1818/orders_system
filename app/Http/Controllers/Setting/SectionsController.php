@@ -9,12 +9,12 @@ use App\Models\Sections;
 
 class SectionsController extends Controller
 {
-    function __construct()
-    {
-
-        $this->middleware('permission:الأقسام', ['only' => ['SectionView','SectionStore', 'SectionEdit', 'SectionUpdate', 'SectionDelete']]);
-
-    }
+//    function __construct()
+//    {
+//
+//        $this->middleware('permission:الأقسام', ['only' => ['SectionView','SectionStore', 'SectionEdit', 'SectionUpdate', 'SectionDelete']]);
+//
+//    }
     public function SectionView() {
 
         $sections = Sections::all();

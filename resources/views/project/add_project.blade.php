@@ -6,7 +6,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto p-4">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto">مدير المشروع</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ إضافة مشروع </span>
+                <h4 class="content-title mb-0 my-auto">مدير المشروع</h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ إضافة تسعيرة </span>
             </div>
         </div>
 
@@ -46,90 +46,6 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>تاريخ بداية المشروع</label><span style="color: red;"> *</span>
-                    <input type="date" class="form-control" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                           id="startDateInput" required name="start_date">
-                    @error('start_date')
-                    <span class="text-danger"> {{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>تاريخ نهاية المشروع</label><span style="color: red;"> *</span>
-                    <input type="date" class="form-control" min="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                           required name="end_date" id="endDateInput" onchange="validateEndDate()">
-                    @error('end_date')
-                    <span class="text-danger"> {{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>مدة المشروع بالأيام</label><span style="color: red;"> *</span>
-                    <input type="text" class="form-control" required name="project_days" id="daysInput" placeholder="مدة المشروع بالأيام ..."
-                           readonly>
-                    @error('project_days
-')
-                    <span class="text-danger"> {{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>رقم التسعيرة</label><span style="color: red;"> *</span>
-                    <input type="text" class="form-control" required name="price_number" id="priceNumberInput"
-                           placeholder="رقم التسعيرة ..." value="{{ $formattedPriceNumber }}" readonly>
-                    @error('price_number')
-                    <span class="text-danger"> {{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>نوع العميل</label><span style="color: red;">*</span>
-                    <div class="controls">
-                        <select name="customer_type" class="form-control" id="customerTypeSelect">
-                            <option value="" selected disabled>نوع العميل</option>
-                            <option value="مانح">مانح</option>
-                            <option value="حكومي">حكومي</option>
-                            <option value="أهلي">أهلي</option>
-                            <option value="أفراد">أفراد</option>
-                        </select>
-                        @error('customer_type')
-                        <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>اسم العميل</label>
-                    <input type="text" class="form-control" name="customer_name" id="customerNameInput"
-                           placeholder="اسم العميل...">
-                    @error('customer_name')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>الجهة المستفيدة</label>
-                    <input type="text" class="form-control" name="benefit" id="benefitInput"
-                           placeholder="الجهة المستفيدة...">
-                    @error('benefit')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
                     <label>اختيار القسم </label><span class="text-danger"> *</span>
                     <div class="controls">
                         <select name="section_name" class="form-control">
@@ -145,29 +61,14 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label> كود المشروع</label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" required name="project_code" placeholder=" كود المشروع...">
-                    @error('project_code')
+                    <label>رقم التسعيرة</label><span style="color: red;"> *</span>
+                    <input type="text" class="form-control" required name="price_number" id="priceNumberInput"
+                           placeholder="رقم التسعيرة ..." value="{{ $formattedPriceNumber }}" readonly>
+                    @error('price_number')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <h5>اختيار الموظفين <span class="text-danger"> *</span></h5>
-                    <div class="controls">
-                        <select name="user_name[]" multiple="multiple" class="form-control">
-                            <option value="" selected="" disabled="">اختيار الموظفين</option>
-
-                        </select>
-                        @error('users_name')
-                        <span class="text-danger"> {{ $message }}</span>
-                        @enderror
-                    </div>
                 </div>
             </div>
         </div>
@@ -189,36 +90,75 @@
                     </div>
                 </div>
             </div>
-            <h4>
-                <a href="javascript:void(0)" class="add-item float-right btn btn-primary" id="stepitemsclick,1" onclick="addItem(1)">أضف بند</a>
-            </h4>
+
             <div class="items-container mt-5" id="stepitems1">
                 <div class="row" >
-                    <div class="col-md-3">
+                    <div class="col-md-3" id="itemNameContainer">
                         <div class="form-group">
                             <label>بند الصرف</label><span style="color: red;"> *</span>
-                            <input type="text" class="form-control" required name="item_name[]" placeholder="بند الصرف...">
+{{--                            <input type="text" class="form-control" name="item_name[]" placeholder="بند الصرف..." style="display: none;">--}}
+                            <select name="item_name[]" class="form-control" id="travel_arriveVia" onchange="toggleOtherOption(this)">
+                                <option value="" selected="" disabled="">اختيار بند الصرف</option>
+                                <option value="مدربين">مدربين</option>
+                                <option value="مستشارين">مستشارين</option>
+                                <option value="سكن">سكن</option>
+                                <option value="طيران">طيران</option>
+                                <option value="مطبوعات">مطبوعات</option>
+                                <option value="انتدابات">انتدابات</option>
+                                <option value="قاعات">قاعات</option>
+                                <option value="مواصلات">مواصلات</option>
+                                <option value="اختبارات">اختبارات</option>
+                                <option value="تغطية إعلامية">تغطية إعلامية</option>
+                                <option value="تصاميم">تصاميم</option>
+                                <option value="منسقين">منسقين</option>
+                                <option value="اعتمادات">اعتمادات</option>
+                                <option value="اشتراكات تقنية">اشتراكات تقنية</option>
+                                <option value="ميسر ورشة">ميسر ورشة</option>
+                                <option value="مقدم">مقدم</option>
+                                <option value="ترجمة">ترجمة</option>
+                                <option value="شراء حقوق">شراء حقوق</option>
+                                <option value="تسويق">تسويق</option>
+                                <option value="هدايا">هدايا</option>
+                                <option value="أخرى">أخرى</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>قيمة البند</label><span class="text-danger"> *</span>
-                            <input type="text" class="form-control item-value" name="item_value[]" placeholder="قيمة البند...">
+                            <input type="text" class="form-control item-value" name="item_value[]" placeholder="قيمة البند..." required>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>تاريخ الاستحقاق</label>
+                            <label>تاريخ اول صرف من البند</label>
                             <input type="date" class="form-control" name="due_date[]"
                                    min="{{ Carbon\Carbon::now()->format('Y-m-d') }}" placeholder="تاريخ الاستحقاق...">
                         </div>
                     </div>
+                    <div class="col-md-3">
+
+                    </div>
                 </div>
             </div>
         </div>
-        <h4>
-            <a href="javascript:void(0)" class="add-more-step float-right btn btn-primary">أضف مرحلة</a>
-        </h4>
+
+        <div class="row">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-2">
+                <h4>
+                    <a href="javascript:void(0)" class="add-item float-right btn btn-primary" id="stepitemsclick,1" onclick="addItem(1)">أضف بند</a>
+                </h4>
+            </div>
+            <div class="col-md-2">
+                <h4>
+                    <a href="javascript:void(0)" class="add-more-step float-right btn btn-primary">أضف مرحلة</a>
+                </h4>
+            </div>
+
+        </div>
+
         <br>
         <div class="paste-new-forms">
 
@@ -228,8 +168,8 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>المجموع</label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" required name="total" id="total" placeholder="المجموع..." readonly>
+                    <label>مجموع التكاليف المباشرة</label><span style="color: red;">  *</span>
+                    <input type="text" class="form-control" required name="total" id="total" placeholder="مجموع التكاليف المباشرة..." readonly>
                     @error('total')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
@@ -276,63 +216,70 @@
             </div>
         </div>
         <hr>
-        <div class="row">
-            <div class="col text-center">
-                <h2> تكلفة التمويل </h2>
-            </div>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-primary" id="toggleButton">تكلفة التمويل</button>
         </div>
         <br>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label> فائدة المرابحة الشهرية (%) </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="monthly_benefit" id="monthly_benefit" required
-                           placeholder="فائدة المرابحة الشهرية...">
-                    @error('monthly_benefit')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
+        <div id="formContainer" style="display: none;">
+            <div class="row">
+                <div class="col text-center">
+                    <h2> تكلفة التمويل </h2>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>  الفترة بالشهر </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="per_month" id="per_month" required
-                           placeholder=" الفترة بالشهر...">
-                    @error('per_month')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label> فائدة المرابحة الشهرية (%) </label><span style="color: red;"> *</span>
+                        <input type="text" class="form-control" name="monthly_benefit" id="monthly_benefit"
+                               placeholder="فائدة المرابحة الشهرية...">
+                        @error('monthly_benefit')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label> الفترة بالشهر </label><span style="color: red;"> *</span>
+                        <input type="text" class="form-control" name="per_month" id="per_month"
+                               placeholder=" الفترة بالشهر...">
+                        @error('per_month')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label> إجمالي النسبة </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="percentage_total" id="percentage_total" required
-                           placeholder="إجمالي النسبة..." readonly>
-                    @error('percentage_total')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label> إجمالي النسبة </label><span style="color: red;"> *</span>
+                        <input type="text" class="form-control" name="percentage_total" id="percentage_total"
+                               placeholder="إجمالي النسبة..." readonly>
+                        @error('percentage_total')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label> قيمة المرابحة </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="benefit_value" id="benefit_value" required
-                           placeholder=" قيمة المرابحة..." readonly>
-                    @error('benefit_value')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label> قيمة المرابحة </label><span style="color: red;"> *</span>
+                        <input type="text" class="form-control" name="benefit_value" id="benefit_value"
+                               placeholder=" قيمة المرابحة..." readonly>
+                        @error('benefit_value')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label> إجمالي تكاليف المشروع </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="total_project_costs" id="total_project_costs" required
-                           placeholder="إجمالي تكاليف المشروع..." readonly>
-                    @error('total_project_costs')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label> إجمالي تكاليف المشروع </label><span style="color: red;"> *</span>
+                        <input type="hidden" name="total_project_costs_manual" id="total_project_costs_manual">
+                        <input type="text" class="form-control" name="total_project_costs" id="total_project_costs"
+                               placeholder="إجمالي تكاليف المشروع..." readonly>
+                        @error('total_project_costs')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
         </div>
@@ -392,35 +339,6 @@
                     <input type="text" class="form-control" name="total_project_value" id="total_project_value" required
                            placeholder="  إجمالي قيمة المشروع..." readonly>
                     @error('total_project_value')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col text-center">
-                <h2> خصم خاص </h2>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label> نسبة الخصم (%) </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="private_discount" id="private_discount" required
-                           placeholder="    نسبة الخصم...">
-                    @error('private_discount')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label> قيمة الخصم </label><span style="color: red;">  *</span>
-                    <input type="text" class="form-control" name="discount_value" id="discount_value" required
-                           placeholder="   قيمة الخصم ..." readonly>
-                    @error('private_discount')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>

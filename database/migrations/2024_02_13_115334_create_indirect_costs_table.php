@@ -28,7 +28,6 @@ return new class extends Migration
             $table->string('actual_profit_percentage', 50);
             $table->string('actual_profit_value', 50);
             $table->decimal('total_project_value');
-            $table->string('private_discount', 50);
             $table->decimal('before_tax');
             $table->decimal('value_tax');
             $table->decimal('after_tax');

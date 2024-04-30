@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Setting;
 use App\Http\Controllers\Controller;
 use App\Models\MultiProject;
 use App\Models\MultiStep;
+use App\Models\OpenProject;
 use App\Models\project_users;
 use App\Models\ProjectManager;
 use App\Models\User;
@@ -20,15 +21,15 @@ use Spatie\Permission\Models\Role;
 
 class ProjectsController extends Controller
 {
-    function __construct()
-    {
-
-        $this->middleware('permission:المشاريع', ['only' => ['ProjectView', 'ProjectEye']]);
-        $this->middleware('permission:المشاريع', ['only' => ['AddProject','ProjectStore', 'ProjectEdit', 'ProjectUpdate']]);
-        $this->middleware('permission:معتمد المشروع', ['only' => ['ProjectApprovedView','ProjectSure']]);
-        $this->middleware('permission:معتمد المشروع', ['only' => ['ProjectReject', 'ProjectManagerEye']]);
-
-    }
+//    function __construct()
+//    {
+//
+//        $this->middleware('permission:المشاريع', ['only' => ['ProjectView', 'ProjectEye']]);
+//        $this->middleware('permission:المشاريع', ['only' => ['AddProject','ProjectStore', 'ProjectEdit', 'ProjectUpdate']]);
+//        $this->middleware('permission:معتمد المشروع', ['only' => ['ProjectApprovedView','ProjectSure']]);
+//        $this->middleware('permission:معتمد المشروع', ['only' => ['ProjectReject', 'ProjectManagerEye']]);
+//
+//    }
     public function ProjectView() {
 
         $projects = projects::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
@@ -74,9 +75,6 @@ class ProjectsController extends Controller
             'item_value' => 'required',
             'total' => 'required',
             'section_name' => 'required',
-            'customer_type'=> 'required',
-            'user_name' => 'required',
-            'total_project_costs' => 'required',
         ],[
             'date.required' => 'التاريخ مطلوب',
             'project_name.required' => 'اسم المشروع مطلوب',
@@ -85,9 +83,6 @@ class ProjectsController extends Controller
             'item_value.required' => 'قيمة البند  مطلوب',
             'total.required' => 'المجموع  مطلوب',
             'section_name.required' => 'اسم القسم مطلوب',
-            'customer_type.requied' => 'نوع العميل مطلوب',
-            'user_name.required' => 'اختيار الموظفين مطلوب',
-            'total_project_costs.required' => '  إجمالي تكلفة المشروع مطلوب'
         ]);
         $user_id = Auth::user()->id;
 
@@ -95,14 +90,7 @@ class ProjectsController extends Controller
             'user_id' =>  $user_id,
             'date' => $request->date,
             'project_name' => $request->project_name,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'project_days' => $request->project_days,
             'price_number' => $request->price_number,
-            'customer_type' => $request->customer_type,
-            'customer_name' => $request->customer_name,
-            'benefit' => $request->benefit,
-            'project_code' => $request->project_code,
             'total' => $request->total,
             'remaining_value' => $request->total,
             'section_name' => $request->section_name,
@@ -115,7 +103,6 @@ class ProjectsController extends Controller
             'management' => $request->management,
             'indirect_costs' => $request->indirect_costs,
             'total_costs' => $request->total_costs,
-            'discount_value' => $request->discount_value,
             'monthly_benefit' => $request->monthly_benefit,
             'per_month' => $request->per_month,
             'percentage_total' => $request->percentage_total,
@@ -126,7 +113,6 @@ class ProjectsController extends Controller
             'actual_profit_percentage' => $request->actual_profit_percentage,
             'actual_profit_value' => $request->actual_profit_value,
             'total_project_value' => $request->total_project_value,
-            'private_discount' => $request->private_discount,
             'before_tax' => $request->before_tax,
             'value_tax' => $request->value_tax,
             'after_tax' => $request->after_tax,
@@ -137,8 +123,8 @@ class ProjectsController extends Controller
         $item_name = $request->item_name;
         $item_value = $request->item_value;
         $due_date = $request->due_date;
-        $user_name = $request->input('user_name');
         $numberStepItems = $request->number_step;
+        $other_item_name = $request->other_item_name;
         $stepId = 0;
         $itemOfEachStep = 0; // the value of index I should loop until each step
         $startIndex = 0; // the value of index I should loop until each step
@@ -152,10 +138,16 @@ class ProjectsController extends Controller
             $numberOfStepItem = $numberStepItems[$stepId];
             $stepId++;
             $itemOfEachStep = $itemOfEachStep+$numberOfStepItem;
-            for($i = $startIndex ; $i < $itemOfEachStep; $i++ ){
+            for ($i = $startIndex; $i < $itemOfEachStep; $i++) {
                 $s_name = $item_name[$i];
                 $s_value = $item_value[$i];
                 $s_date = $due_date[$i];
+
+                // Check if the current item is "أخرى" and use the value from the other_item_name input field
+                if ($s_name === "أخرى") {
+                        $s_name = $other_item_name;
+                    }
+
 
                 MultiProject::insert([
                     'project_id' => $project_id,
@@ -184,15 +176,8 @@ class ProjectsController extends Controller
                     ]);
                 }*/
         }
-        foreach ($user_name as $user) {
-            project_users::insert([
-                'project_id' => $project_id,
-                'user_name' => $user,
-                'created_at' => Carbon::now(),
-            ]);
-        }
 
-        $request->session()->flash('status', 'تم إضافة المشروع بنجاح');
+        $request->session()->flash('status', 'تم إضافة التسعيرة بنجاح');
         return redirect('/manager/project/view');
 
     }
@@ -244,14 +229,7 @@ class ProjectsController extends Controller
         projects::findOrFail($id)->update([
             'date' => $request->date,
             'project_name' => $request->project_name,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'project_days' => $request->project_days,
             'price_number' => $request->price_number,
-            'customer_type' => $request->customer_type,
-            'customer_name' => $request->customer_name,
-            'benefit' => $request->benefit,
-            'project_code' => $request->project_code,
             'total' => $request->total,
             'remaining_value' => $request->total,
             'section_name' => $request->section_name,
@@ -263,7 +241,6 @@ class ProjectsController extends Controller
             'management' => $request->management,
             'indirect_costs' => $request->indirect_costs,
             'total_costs' => $request->total_costs,
-            'discount_value' => $request->discount_value,
             'monthly_benefit' => $request->monthly_benefit,
             'per_month' => $request->per_month,
             'percentage_total' => $request->percentage_total,
@@ -274,7 +251,6 @@ class ProjectsController extends Controller
             'actual_profit_percentage' => $request->actual_profit_percentage,
             'actual_profit_value' => $request->actual_profit_value,
             'total_project_value' => $request->total_project_value,
-            'private_discount' => $request->private_discount,
             'before_tax' => $request->before_tax,
             'value_tax' => $request->value_tax,
             'after_tax' => $request->after_tax,
@@ -286,7 +262,8 @@ class ProjectsController extends Controller
         $multiIds = $request->input('multi');
         $item_name = $request->input('item_name');
         $item_value = $request->input('item_value');
-        $user_names = $request->input('user_name');
+        $due_date = $request->input('due_date');
+
         foreach ($stepIds as $key => $stepId) {
             $data = [
                 'step_name' => $step_name[$key],
@@ -298,37 +275,17 @@ class ProjectsController extends Controller
                 'item_name' => $item_name[$key],
                 'item_value' => $item_value[$key],
                 'remaining_value' => $item_value[$key],
+                'due_date' => $due_date[$key],
             ];
             MultiProject::where('id', $multiId)->update($data);
         }
-        if (!empty($user_names)) {
-            foreach ($user_names as $user_name) {
-                $existingUser = project_users::where('project_id', $id)->where('user_name', $user_name)->first();
-                if ($existingUser) {
 
-                    $data = ['user_name' => $user_name];
-                    project_users::where('id', $existingUser->id)->update($data);
-                } else {
-
-                    project_users::create([
-                        'project_id' => $id,
-                        'user_name' => $user_name
-                    ]);
-                }
-            }
-        }
         DB::table('projects')
             ->where('id', $id)
             ->update(['status_id' => 1]);
 
-        $request->session()->flash('status', 'تم تعديل المشروع بنجاح');
+        $request->session()->flash('status', 'تم تعديل التسعيرة بنجاح');
         return redirect('/manager/project/view');
-    }
-
-    public function ProjectApprovedView() {
-
-        $projects = projects::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
-        return view('project.project_approved' , compact('projects'));
     }
 
     public function ProjectSure($id) {
@@ -336,8 +293,17 @@ class ProjectsController extends Controller
         DB::table('projects')
             ->where('id', $id)
             ->update(['status_id' => 6]);
-        Session()->flash('status', 'تم اعتماد المشروع بنجاح');
-        return redirect('/project/approved/view');
+        Session()->flash('status', 'تم اعتماد التسعيرة بنجاح');
+        return redirect('/manager/project/view');
+    }
+
+    public function PriceSure($id) {
+
+        DB::table('projects')
+            ->where('id', $id)
+            ->update(['status_id' => 7]);
+        Session()->flash('status', 'تم اعتماد التسعيرة بنجاح');
+        return redirect('/manager/project/view');
     }
 
     public function ProjectEye($id) {
@@ -375,8 +341,8 @@ class ProjectsController extends Controller
         DB::table('projects')
             ->where('id', $id)
             ->update(['status_id' => 2]);
-        Session()->flash('status', 'لم يتم اعتماد المشروع ');
-        return redirect('/project/approved/view');
+        Session()->flash('status', 'لم يتم اعتماد التسعيرة ');
+        return redirect('/manager/project/view');
     }
 
     public function ProjectBack() {
@@ -387,28 +353,19 @@ class ProjectsController extends Controller
         return redirect('/manager/project/view');
     }
 
-    public function ProjectManagerEye($id) {
-        $user_id = Auth::user()->id;
-
-        $steps = MultiStep::where('project_id', $id)->get();
-        $sections = MultiSections::where('user_id', $user_id)->get();
-        $multi_project = MultiProject::where('project_id', $id)->get();
-        $project_users = project_users::where('project_id', $id)->get();
-        $indirect_costs = IndirectCosts::where('project_id', $id)->first();
-        $project = projects::find($id);
-        return view('project.manager_eye', compact('sections', 'project',
-            'multi_project', 'steps', 'project_users', 'indirect_costs'));
-    }
 
     public function ProjectUpdateManager(Request $request, $id) {
         projects::findOrFail($id)->update([
            'user_id' => $request->user_id
         ]);
+        OpenProject::findOrFail($request->openProject_user_id)->update([
+            'user_id' => $request->user_id
+        ]);
         $user = User::findOrFail($request->user_id);
 
-        $managerRole = Role::where('name', 'مدير المشروع')->first();
+        $managerRole = Role::where('name', 'مدير مشروع')->first();
 
-        if (!$user->roles()->where('name', 'مدير المشروع')->exists()) {
+        if (!$user->roles()->where('name', 'مدير مشروع')->exists()) {
             // Add the role "مدير المشروع" to the user's roles
             $user->roles()->attach($managerRole);
         }

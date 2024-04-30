@@ -23,7 +23,8 @@
                     <img src="{{ asset('assets/dist/img/ryadh.png') }}" height="50px" width="250px">
                 </a>
             </div>
-
+            <br>
+            <h3 style="text-align: center; color: #212529;">منصة إجراء</h3>
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>

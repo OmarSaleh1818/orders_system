@@ -13,13 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class ApplicantManagerController extends Controller
 {
-    function __construct()
-    {
-
-        $this->middleware('permission:اعتماد الطلبات', ['only' => ['applicantManagerView', 'ApplicantManagerEye']]);
-        $this->middleware('permission:اعتماد الطلبات', ['only' => ['ApplicantManagerSure','ApplicantManagerReject']]);
-
-    }
+//    function __construct()
+//    {
+//
+//        $this->middleware('permission:اعتماد الطلبات', ['only' => ['applicantManagerView', 'ApplicantManagerEye']]);
+//        $this->middleware('permission:اعتماد الطلبات', ['only' => ['ApplicantManagerSure','ApplicantManagerReject']]);
+//
+//    }
     public function applicantManagerView() {
 
         $applicants = Applicant::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
@@ -40,7 +40,7 @@ class ApplicantManagerController extends Controller
             ->where('id', $id)
             ->update(['status_id' => 3]);
         Session()->flash('status', 'تم اعتماد الطلب بنجاح');
-        return redirect('/manager/applicant/view');
+        return redirect('/applicant/view');
     }
 
     public function ApplicantManagerReject(Request $request, $id) {
@@ -75,7 +75,7 @@ class ApplicantManagerController extends Controller
             ->where('item_name', $request->item_name)
             ->update(['remaining_value' => $request->value]);
         Session()->flash('status', 'لم يتم اعتماد الطلب بنجاح');
-        return redirect('/manager/applicant/view');
+        return redirect('/applicant/view');
     }
 
     public function ApplicantManagerBack() {

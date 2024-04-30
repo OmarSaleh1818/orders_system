@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('project_users', function (Blueprint $table) {
             $table->id();
             $table->integer('project_id');
+            $table->integer('openProject_id');
             $table->string('user_name');
             $table->timestamps();
         });

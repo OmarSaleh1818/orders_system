@@ -13,7 +13,7 @@ class Applicant extends Model
 
     public function project() {
 
-        return $this->belongsTo(projects::class, 'project_name','id');
+        return $this->belongsTo(projects::class, 'project_id','id');
 
     }
 

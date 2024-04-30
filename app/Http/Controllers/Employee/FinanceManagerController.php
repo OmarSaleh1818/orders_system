@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\DB;
 
 class FinanceManagerController extends Controller
 {
-    function __construct()
-    {
-
-        $this->middleware('permission:المدير المالي', ['only' => ['FinanceManagerView']]);
-        $this->middleware('permission:معتمد الصرف', ['only' => ['FinanceManagerEye','FinanceManagerInquiry']]);
-        $this->middleware('permission:معتمد الصرف', ['only' => ['FinanceManagerReject','FinanceManagerSure']]);
-
-    }
+//    function __construct()
+//    {
+//
+//        $this->middleware('permission:المدير المالي', ['only' => ['FinanceManagerView']]);
+//        $this->middleware('permission:معتمد الصرف', ['only' => ['FinanceManagerEye','FinanceManagerInquiry']]);
+//        $this->middleware('permission:معتمد الصرف', ['only' => ['FinanceManagerReject','FinanceManagerSure']]);
+//
+//    }
 
     public function FinanceManagerView() {
 
@@ -57,7 +57,7 @@ class FinanceManagerController extends Controller
             ->where('id', $id)
             ->update(['status_id' => 8]);
         Session()->flash('status', 'تم إرسال الاستفسار بنجاح');
-        return redirect('/finance/manager/view');
+        return redirect('/applicant/view');
     }
 
     public function FinanceManagerBack() {
@@ -80,7 +80,7 @@ class FinanceManagerController extends Controller
         ]);
 
         Session()->flash('status', 'تم  تأجيل التاريخ بنجاح');
-        return redirect('/finance/manager/view');
+        return redirect('/applicant/view');
     }
 
     public function FinanceManagerReject(Request $request, $id) {
@@ -114,16 +114,26 @@ class FinanceManagerController extends Controller
             ->where('item_name', $request->item_name)
             ->update(['remaining_value' => $request->value]);
         Session()->flash('status', 'لم يتم اعتماد الطلب ');
-        return redirect('/finance/manager/view');
+        return redirect('/applicant/view');
     }
 
     public function FinanceManagerSure($id) {
         DB::table('applicants')
             ->where('id', $id)
+            ->update(['status_id' => 6]);
+
+        Session()->flash('status', 'تم الاعتماد بنجاح');
+        return redirect('/applicant/view');
+    }
+
+    public function FinanceOrderSure($id) {
+        DB::table('applicants')
+            ->where('id', $id)
             ->update(['status_id' => 4]);
 
         Session()->flash('status', 'تم اعتماد الصرف بنجاح');
-        return redirect('/finance/manager/view');
+        return redirect('/applicant/view');
+
     }
 
 
