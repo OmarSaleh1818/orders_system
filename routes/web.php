@@ -9,9 +9,11 @@ use App\Http\Controllers\Setting\SectionsController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Setting\ProjectsController;
 use App\Http\Controllers\Setting\InvoicesController;
+use App\Http\Controllers\Setting\BalanceController;
 use App\Http\Controllers\Employee\ApplicantManagerController;
 use App\Http\Controllers\Employee\FinanceManagerController;
 use App\Http\Controllers\Employee\FinanceController;
+use App\Http\Controllers\Setting\PdfController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\RoleController;
 use App\Http\Controllers\DashboardController;
@@ -78,6 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/project/eye/{id}', [ProjectsController::class, 'ProjectEye'])->name('project.eye');
         Route::get('/back', [ProjectsController::class, 'Back'])->name('back');
         Route::get('/project/repeat/{id}', [ProjectsController::class, 'ProjectRepeat'])->name('project.repeat');
+        Route::get('/project/pdf/{id}', [PdfController::class, 'ProjectPdf'])->name('project.pdf');
     });
     Route::get('/get-users-by-section', [ProjectsController::class, 'getUsersBySection']);
 // End
@@ -105,45 +108,41 @@ Route::middleware('auth')->group(function () {
 
 // All Users Route
     Route::prefix('users')->group(function() {
-//        Route::get('/view', [RegisteredUserController::class, 'create'])->name('users');
-//        Route::get('/create', [RegisteredUserController::class, 'UsersCreate'])->name('users_create');
-//        Route::post('/store', [RegisteredUserController::class, 'UsersStore'])->name('users.store');
-        // All Section Route
         Route::get('/section/view', [SectionsController::class, 'SectionView'])->name('sections');
         Route::post('/section/store', [SectionsController::class, 'SectionStore'])->name('section.store');
         Route::get('/section/edit/{id}', [SectionsController::class, 'SectionEdit'])->name('section.edit');
         Route::post('/section/update/{id}', [SectionsController::class, 'SectionUpdate'])->name('section.update');
         Route::get('/section/delete/{id}', [SectionsController::class, 'SectionDelete'])->name('section.delete');
-        // End
     });
 // End
 
 // All Project Route
-    Route::get('/project/open/view', [OpenPrejectController::class, 'ProjectOpenView'])->name('project.open');
-    Route::get('/add/project/open/{id}', [OpenPrejectController::class, 'AddProjectOpen'])->name('add.project.open');
-    Route::post('/project/open/store/{id}', [OpenPrejectController::class, 'ProjectOpenStore'])->name('project.open.store');
-    Route::get('/project/sure/{id}', [ProjectsController::class, 'ProjectSure'])->name('project.sure');
-    Route::get('/price/sure/{id}', [ProjectsController::class, 'PriceSure'])->name('price.sure');
-    Route::post('/project/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
-    Route::get('/project/back', [ProjectsController::class, 'ProjectBack'])->name('project.back');
-    Route::get('/project/manager/eye/{id}', [OpenPrejectController::class, 'ProjectManagerEye'])->name('project.manager.eye');
-    Route::get('/open/project/sure/{id}', [OpenPrejectController::class, 'OpenProjectSure'])->name('open.project.sure');
-    Route::get('/open/project/Manager/sure/{id}', [OpenPrejectController::class, 'OpenProjectManagerSure'])->name('open.projectManager.sure');
-    Route::get('/open/project/back', [OpenPrejectController::class, 'OpenProjectBack'])->name('open.project.back');
-    Route::post('/open/project/reject/{id}', [OpenPrejectController::class, 'OpenProjectReject'])->name('open.project.reject');
-    Route::get('/open/project/edit/{id}', [OpenPrejectController::class, 'OpenProjectEdit'])->name('open.project.edit');
-    Route::post('/open/project/update/{id}', [OpenPrejectController::class, 'OpenProjectUpdate'])->name('project.open.update');
-    Route::post('/project/update/manager/{id}', [ProjectsController::class, 'ProjectUpdateManager'])->name('project.update.manager');
+    Route::prefix('project')->group(function() {
+        Route::get('/open/view', [OpenPrejectController::class, 'ProjectOpenView'])->name('project.open');
+        Route::get('/add/project/open/{id}', [OpenPrejectController::class, 'AddProjectOpen'])->name('add.project.open');
+        Route::post('/open/store/{id}', [OpenPrejectController::class, 'ProjectOpenStore'])->name('project.open.store');
+        Route::get('/sure/{id}', [ProjectsController::class, 'ProjectSure'])->name('project.sure');
+        Route::get('/price/sure/{id}', [ProjectsController::class, 'PriceSure'])->name('price.sure');
+        Route::post('/reject/{id}', [ProjectsController::class, 'ProjectReject'])->name('project.reject');
+        Route::get('/back', [ProjectsController::class, 'ProjectBack'])->name('project.back');
+        Route::get('/manager/eye/{id}', [OpenPrejectController::class, 'ProjectManagerEye'])->name('project.manager.eye');
+        Route::get('/open/project/sure/{id}', [OpenPrejectController::class, 'OpenProjectSure'])->name('open.project.sure');
+        Route::get('/open/project/Manager/sure/{id}', [OpenPrejectController::class, 'OpenProjectManagerSure'])->name('open.projectManager.sure');
+        Route::get('/open/project/back', [OpenPrejectController::class, 'OpenProjectBack'])->name('open.project.back');
+        Route::post('/open/project/reject/{id}', [OpenPrejectController::class, 'OpenProjectReject'])->name('open.project.reject');
+        Route::get('/open/project/edit/{id}', [OpenPrejectController::class, 'OpenProjectEdit'])->name('open.project.edit');
+        Route::post('/open/project/update/{id}', [OpenPrejectController::class, 'OpenProjectUpdate'])->name('project.open.update');
+        Route::post('/update/manager/{id}', [ProjectsController::class, 'ProjectUpdateManager'])->name('project.update.manager');
 
-    Route::get('/add/project/start/{id}', [StartProjectControler::class, 'AddProjectStart'])->name('add.project.start');
-    Route::post('/project/start/store/{id}', [StartProjectControler::class, 'ProjectStartStore'])->name('project.start.store');
-    Route::get('/project/approved/eye/{id}', [StartProjectControler::class, 'ProjectApprovedEye'])->name('project.approved.eye');
-    Route::post('/project/approved/reject/{id}', [StartProjectControler::class, 'ProjectApprovedReject'])->name('project.approved.reject');
-    Route::get('/project/approved/edit/{id}', [StartProjectControler::class, 'ProjectApprovedEdit'])->name('project.approved.edit');
-    Route::post('/project/approved/update/{id}', [StartProjectControler::class, 'ProjectApprovedUpdate'])->name('project.approved.update');
-    Route::get('/project/approved/sure/{id}', [StartProjectControler::class, 'ProjectApprovedSure'])->name('project.approved.sure');
-    Route::get('/project/approved/Manager/sure/{id}', [StartProjectControler::class, 'ProjectApprovedManagerSure'])->name('project.approvedManager.sure');
-
+        Route::get('/add/project/start/{id}', [StartProjectControler::class, 'AddProjectStart'])->name('add.project.start');
+        Route::post('/start/store/{id}', [StartProjectControler::class, 'ProjectStartStore'])->name('project.start.store');
+        Route::get('/approved/eye/{id}', [StartProjectControler::class, 'ProjectApprovedEye'])->name('project.approved.eye');
+        Route::post('/approved/reject/{id}', [StartProjectControler::class, 'ProjectApprovedReject'])->name('project.approved.reject');
+        Route::get('/approved/edit/{id}', [StartProjectControler::class, 'ProjectApprovedEdit'])->name('project.approved.edit');
+        Route::post('/approved/update/{id}', [StartProjectControler::class, 'ProjectApprovedUpdate'])->name('project.approved.update');
+        Route::get('/approved/sure/{id}', [StartProjectControler::class, 'ProjectApprovedSure'])->name('project.approved.sure');
+        Route::get('/approved/Manager/sure/{id}', [StartProjectControler::class, 'ProjectApprovedManagerSure'])->name('project.approvedManager.sure');
+    });
 // End
 
 // All invoices route
@@ -159,6 +158,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoices/manager/sure/{id}', [InvoicesController::class, 'InvoicesManagerSure'])->name('invoices.manager.sure');
     Route::post('/invoices/attachment/{id}', [InvoicesController::class, 'InvoicesAttachment'])->name('invoices.attachment');
 
+// End
+
+    // All balance Route
+    Route::prefix('balance')->group(function() {
+        Route::get('/setting/view', [BalanceController::class, 'BalanceSettingView'])->name('balance.setting');
+        Route::get('/add/year', [BalanceController::class, 'AddYear'])->name('add.year');
+        Route::post('/year/store', [BalanceController::class, 'BalanceYearStore'])->name('balance.year.store');
+        Route::get('/year/eye/{id}', [BalanceController::class, 'BalanceYearEye'])->name('balance.year.eye');
+        Route::get('/back', [BalanceController::class, 'BalanceBack'])->name('balance.back');
+        Route::get('/year/edit/{id}', [BalanceController::class, 'BalanceYearEdit'])->name('balance.year.edit');
+        Route::post('/year/update/{id}', [BalanceController::class, 'BalanceYearUpdate'])->name('balance.year.update');
+
+        Route::get('/project/view', [BalanceController::class, 'BalanceProjectView'])->name('balance.project');
+
+        Route::get('/public/view', [BalanceController::class, 'BalancePublicView'])->name('balance.public');
+    });
 // End
 });
 Route::get('/reload-captcha', [ApplicantControllar::class, 'ReloadCaptcha']);

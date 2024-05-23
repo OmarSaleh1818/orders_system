@@ -179,6 +179,7 @@ class ProjectsController extends Controller
         $request->validate([
             'date' => 'required',
             'project_name' => 'required',
+            'step_name' => 'required' ,
             'item_name' => 'required',
             'item_value' => 'required',
             'total' => 'required',
@@ -186,6 +187,7 @@ class ProjectsController extends Controller
         ],[
             'date.required' => 'التاريخ مطلوب',
             'project_name.required' => 'اسم المشروع مطلوب',
+            'step_name.required' => 'اسم المرحلة مطلوب',
             'item_name.required' => 'بند الصرف مطلوب',
             'item_value.required' => 'قيمة البند  مطلوب',
             'total.required' => 'المجموع  مطلوب',
@@ -235,8 +237,8 @@ class ProjectsController extends Controller
         $existingItemIds = $request->multi;
         $deleteSteps = array_diff($existingStepIds, $numberStepItems);
         foreach ($deleteSteps as $deleteStepIndex => $deleteStepId) {
-            MultiProject::where('step_id', $deleteStepId)->delete();
-            MultiStep::where('id', $deleteStepId)->delete();
+            MultiProject::where('step_id', $deleteStepId)->where('project_id', $id)->delete();
+            MultiStep::where('id', $deleteStepId)->where('project_id', $id)->delete();
 
             // Remove the deleted step and its items from the existingStepIds and existingItemIds arrays
             unset($existingStepIds[$deleteStepIndex]);
@@ -301,8 +303,7 @@ class ProjectsController extends Controller
             }
         }
 
-// Delete any remaining items that were not updated or inserted
-        MultiProject::whereNotIn('id', $insertedItemIds)->delete();
+//        MultiProject::whereNotIn('id', $insertedItemIds)->delete();
 
         DB::table('projects')
             ->where('id', $id)

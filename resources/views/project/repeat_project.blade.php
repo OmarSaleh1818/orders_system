@@ -14,7 +14,7 @@
 @endsection
 
 @section('content')
-    <form method="post" action="{{ route('project.store') }}">
+    <form method="post" action="{{ route('project.store') }}" id="myForm">
         @csrf
         <hr>
         <div class="row">

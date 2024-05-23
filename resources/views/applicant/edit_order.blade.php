@@ -36,16 +36,16 @@
                 </div>
             @endif
         </div>
-        @if($applicant->transformation == 1)
-            <hr>
-            <div class="row">
-                <div class="col text-center">
-                    <h2>  تحويل محلي</h2>
+        <form method="post" action="{{ route('applicant.update', $applicant->id) }}">
+            @csrf
+            @if($applicant->transformation == 1)
+                <hr>
+                <div class="row">
+                    <div class="col text-center">
+                        <h2>  تحويل محلي</h2>
+                    </div>
                 </div>
-            </div>
-            <br>
-            <form method="post" action="{{ route('applicant.update', $applicant->id) }}">
-                @csrf
+                <br>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -221,16 +221,225 @@
                         </div>
                     </div>
                 </div>
-                <br>
-                <div class="d-flex justify-content-center" style="gap: 1rem;">
-                    <input type="submit" class="btn btn-info" value=" حفظ وإرسال ">
+
+            @else
+                <hr>
+                <div class="row">
+                    <div class="col text-center">
+                        <h2>  تحويل دولي</h2>
+                    </div>
                 </div>
                 <br>
-            </form>
-        @else
-
-        @endif
-
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>التاريخ</label><span style="color: red;">  *</span>
+                            <input type="date" class="form-control" value="{{ $applicant->date }}"  required name="date">
+                            @error('date')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>رقم طلب الصرف </label><span style="color: red;">  *</span>
+                            <input type="text" class="form-control" required name="order_number" readonly value="{{ $applicant->order_number }}">
+                            @error('order_number')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="project_name">اسم المشروع </label><span style="color: red;">  *</span>
+                            <input type="text" name="project_id" class="form-control" value="{{ $applicant['project']['project_name'] }}" readonly>
+                            @error('project_id')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group" id="section_name_div">
+                            <label for="section_name">اسم القسم</label><span style="color: red;">  *</span>
+                            <input type="text" name="section_name" class="form-control" value="{{ $applicant->section_name }}" readonly>
+                            @error('section_name')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="step_name"> المرحلة</label><span style="color: red;">  *</span>
+                            <input type="text" name="step_name" class="form-control" value="{{ $applicant->step_name }}" readonly>
+                            @error('step_name')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="item_name"> البند</label><span style="color: red;">  *</span>
+                            <input type="text" name="item_name" class="form-control" value="{{ $applicant->item_name }}" readonly>
+                            @error('item_name')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="item_value">قيمة البند</label>
+                            <input type="text" class="form-control" name="item_value"  value="{{ $applicant->item_value }}" readonly>
+                            @error('item_value')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="remaining_value"> المتبقي من قيمة البند</label>
+                            <input type="text" class="form-control" name="remaining_value" value="{{ $applicant->remaining_value }}" readonly>
+                            @error('remaining_value')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="remaining_value"> المتبقي من قيمة البند بعد الصرف</label>
+                            <input type="text" class="form-control" name="remaining_value_after" value="{{ $applicant->remaining_value }}" readonly>
+                            @error('remaining_value_after')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>المبلغ بالريال السعودي </label><span style="color: red;">  *</span>
+                            <input type="text" class="form-control" required name="price" value="{{ $applicant->price }}" >
+                            @error('price')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> مستوى الأولوية </label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" required name="priority_level" value="{{ $applicant->priority_level }}">
+                            @error('priority_level')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>اسم المستفيد بالعربي</label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="benefit_name" value="{{ $applicant->benefit_name }}">
+                            @error('bank_name')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>اسم المستفيد بالانجليزي</label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="en_benefit_name" value="{{ $applicant->en_benefit_name }}">
+                            @error('en_benefit_name')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> جنسية المستفيد </label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="benefit_nationality" value="{{ $applicant->benefit_nationality }}">
+                            @error('benefit_nationality')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> الدولة </label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="country" value="{{ $applicant->country }}">
+                            @error('country')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>عملة التحويل  </label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="conversion_currency" value="{{ $applicant->conversion_currency }}">
+                            @error('conversion_currency')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>اسم المصرف</label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="bank_name" value="{{ $applicant->bank_name }}">
+                            @error('bank_name')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>رقم الحساب البنكي</label><span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="account_number" value="{{ $applicant->account_number }}">
+                            @error('account_number')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>تاريخ نهاية العقد </label><span class="text-danger">*</span>
+                            <input type="date" class="form-control" name="payment_date"
+                                   value="{{ $applicant->payment_date }}">
+                            @error('payment_date')
+                            <span class="text-danger"> {{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <label for="order_name">البيان</label>
+                                <textarea id="description" name="description"  class="form-control" placeholder="البيان...">{{ $applicant->description }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            @endif
+            <br>
+            <div class="d-flex justify-content-center" style="gap: 1rem;">
+                <input type="submit" class="btn btn-info" value=" حفظ وإرسال ">
+            </div>
+            <br>
+        </form>
 
         <script src="{{ asset('assets/js/add_order.js') }}"></script>
 

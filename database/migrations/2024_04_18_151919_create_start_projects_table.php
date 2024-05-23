@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('art_show');
             $table->string('finance_show');
             $table->string('draft_show');
+            $table->integer('total');
             $table->integer('status_id')->default(1);
             $table->timestamps();
         });

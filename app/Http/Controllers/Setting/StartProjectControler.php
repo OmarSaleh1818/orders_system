@@ -57,6 +57,7 @@ class StartProjectControler extends Controller
                 'project_id' => $request->project_id,
                 'openProject_id' => $id,
                 'date' => $request->date,
+                'total' => $request->total,
                 'art_show' => $art_showPath,
                 'finance_show' => $finance_showPath,
                 'draft_show' => $draft_showPath,
@@ -173,6 +174,7 @@ class StartProjectControler extends Controller
         }
         StartProject::where('openProject_id', $openProject->id)->update([
             'date' => $request->date,
+            'total' => $request->total,
             'description' => $request->description,
             'created_at' => Carbon::now(),
         ]);

@@ -129,7 +129,7 @@
                     <div class="col-md-3">
                         <div class="form-group mb-2">
                             <label>قيمة الدفعة</label><span style="color: red;">  *</span>
-                            <input type="text" class="form-control" name="batch_value[]" value="{{ $multi->batch_value }}">
+                            <input type="text" class="form-control batch_value" name="batch_value[]" value="{{ $multi->batch_value }}">
                             @error('batch_value')
                             <span class="text-danger"> {{ $message }}</span>
                             @enderror
@@ -148,6 +148,18 @@
             </div>
         @endforeach
         <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>مجموع الدفعات</label><span style="color: red;">  *</span>
+                    <input type="number" class="form-control" required name="total" id="total"
+                           value="{{ $start_project->total }}" readonly>
+                    @error('total')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
@@ -170,6 +182,25 @@
     </form>
 
 
-    <script src="{{ asset('assets/js/project_start.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            // Recalculate total when any batch_value input changes
+            $(document).on('input', '.batch_value', function () {
+                updateTotal();
+            });
+
+            // Calculate total initially
+            updateTotal();
+
+            function updateTotal() {
+                var total = 0;
+                $('.batch_value').each(function () {
+                    var value = parseFloat($(this).val()) || 0;
+                    total += value;
+                });
+                $('#total').val(total);
+            }
+        });
+    </script>
 
 @endsection

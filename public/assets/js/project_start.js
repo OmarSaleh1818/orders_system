@@ -24,13 +24,13 @@ $(document).ready(function() {
                         <div class="col-md-3">\
                             <div class="form-group mb-2">\
                                 <label>رقم الدفعة</label><span style="color: red;">  *</span>\
-                                <input type="text" class="form-control" name="batch_number[]" placeholder="رقم الدفعة...">\
+                                <input type="text" class="form-control" required name="batch_number[]" placeholder="رقم الدفعة...">\
                             </div>\
                         </div>\
                         <div class="col-md-3">\
                             <div class="form-group mb-2">\
                                 <label>قيمة الدفعة</label><span style="color: red;">  *</span>\
-                                <input type="text" class="form-control" name="batch_value[]" placeholder="قيمة الدفعة...">\
+                                <input type="text" class="form-control batch_value" name="batch_value[]" placeholder="قيمة الدفعة...">\
                             </div>\
                         </div>\
                         <div class="col-md-3">\
@@ -49,3 +49,26 @@ $(document).ready(function() {
                 </div>');
     });
 });
+
+////////////////////
+
+// Calculate total when an item_value input changes
+$(document).ready(function () {
+    // Recalculate total when any batch_value input changes
+    $(document).on('input', '.batch_value', function () {
+        updateTotal();
+    });
+
+    // Calculate total initially
+    updateTotal();
+
+    function updateTotal() {
+        var total = 0;
+        $('.batch_value').each(function () {
+            var value = parseFloat($(this).val()) || 0;
+            total += value;
+        });
+        $('#total').val(total);
+    }
+});
+

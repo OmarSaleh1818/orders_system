@@ -106,7 +106,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="remaining_value"> المتبقي من قيمة البند بعد الصرف</label>
-                        <input type="text" class="form-control" name="remaining_value_after" value="{{ $applicant->remaining_value_after }}" readonly>
+                        <input type="text" class="form-control" name="remaining_value_after" value="{{ $applicant->remaining_value }}" readonly>
                         @error('remaining_value_after')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
@@ -277,7 +277,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="remaining_value"> المتبقي من قيمة البند بعد الصرف</label>
-                        <input type="text" class="form-control" name="remaining_value_after" value="{{ $applicant->remaining_value_after }}" readonly>
+                        <input type="text" class="form-control" name="remaining_value_after" value="{{ $applicant->remaining_value }}" readonly>
                         @error('remaining_value_after')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror

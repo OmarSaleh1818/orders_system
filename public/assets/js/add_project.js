@@ -162,7 +162,25 @@ function removeItem(event){
     updateTotal();
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+        // Get all hidden input elements with the name 'number_step[]'
+        var steps = document.querySelectorAll("input[name='number_step[]']");
+        var isValid = true;
 
+        steps.forEach(function(step) {
+            if (step.value == 0) {
+                isValid = false;
+                // Display an alert
+                alert("كل مرحلة يجب ان تحتوي على الأقل بند واحد.");
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission if validation fails
+        }
+    });
+});
 
 // Calculate total when an item_value input changes
 $(document).on('input', '.item-value', function () {

@@ -310,18 +310,22 @@
                 </button>
             @endcan
             <button class="btn btn-secondary" disabled> في انتظار المدير المالي <i class="far fa-clock" aria-hidden="true"></i></button>
+            <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 2)
             <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
             <button class="btn btn-danger" disabled> غير معتمد</button>
+            <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 13)
             <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
             <button class="btn btn-success" disabled> تم اعتماد المشروع </button>
+            <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 3)
             <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
             <button class="btn btn-dark" disabled> تم فتح المشروع </button>
+            <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 6)
             <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
@@ -333,6 +337,7 @@
             @endcan
             <button class="btn btn-secondary" disabled> في انتظار المدير <i class="far fa-clock" aria-hidden="true"></i></button>
             <button class="btn btn-success" disabled> تم اعتماد المدير المالي</button>
+            <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 7)
             <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
@@ -344,6 +349,7 @@
                 <a href="{{ route('add.project.open', $project->id) }}" class="btn btn-secondary">  فتح مشروع  </a>
             @endif
             <button class="btn btn-success" disabled> تم اعتماد المدير </button>
+            <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @endif
     </div>

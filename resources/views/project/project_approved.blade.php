@@ -571,6 +571,17 @@
         </div>
     </div>
     @endforeach
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group mb-2">
+                <label>مجموع الدفعات</label><span style="color: red;">  *</span>
+                <input type="text" class="form-control" name="total" readonly value="{{ $start_project->total }}">
+                @error('total')
+                <span class="text-danger"> {{ $message }}</span>
+                @enderror
+            </div>
+        </div>
+    </div>
     <br>
     @can('اعتماد المدير لفتح المشروع')
         <div class="row">

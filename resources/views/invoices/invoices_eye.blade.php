@@ -170,7 +170,7 @@
             @endcan
             <button class="btn btn-secondary" disabled> في انتظار التنفيذ <i class="far fa-clock" aria-hidden="true"></i> </button>
             <a href="{{ route('invoices.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
-        @elseif($item->status_id == 5)
+        @elseif($invoices->status_id == 5)
             <button class="btn btn-success" disabled>  تم إرفاق الفاتورة <i class="fa fa-check-circle"></i></button>
             <a href="{{ route('invoices.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @endif

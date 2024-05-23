@@ -29,18 +29,17 @@ $(document).ready(function () {
         // Get the project code from the server
         $.get('/get-order-number/' + projectId, function (data) {
             var projectCode = data.project_code;
+            var suffix = '-001'; // Default suffix
 
-            // Get the last order number from the applicants table
-            $.get('/get-last-order-number/' + projectId, function (data) {
-                var lastOrderNumber = data.last_order_number;
+            // Check if the project code already has a suffix
+            if (projectCode.match(/-\d{3}$/)) {
+                // Extract the current suffix and increment it
+                var currentSuffix = parseInt(projectCode.slice(-3));
+                suffix = '-' + ('00' + (currentSuffix + 1)).slice(-3); // Increment and pad with zeros
+            }
 
-                // Extract the last three numbers and increment
-                var currentSuffix = parseInt(lastOrderNumber.slice(-3));
-                var suffix = ('00' + (currentSuffix + 1)).slice(-3); // Increment and pad with zeros
-
-                var newProjectCode = projectCode + '-' + suffix;
-                $('#order_number').val(newProjectCode);
-            });
+            var newProjectCode = projectCode + suffix;
+            $('#order_number').val(newProjectCode);
         });
 
         // Make an AJAX request to get the section name

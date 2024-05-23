@@ -6,7 +6,7 @@
     <div class="breadcrumb-header justify-content-between">
         <div class="my-auto p-4">
             <div class="d-flex">
-                <h4 class="content-title mb-0 my-auto"> تسعير المشاريع </h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ نعديل تسعيرة </span>
+                <h4 class="content-title mb-0 my-auto"> تسعير المشاريع </h4><span class="text-muted mt-1 tx-13 mr-3 mb-0">/ تعديل تسعيرة </span>
             </div>
         </div>
 
@@ -14,7 +14,7 @@
 @endsection
 
 @section('content')
-    <form method="post" action="{{ route('project.update', $project->id) }}">
+    <form method="post" action="{{ route('project.update', $project->id) }}" id="myForm">
         @csrf
         <div class="row">
             @if($project->status_id == 2)
@@ -39,7 +39,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>التاريخ</label><span style="color: red;">  *</span>
-                    <input type="date" class="form-control" id="dateInput" value="{{ $project->date }}"
+                    <input type="date" class="form-control" value="{{ $project->date }}" id="dateInput"
                            min="{{ Carbon\Carbon::now()->format('Y-m-d') }}" required name="date">
                     @error('date')
                     <span class="text-danger"> {{ $message }}</span>

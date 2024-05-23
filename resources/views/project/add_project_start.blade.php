@@ -107,7 +107,7 @@
                 <div class="col-md-3">
                     <div class="form-group mb-2">
                         <label>قيمة الدفعة</label><span style="color: red;">  *</span>
-                        <input type="text" class="form-control" name="batch_value[]" placeholder="قيمة الدفعة...">
+                        <input type="number" class="form-control batch_value" name="batch_value[]" placeholder="قيمة الدفعة...">
                         @error('batch_value')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
@@ -131,6 +131,19 @@
             <a href="javascript:void(0)" class="add-more-form float-left btn btn-primary">إضافة دفعات</a>
         </div>
         <br>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>مجموع الدفعات</label><span style="color: red;">  *</span>
+                    <input type="number" class="form-control" required name="total" id="total"
+                           placeholder="مجموع الدفعات ..." readonly>
+                    @error('total')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <hr>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
