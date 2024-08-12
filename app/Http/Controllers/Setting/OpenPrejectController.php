@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class OpenPrejectController extends Controller
 {
@@ -74,12 +75,21 @@ class OpenPrejectController extends Controller
         ]);
 
         $user_id = Auth::user()->id;
+
         $art_show = $request->file('art_show');
-        $art_showPath = $art_show->move("upload", $art_show->getClientOriginalName());
+        $originalArtShow = $art_show->getClientOriginalName();
+        $sanitizedFileArtShow = Str::slug(pathinfo($originalArtShow, PATHINFO_FILENAME), '_') . '.' . $art_show->getClientOriginalExtension();
+        $art_showPath = $art_show->move("upload", $sanitizedFileArtShow);
+
         $finance_show = $request->file('finance_show');
-        $finance_showPath = $finance_show->move("upload", $finance_show->getClientOriginalName());
+        $originalFinanceShow = $finance_show->getClientOriginalName();
+        $sanitizedFileFinanceShow = Str::slug(pathinfo($originalFinanceShow, PATHINFO_FILENAME), '_') . '.' . $finance_show->getClientOriginalExtension();
+        $finance_showPath = $finance_show->move("upload", $sanitizedFileFinanceShow);
+
         $draft_show = $request->file('draft_show');
-        $draft_showPath = $draft_show->move("upload", $draft_show->getClientOriginalName());
+        $originalDraftShow = $draft_show->getClientOriginalName();
+        $sanitizedFileDraftShow = Str::slug(pathinfo($originalDraftShow, PATHINFO_FILENAME), '_') . '.' . $draft_show->getClientOriginalExtension();
+        $draft_showPath = $draft_show->move("upload", $sanitizedFileDraftShow);
 
         if($art_showPath && $finance_showPath && $finance_showPath) {
             $open_project = OpenProject::insertGetId([
@@ -187,7 +197,9 @@ class OpenPrejectController extends Controller
 
         if ($request->hasFile('art_show')) {
             $art_show = $request->file('art_show');
-            $art_showPath = $art_show->move("upload", $art_show->getClientOriginalName());
+            $originalArtShow = $art_show->getClientOriginalName();
+            $sanitizedFileArtShow = Str::slug(pathinfo($originalArtShow, PATHINFO_FILENAME), '_') . '.' . $art_show->getClientOriginalExtension();
+            $art_showPath = $art_show->move("upload", $sanitizedFileArtShow);
             OpenProject::findOrFail($id)->update([
                 'art_show' => $art_showPath,
             ]);
@@ -195,7 +207,9 @@ class OpenPrejectController extends Controller
 
         if ($request->hasFile('finance_show')) {
             $finance_show = $request->file('finance_show');
-            $finance_showPath = $finance_show->move("upload", $finance_show->getClientOriginalName());
+            $originalFinanceShow = $finance_show->getClientOriginalName();
+            $sanitizedFileFinanceShow = Str::slug(pathinfo($originalFinanceShow, PATHINFO_FILENAME), '_') . '.' . $finance_show->getClientOriginalExtension();
+            $finance_showPath = $finance_show->move("upload", $sanitizedFileFinanceShow);
             OpenProject::findOrFail($id)->update([
                 'finance_show' => $finance_showPath,
             ]);
@@ -203,7 +217,9 @@ class OpenPrejectController extends Controller
 
         if ($request->hasFile('draft_show')) {
             $draft_show = $request->file('draft_show');
-            $draft_showPath = $draft_show->move("upload", $draft_show->getClientOriginalName());
+            $originalDraftShow = $draft_show->getClientOriginalName();
+            $sanitizedFileDraftShow = Str::slug(pathinfo($originalDraftShow, PATHINFO_FILENAME), '_') . '.' . $draft_show->getClientOriginalExtension();
+            $draft_showPath = $draft_show->move("upload", $sanitizedFileDraftShow);
             OpenProject::findOrFail($id)->update([
                 'draft_show' => $draft_showPath,
             ]);

@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class FinanceController extends Controller
 {
@@ -45,7 +46,10 @@ class FinanceController extends Controller
         ]);
         $value = $request->value - $request->price;
         $file = $request->file('attachment');
-        $filePath = $file->move("upload", $file->getClientOriginalName());
+        $originalFile = $file->getClientOriginalName();
+        $sanitizedFile = Str::slug(pathinfo($originalFile, PATHINFO_FILENAME), '_') . '.' . $file->getClientOriginalExtension();
+        $filePath = $file->move("upload", $sanitizedFile);
+        
         if($filePath) {
             Finance::insert([
                 'applicant_id' => $id,

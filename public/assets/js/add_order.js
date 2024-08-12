@@ -26,20 +26,11 @@ $(document).ready(function () {
     $('#project_name').change(function () {
         var projectId = $(this).val();
 
-        // Get the project code from the server
         $.get('/get-order-number/' + projectId, function (data) {
-            var projectCode = data.project_code;
-            var suffix = '-001'; // Default suffix
-
-            // Check if the project code already has a suffix
-            if (projectCode.match(/-\d{3}$/)) {
-                // Extract the current suffix and increment it
-                var currentSuffix = parseInt(projectCode.slice(-3));
-                suffix = '-' + ('00' + (currentSuffix + 1)).slice(-3); // Increment and pad with zeros
-            }
-
-            var newProjectCode = projectCode + suffix;
-            $('#order_number').val(newProjectCode);
+            var newOrderNumber = data.new_order_number; // Use the new order number provided by the server
+        
+            // Set the new order number to the input field
+            $('#order_number').val(newOrderNumber);
         });
 
         // Make an AJAX request to get the section name
@@ -51,8 +42,8 @@ $(document).ready(function () {
         $.get('/get-step-names/' + projectId, function (data) {
             $('#step_name').empty().append('<option value="" selected="" disabled="">اختر المرحلة</option>');
 
-            $.each(data.step_names, function (index, stepName) {
-                $('#step_name').append('<option value="' + stepName + '">' + stepName + '</option>');
+            $.each(data.step_names, function (index, step) {
+                $('#step_name').append('<option value="'  + step.id + '">' + step.step_name + '</option>');
             });
         });
     });
@@ -119,18 +110,10 @@ $(document).ready(function () {
         var projectId = $(this).val();
 
         $.get('/get-order-number/' + projectId, function (data) {
-            var projectCode = data.project_code;
-            var suffix = '-001'; // Default suffix
-
-            // Check if the project code already has a suffix
-            if (projectCode.match(/-\d{3}$/)) {
-                // Extract the current suffix and increment it
-                var currentSuffix = parseInt(projectCode.slice(-3));
-                suffix = '-' + ('00' + (currentSuffix + 1)).slice(-3); // Increment and pad with zeros
-            }
-
-            var newProjectCode = projectCode + suffix;
-            $('#order_number1').val(newProjectCode);
+            var newOrderNumber = data.new_order_number; // Use the new order number provided by the server
+        
+            // Set the new order number to the input field
+            $('#order_number1').val(newOrderNumber);
         });
 
         // Make an AJAX request to get the section name
@@ -142,8 +125,8 @@ $(document).ready(function () {
         $.get('/get-step-names/' + projectId, function (data) {
             $('#step_name1').empty().append('<option value="" selected="" disabled="">اختر المرحلة</option>');
 
-            $.each(data.step_names, function (index, stepName) {
-                $('#step_name1').append('<option value="' + stepName + '">' + stepName + '</option>');
+            $.each(data.step_names, function (index, step) {
+                $('#step_name1').append('<option value="' + step.id + '">' + step.step_name + '</option>');
             });
         });
     });

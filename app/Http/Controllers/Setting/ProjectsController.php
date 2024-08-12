@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
+
 class ProjectsController extends Controller
 {
 //    function __construct()
@@ -115,45 +116,39 @@ class ProjectsController extends Controller
             'after_tax' => $request->after_tax,
             'created_at' => Carbon::now(),
         ]);
-        $step_name = $request->step_name;
-        $item_name = $request->item_name;
-        $item_value = $request->item_value;
-        $numberStepItems = $request->number_step;
-        $other_item_name = $request->other_item_name;
-        $stepId = 0;
-        $startIndex = 0; // Initialize the start index outside the loop
+        // Get all request data
+        $stepNames = $request->input('step_name');
+        $stepIds = $request->input('step_id');
+        $itemNames = $request->input('item_name');
+        $itemValues = $request->input('item_value');
+        $otherItemNames = $request->input('other_item_name', []);
+        $stepItemIds = $request->input('step_item_id');
 
-        foreach ($step_name as $step) {
-            $p_name = $step;
-            $step_id = MultiStep::insertGetId([
+        foreach ($stepNames as $index => $stepName) {
+            $step = MultiStep::create([
                 'project_id' => $project_id,
-                'step_name' => $p_name,
+                'step_name' => $stepName,
                 'created_at' => Carbon::now(),
             ]);
-            $numberOfStepItem = $numberStepItems[$stepId];
 
-            for ($i = $startIndex; $i < $startIndex + $numberOfStepItem; $i++) {
-                $s_name = $item_name[$i];
-                $s_value = $item_value[$i];
-
-                // Check if the current item is "أخرى" and use the value from the other_item_name input field
-                if ($s_name === "أخرى") {
-                    $s_name = $other_item_name;
+            foreach ($stepItemIds as $itemIndex => $stepItemId) {
+                if ($stepItemId == $stepIds[$index]) {
+                    $itemName = $itemNames[$itemIndex];
+                    if (isset($otherItemNames[$itemIndex]) && !empty($otherItemNames[$itemIndex])) {
+                        $itemName = $otherItemNames[$itemIndex];
+                    }
+                    MultiProject::create([
+                        'project_id' => $project_id,
+                        'step_id' => $step->id,
+                        'item_name' => $itemName,
+                        'item_value' => $itemValues[$itemIndex],
+                        'remaining_value' => $itemValues[$itemIndex],
+                        'created_at' => Carbon::now(),
+                    ]);
                 }
-
-                MultiProject::insert([
-                    'project_id' => $project_id,
-                    'step_id' => $step_id,
-                    'item_name' => $s_name,
-                    'item_value' => $s_value,
-                    'remaining_value' => $s_value,
-                    'created_at' => Carbon::now(),
-                ]);
             }
-
-            $startIndex += $numberOfStepItem; // Update the start index for the next step
-            $stepId++; // Increment the step ID
         }
+       
 
         $request->session()->flash('status', 'تم إضافة التسعيرة بنجاح');
         return redirect('/manager/project/view');
@@ -222,88 +217,63 @@ class ProjectsController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        $step_name = $request->step_name;
-        $item_name = $request->item_name;
-        $item_value = $request->item_value;
-        $numberStepItems = $request->number_step;
-        $other_item_name = $request->other_item_name;
-
-// Track the IDs of the steps and items that are inserted or updated
+        // Track the IDs of the steps and items that are inserted or updated
         $insertedStepIds = [];
         $insertedItemIds = [];
 
-// Delete steps and their items
-        $existingStepIds = $request->step_id;
-        $existingItemIds = $request->multi;
-        $deleteSteps = array_diff($existingStepIds, $numberStepItems);
-        foreach ($deleteSteps as $deleteStepIndex => $deleteStepId) {
-            MultiProject::where('step_id', $deleteStepId)->where('project_id', $id)->delete();
-            MultiStep::where('id', $deleteStepId)->where('project_id', $id)->delete();
+        // Handle updated or new steps
+        foreach ($request->step_id as $index => $stepId) {
+            $stepData = [
+                'project_id' => $id,
+                'step_name' => $request->step_name[$index],
+            ];
 
-            // Remove the deleted step and its items from the existingStepIds and existingItemIds arrays
-            unset($existingStepIds[$deleteStepIndex]);
-            unset($existingItemIds[$deleteStepIndex]);
-        }
-        $existingStepIds = array_values($existingStepIds);
-        $existingItemIds = array_values($existingItemIds);
-
-// Insert or update steps and their items
-        foreach ($numberStepItems as $stepIndex => $stepId) {
-            $stepName = $step_name[$stepIndex];
-
-            if (in_array($stepId, $existingStepIds)) {
-                // Existing step, update it
-                MultiStep::where('id', $stepId)->update([
-                    'step_name' => $stepName,
-                    'updated_at' => now(),
-                ]);
+            if (strpos($stepId, 'new') === false) {
+                // Update existing step
+                MultiStep::where('id', $stepId)->update($stepData);
             } else {
-                // New step, insert it
-                $stepId = MultiStep::insertGetId([
-                    'project_id' => $id,
-                    'step_name' => $stepName,
-                    'created_at' => now(),
-                ]);
+                // Create new step
+                $newStep = MultiStep::create($stepData);
+                $stepId = $newStep->id;
                 $insertedStepIds[] = $stepId;
             }
 
-            // Get the start and end index for items in this step
-            $startIndex = array_sum(array_slice($numberStepItems, 0, $stepIndex));
-            $endIndex = $startIndex + $numberStepItems[$stepIndex];
-
-            // Insert or update items for this step
-            for ($i = $startIndex; $i < $endIndex; $i++) {
-                $itemId = $existingItemIds[$i] ?? null;
-                $itemName = $item_name[$i];
-                $itemValue = $item_value[$i];
-
-                if ($itemName === "أخرى") {
-                    $itemName = $other_item_name;
-                }
-
-                if ($itemId && MultiProject::where('id', $itemId)->exists()) {
-                    // Existing item, update it
-                    MultiProject::where('id', $itemId)->update([
-                        'item_name' => $itemName,
-                        'item_value' => $itemValue,
-                        'remaining_value' => $itemValue,
-                    ]);
-                } else {
-                    // New item, insert it
-                    $itemId = MultiProject::insertGetId([
-                        'project_id' => $id,
+            // Handle items for each step
+            foreach ($request->item_id as $itemIndex => $itemId) {
+                if ($request->step_item_id[$itemIndex] == $request->step_id[$index] || in_array($request->step_id[$index], $insertedStepIds)) {
+                    $itemData = [
                         'step_id' => $stepId,
-                        'item_name' => $itemName,
-                        'item_value' => $itemValue,
-                        'remaining_value' => $itemValue,
+                        'item_name' => $request->item_name[$itemIndex] === 'أخرى' ? $request->other_item_name[$itemIndex] : $request->item_name[$itemIndex],
+                        'item_value' => $request->item_value[$itemIndex],
+                        'remaining_value' => $request->item_value[$itemIndex],
+                        'project_id' => $id,
                         'created_at' => now(),
-                    ]);
-                    $insertedItemIds[] = $itemId;
+                    ];
+
+                    if (strpos($itemId, 'new') === false) {
+                        // Update existing item
+                        MultiProject::where('id', $itemId)->update($itemData);
+                    } else {
+                        // Create new item
+                        MultiProject::create($itemData);
+                    }
                 }
             }
         }
 
-//        MultiProject::whereNotIn('id', $insertedItemIds)->delete();
+        // // Handle deleted steps and items
+        // $deletedSteps = explode(',', $request->input('deleted_steps', ''));
+        // $deletedItems = explode(',', $request->input('deleted_items', ''));
+
+        // if (!empty($deletedSteps)) {
+        //     MultiProject::whereIn('step_id', $deletedSteps)->where('project_id', $id)->delete();
+        //     MultiStep::whereIn('id', $deletedSteps)->where('project_id', $id)->delete();
+        // }
+
+        // if (!empty($deletedItems)) {
+        //     MultiProject::whereIn('id', $deletedItems)->delete();
+        // }
+
 
         DB::table('projects')
             ->where('id', $id)
@@ -381,7 +351,7 @@ class ProjectsController extends Controller
     public function ProjectRepeat($id) {
         $user_id = Auth::user()->id;
 
-        $steps = MultiStep::where('project_id', $id)->get();
+        $steps = MultiStep::where('project_id', $id)->with('items')->get();
         $multi_project = MultiProject::where('project_id', $id)->get();
         $project_users = project_users::where('project_id', $id)->get();
         $projectManager = ProjectManager::where('project_id', $id)->first();

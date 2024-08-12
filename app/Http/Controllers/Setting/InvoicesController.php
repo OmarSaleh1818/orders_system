@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class InvoicesController extends Controller
 {
@@ -66,8 +67,11 @@ class InvoicesController extends Controller
         ]);
 
         $user_id = Auth::user()->id;
+
         $attachment = $request->file('attachment');
-        $attachmentPath = $attachment->move("invoices", $attachment->getClientOriginalName());
+        $originalAttachment = $attachment->getClientOriginalName();
+        $sanitizedAttachment = Str::slug(pathinfo($originalAttachment, PATHINFO_FILENAME), '_') . '.' . $attachment->getClientOriginalExtension();
+        $attachmentPath = $attachment->move("invoices", $sanitizedAttachment);
 
         $invoices_id = Invoices::insertGetId([
             'user_id' => $user_id,
@@ -164,7 +168,9 @@ class InvoicesController extends Controller
 
         if ($request->hasFile('attachment')) {
             $attachment = $request->file('attachment');
-            $attachmentPath = $attachment->move("invoices", $attachment->getClientOriginalName());
+            $originalAttachment = $attachment->getClientOriginalName();
+            $sanitizedAttachment = Str::slug(pathinfo($originalAttachment, PATHINFO_FILENAME), '_') . '.' . $attachment->getClientOriginalExtension();
+            $attachmentPath = $attachment->move("invoices", $sanitizedAttachment);
             Invoices::find($id)->update([
                 'attachment' => $attachmentPath,
             ]);
@@ -238,7 +244,9 @@ class InvoicesController extends Controller
             'invoice_attachment.mimes' => 'يجب أن يكون الملف من نوع PDF أو DOC',
         ]);
         $file = $request->file('invoice_attachment');
-        $filePath = $file->move("invoices", $file->getClientOriginalName());
+        $originalFile = $file->getClientOriginalName();
+        $sanitizedFile = Str::slug(pathinfo($originalFile, PATHINFO_FILENAME), '_') . '.' . $file->getClientOriginalExtension();
+        $filePath = $file->move("invoices", $sanitizedFile);
         if($filePath) {
             InvoicesAttachment::insert([
                 'invoice_id' => $id,

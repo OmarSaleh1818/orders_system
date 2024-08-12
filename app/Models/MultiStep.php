@@ -20,7 +20,7 @@ class MultiStep extends Model
 
     public function items()
     {
-        return $this->hasMany(MultiProject::class);
+        return $this->hasMany(MultiProject::class, 'step_id');
     }
 
 

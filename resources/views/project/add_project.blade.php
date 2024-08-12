@@ -85,75 +85,36 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label>اسم المرحلة</label><span style="color: red;">  *</span>
-                        <input type="hidden" value="1" id="step1" name="number_step[]">
+                        <label>اسم المرحلة</label><span style="color: red;"> *</span>
+                        <input type="hidden" value="1" id="step1" name="step_id[]">
                         <input type="text" class="form-control" required name="step_name[]" placeholder="اسم المرحلة...">
                     </div>
                 </div>
             </div>
 
             <div class="items-container mt-5" id="stepitems1">
-                <div class="row" >
-                    <div class="col-md-3" id="itemNameContainer">
-                        <div class="form-group">
-                            <label>بند الصرف</label><span style="color: red;"> *</span>
-                            <select name="item_name[]" class="form-control" id="travel_arriveVia" onchange="toggleOtherOption(this)">
-                                <option value="" selected="" disabled="">اختيار بند الصرف</option>
-                                <option value="مدربين">مدربين</option>
-                                <option value="مستشارين">مستشارين</option>
-                                <option value="سكن">سكن</option>
-                                <option value="طيران">طيران</option>
-                                <option value="مطبوعات">مطبوعات</option>
-                                <option value="انتدابات">انتدابات</option>
-                                <option value="قاعات">قاعات</option>
-                                <option value="مواصلات">مواصلات</option>
-                                <option value="اختبارات">اختبارات</option>
-                                <option value="تغطية إعلامية">تغطية إعلامية</option>
-                                <option value="تصاميم">تصاميم</option>
-                                <option value="منسقين">منسقين</option>
-                                <option value="اعتمادات">اعتمادات</option>
-                                <option value="اشتراكات تقنية">اشتراكات تقنية</option>
-                                <option value="ميسر ورشة">ميسر ورشة</option>
-                                <option value="مقدم">مقدم</option>
-                                <option value="ترجمة">ترجمة</option>
-                                <option value="شراء حقوق">شراء حقوق</option>
-                                <option value="تسويق">تسويق</option>
-                                <option value="هدايا">هدايا</option>
-                                <option value="أخرى">أخرى</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label>قيمة البند</label><span class="text-danger"> *</span>
-                            <input type="number" class="form-control item-value" name="item_value[]" placeholder="قيمة البند..." required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
+                <!-- Items will be dynamically added here -->
+            </div>
 
-                    </div>
-
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- Additional content -->
+                </div>
+                <div class="col-md-2">
+                    <h4>
+                        <a href="javascript:void(0)" class="add-item float-right btn btn-primary" id="stepitemsclick,1" onclick="addItem(1)">أضف بند</a>
+                    </h4>
+                </div>
+                <div class="col-md-2">
+                    <h4>
+                        <a href="javascript:void(0)" class="add-more-step float-right btn btn-primary">أضف مرحلة</a>
+                    </h4>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-3">
+            <br>
+            <div class="paste-new-forms">
+                <!-- New steps will be dynamically added here -->
             </div>
-            <div class="col-md-2">
-                <h4>
-                    <a href="javascript:void(0)" class="add-item float-right btn btn-primary" id="stepitemsclick,1" onclick="addItem(1)">أضف بند</a>
-                </h4>
-            </div>
-            <div class="col-md-2">
-                <h4>
-                    <a href="javascript:void(0)" class="add-more-step float-right btn btn-primary">أضف مرحلة</a>
-                </h4>
-            </div>
-
-        </div>
-        <br>
-        <div class="paste-new-forms">
 
         </div>
 

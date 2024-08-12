@@ -107,7 +107,7 @@
                 <div class="col-md-3">
                     <div class="form-group mb-2">
                         <label>قيمة الدفعة</label><span style="color: red;">  *</span>
-                        <input type="number" class="form-control batch_value" name="batch_value[]" placeholder="قيمة الدفعة...">
+                        <input type="number" class="form-control batch_value" name="batch_value[]" placeholder="قيمة الدفعة..." step="any">
                         @error('batch_value')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror

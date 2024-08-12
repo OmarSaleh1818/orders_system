@@ -131,12 +131,15 @@ class ApplicantControllar extends Controller
 
         $user_id = Auth::user()->id;
         $remaining = $request->remaining_value - $request->price;
+
+        $step = MultiStep::where('id', $request->step_name)->first();
+
         Applicant::insert([
             'user_id' =>  $user_id,
             'project_id' => $request->project_id,
             'transformation' => $request->transformation,
             'order_number' => $request->order_number,
-            'step_name' => $request->step_name,
+            'step_name' => $step->step_name,
             'date' => $request->date,
             'section_name' => $request->section_name,
             'item_name' => $request->item_name,
@@ -246,12 +249,13 @@ class ApplicantControllar extends Controller
 
         $user_id = Auth::user()->id;
         $remaining = $request->remaining_value - $request->price;
+        $step = MultiStep::where('id', $request->step_name)->first();
         Applicant::insert([
             'user_id' =>  $user_id,
             'project_id' => $request->project_id,
             'transformation' => $request->transformation,
             'order_number' => $request->order_number,
-            'step_name' => $request->step_name,
+            'step_name' => $step->step_name,
             'date' => $request->date,
             'section_name' => $request->section_name,
             'item_name' => $request->item_name,
@@ -367,8 +371,9 @@ class ApplicantControllar extends Controller
             echo 'Error';
         }
         $remaining = $request->remaining_value - $request->price;
+        $step = MultiStep::where('id', $request->step_name)->first();
         Applicant::findOrFail($id)->update([
-            'step_name' => $request->step_name,
+            'step_name' => $step->step_name,
             'date' => $request->date,
             'section_name' => $request->section_name,
             'item_name' => $request->item_name,
@@ -412,9 +417,34 @@ class ApplicantControllar extends Controller
     }
 
     public function getOrderNumber($project_id) {
+        // Retrieve the project_code from the projects table
         $project = projects::find($project_id);
-
-        return response()->json(['project_code' => $project->project_code]);
+        $project_code = $project->project_code;
+    
+        // Find the highest order_number in the applicants table for this project_code
+        $latestApplicant = Applicant::where('order_number', 'like', $project_code . '%')
+                                     ->orderBy('order_number', 'desc')
+                                     ->first();
+    
+        // Default suffix
+        $suffix = '-001'; 
+    
+        if ($latestApplicant) {
+            // Extract the current suffix from the latest order_number
+            if (preg_match('/-(\d{3})$/', $latestApplicant->order_number, $matches)) {
+                $currentSuffix = (int)$matches[1];
+                $suffix = '-' . str_pad($currentSuffix + 1, 3, '0', STR_PAD_LEFT); // Increment and pad with zeros
+            }
+        }
+    
+        // Generate the new order_number
+        $newOrderNumber = $project_code . $suffix;
+    
+        // Save the new order_number to the applicants table (if needed, here as an example)
+        // You might want to handle this part separately when creating a new applicant
+        // applicants::create(['order_number' => $newOrderNumber]);
+    
+        return response()->json(['project_code' => $project_code, 'suffix' => $suffix, 'new_order_number' => $newOrderNumber]);
     }
 
     public function getLastOrderNumber($project_id)
@@ -436,14 +466,14 @@ class ApplicantControllar extends Controller
 
     public function getStepNames($project_id)
     {
-        $steps = MultiStep::where('project_id', $project_id)->pluck('step_name');
-
+        $steps = MultiStep::where('project_id', $project_id)
+        ->get(['id', 'step_name']); 
         return response()->json(['step_names' => $steps]);
     }
 
     public function getItemNames($step_name)
     {
-        $step = MultiStep::where('step_name', $step_name)->first();
+        $step = MultiStep::where('id', $step_name)->first();
 
         if ($step) {
             $items = MultiProject::where('step_id', $step->id)->pluck('item_name');

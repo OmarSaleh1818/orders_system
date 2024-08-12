@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class StartProjectControler extends Controller
 {
@@ -46,11 +47,19 @@ class StartProjectControler extends Controller
         ]);
 
         $art_show = $request->file('art_show');
-        $art_showPath = $art_show->move("upload", $art_show->getClientOriginalName());
+        $originalArtShow = $art_show->getClientOriginalName();
+        $sanitizedFileArtShow = Str::slug(pathinfo($originalArtShow, PATHINFO_FILENAME), '_') . '.' . $art_show->getClientOriginalExtension();
+        $art_showPath = $art_show->move("upload", $sanitizedFileArtShow);
+    
         $finance_show = $request->file('finance_show');
-        $finance_showPath = $finance_show->move("upload", $finance_show->getClientOriginalName());
+        $originalFinanceShow = $finance_show->getClientOriginalName();
+        $sanitizedFileFinanceShow = Str::slug(pathinfo($originalFinanceShow, PATHINFO_FILENAME), '_') . '.' . $finance_show->getClientOriginalExtension();
+        $finance_showPath = $finance_show->move("upload", $sanitizedFileFinanceShow);
+
         $draft_show = $request->file('draft_show');
-        $draft_showPath = $draft_show->move("upload", $draft_show->getClientOriginalName());
+        $originalDraftShow = $draft_show->getClientOriginalName();
+        $sanitizedFileDraftShow = Str::slug(pathinfo($originalDraftShow, PATHINFO_FILENAME), '_') . '.' . $draft_show->getClientOriginalExtension();
+        $draft_showPath = $draft_show->move("upload", $sanitizedFileDraftShow);
 
         if($art_showPath && $finance_showPath && $finance_showPath) {
             $start_project = StartProject::insertGetId([
@@ -153,22 +162,28 @@ class StartProjectControler extends Controller
         $openProject = OpenProject::find($id);
         if ($request->hasFile('art_show')) {
             $art_show = $request->file('art_show');
-            $art_showPath = $art_show->move("upload", $art_show->getClientOriginalName());
-            StartProject::where('openProject_id', $openProject->id)->update([
+            $originalArtShow = $art_show->getClientOriginalName();
+            $sanitizedFileArtShow = Str::slug(pathinfo($originalArtShow, PATHINFO_FILENAME), '_') . '.' . $art_show->getClientOriginalExtension();
+            $art_showPath = $art_show->move("upload", $sanitizedFileArtShow);
+                StartProject::where('openProject_id', $openProject->id)->update([
                 'art_show' => $art_showPath,
             ]);
         }
         if ($request->hasFile('finance_show')) {
             $finance_show = $request->file('finance_show');
-            $finance_showPath = $finance_show->move("upload", $finance_show->getClientOriginalName());
-            OpenProject::where('openProject_id', $openProject->id)->update([
+            $originalFinanceShow = $finance_show->getClientOriginalName();
+            $sanitizedFileFinanceShow = Str::slug(pathinfo($originalFinanceShow, PATHINFO_FILENAME), '_') . '.' . $finance_show->getClientOriginalExtension();
+            $finance_showPath = $finance_show->move("upload", $sanitizedFileFinanceShow);
+            StartProject::where('openProject_id', $openProject->id)->update([
                 'finance_show' => $finance_showPath,
             ]);
         }
         if ($request->hasFile('draft_show')) {
             $draft_show = $request->file('draft_show');
-            $draft_showPath = $draft_show->move("upload", $draft_show->getClientOriginalName());
-            OpenProject::where('openProject_id', $openProject->id)->update([
+            $originalDraftShow = $draft_show->getClientOriginalName();
+            $sanitizedFileDraftShow = Str::slug(pathinfo($originalDraftShow, PATHINFO_FILENAME), '_') . '.' . $draft_show->getClientOriginalExtension();
+            $draft_showPath = $draft_show->move("upload", $sanitizedFileDraftShow);
+            StartProject::where('openProject_id', $openProject->id)->update([
                 'draft_show' => $draft_showPath,
             ]);
         }
