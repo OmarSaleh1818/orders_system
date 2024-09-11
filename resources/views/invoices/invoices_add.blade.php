@@ -70,7 +70,7 @@
                 <div class="form-group">
                     <div class="form-group">
                         <label for="order_name">البيان</label>
-                        <textarea id="description" name="description"  class="form-control" placeholder="البيان ..."></textarea>
+                        <textarea id="description" name="description" required class="form-control" placeholder="البيان ..."></textarea>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                 <div class="col-md-2">
                     <div class="form-group mb-2">
                         <label> العدد </label><span style="color: red;">  *</span>
-                        <input type="number" class="form-control number" name="number[]" placeholder=" العدد ..." oninput="calculateTotalPrice()">
+                        <input type="number" class="form-control number" name="number[]" required placeholder=" العدد ..." oninput="calculateTotalPrice()">
                         @error('number')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
@@ -105,7 +105,7 @@
                 <div class="col-md-2">
                     <div class="form-group mb-2">
                         <label>  السعر الفردي</label><span style="color: red;">  *</span>
-                        <input type="number" class="form-control individual_price" name="individual_price[]" placeholder=" السعر الفردي شامل الضريبة ..." oninput="calculateTotalPrice()">
+                        <input type="number" class="form-control individual_price" required name="individual_price[]" placeholder=" السعر الفردي شامل الضريبة ..." oninput="calculateTotalPrice()">
                         @error('individual_price')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror

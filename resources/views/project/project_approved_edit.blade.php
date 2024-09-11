@@ -106,6 +106,17 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label> صافي قيمة المشروع بعد الضريبة</label>
+                    <input type="text" class="form-control" readonly name="after_tax" id="after_tax" value="{{ $openProject['projectStart']['after_tax'] }}">
+                    @error('after_tax')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="row">
             <div class="col text-center">
@@ -120,7 +131,7 @@
                     <div class="col-md-3">
                         <div class="form-group mb-2">
                             <label>رقم الدفعة</label><span style="color: red;">  *</span>
-                            <input type="text" class="form-control" name="batch_number[]" value="{{ $multi->batch_number }}">
+                            <input type="text" class="form-control" required name="batch_number[]" value="{{ $multi->batch_number }}">
                             @error('batch_number')
                             <span class="text-danger"> {{ $message }}</span>
                             @enderror
@@ -129,7 +140,7 @@
                     <div class="col-md-3">
                         <div class="form-group mb-2">
                             <label>قيمة الدفعة</label><span style="color: red;">  *</span>
-                            <input type="text" class="form-control batch_value" name="batch_value[]" value="{{ $multi->batch_value }}">
+                            <input type="text" class="form-control batch_value" required name="batch_value[]" value="{{ $multi->batch_value }}" oninput="validateNumber(this)">
                             @error('batch_value')
                             <span class="text-danger"> {{ $message }}</span>
                             @enderror
@@ -138,7 +149,7 @@
                     <div class="col-md-3">
                         <div class="form-group mb-2">
                             <label>تاريخ الاستحقاق</label><span style="color: red;">  *</span>
-                            <input type="date" class="form-control" name="due_date[]" value="{{ $multi->due_date }}">
+                            <input type="date" class="form-control" required name="due_date[]" value="{{ $multi->due_date }}">
                             @error('due_date')
                             <span class="text-danger"> {{ $message }}</span>
                             @enderror
@@ -183,22 +194,65 @@
 
 
     <script>
-        $(document).ready(function () {
-            // Recalculate total when any batch_value input changes
-            $(document).on('input', '.batch_value', function () {
-                updateTotal();
+        function validateNumber(input) {
+            let value = input.value;
+
+            // Check if the number is negative
+            if (value.includes('-')) {
+                alert("يجب إدخال رقم صحيح");
+                value = value.replace('-', ''); // Remove the negative sign
+            }
+
+            // Replace any invalid characters (letters, etc.) except numbers and decimal points
+            value = value.replace(/[^0-9.]/g, '');
+            
+            // Prevent more than one decimal point
+            if (value.split('.').length > 2) {
+                value = value.substring(0, value.length - 1);
+            }
+
+            input.value = value;
+        }
+
+       // Function to calculate the total of batch values
+        function calculateTotal() {
+            var total = 0;
+            var batchValues = document.querySelectorAll('.batch_value');
+            batchValues.forEach(function(input) {
+                var value = parseFloat(input.value) || 0; // Handle empty or invalid inputs
+                total += value;
             });
+            document.getElementById('total').value = total;
+            validateTotal();
+        }
 
-            // Calculate total initially
-            updateTotal();
+        // Function to validate that total is less than or equal to after_tax
+        function validateTotal() {
+            var afterTax = parseFloat(document.getElementById('after_tax').value);
+            var total = parseFloat(document.getElementById('total').value);
+            
+            if (total > afterTax) {
+                alert("مجموع الدفعات يجب أن لا يتجاوز صافي قيمة المشروع بعد الضريبة");
+                
+                // Find the last batch_value input that caused the issue and clear it
+                var batchValues = document.querySelectorAll('.batch_value');
+                for (var i = batchValues.length - 1; i >= 0; i--) {
+                    var batchValue = parseFloat(batchValues[i].value);
+                    if (!isNaN(batchValue) && batchValue !== 0) {
+                        batchValues[i].value = ''; // Clear the last entered value that caused the issue
+                        break;
+                    }
+                }
 
-            function updateTotal() {
-                var total = 0;
-                $('.batch_value').each(function () {
-                    var value = parseFloat($(this).val()) || 0;
-                    total += value;
-                });
-                $('#total').val(total);
+                // Clear the total
+                document.getElementById('total').value = '';
+            }
+        }
+
+        // Add event listeners to all batch_value inputs to recalculate total on input change
+        document.addEventListener('input', function(event) {
+            if (event.target.classList.contains('batch_value')) {
+                calculateTotal();
             }
         });
     </script>

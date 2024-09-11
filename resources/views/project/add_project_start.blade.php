@@ -14,7 +14,7 @@
 @endsection
 
 @section('content')
-    <form method="post" action="{{ route('project.start.store', $openProject->id) }}" enctype="multipart/form-data">
+    <form id="projectForm" method="post" action="{{ route('project.start.store', $openProject->id) }}" enctype="multipart/form-data">
         @csrf
         <input type="hidden"  name="project_id" value="{{ $openProject['project']['id'] }}">
         <hr>
@@ -36,7 +36,7 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>اسم المشروع</label><span style="color: red;">  *</span>
+                    <label>اسم المشروع</label>
                     <input type="text" class="form-control" readonly name="project_name" value="{{ $openProject['project']['project_name'] }}">
                     @error('project_name')
                     <span class="text-danger"> {{ $message }}</span>
@@ -69,7 +69,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label>  العرض المالي الموقع</label><span style="color: red;">  *</span>
+                    <label> العرض المالي الموقع</label><span style="color: red;">  *</span>
                     <input type="file" class="form-control" required name="finance_show" >
                     @error('finance_show')
                     <span class="text-danger"> {{ $message }}</span>
@@ -107,7 +107,7 @@
                 <div class="col-md-3">
                     <div class="form-group mb-2">
                         <label>قيمة الدفعة</label><span style="color: red;">  *</span>
-                        <input type="number" class="form-control batch_value" name="batch_value[]" placeholder="قيمة الدفعة..." step="any">
+                        <input type="text" class="form-control batch_value" required name="batch_value[]" placeholder="قيمة الدفعة..." step="any" oninput="validateNumber(this)">
                         @error('batch_value')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
@@ -116,7 +116,7 @@
                 <div class="col-md-3">
                     <div class="form-group mb-2">
                         <label>تاريخ الاستحقاق</label><span style="color: red;">  *</span>
-                        <input type="date" class="form-control" name="due_date[]" placeholder="تاريخ الاستحقاق...">
+                        <input type="date" class="form-control" name="due_date[]" required placeholder="تاريخ الاستحقاق...">
                         @error('due_date')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
@@ -132,12 +132,21 @@
         </div>
         <br>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="form-group">
                     <label>مجموع الدفعات</label><span style="color: red;">  *</span>
                     <input type="number" class="form-control" required name="total" id="total"
                            placeholder="مجموع الدفعات ..." readonly>
                     @error('total')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label> صافي قيمة المشروع بعد الضريبة</label>
+                    <input type="text" class="form-control" readonly name="after_tax" id="after_tax" value="{{ $openProject['projectStart']['after_tax'] }}">
+                    @error('after_tax')
                     <span class="text-danger"> {{ $message }}</span>
                     @enderror
                 </div>
@@ -158,7 +167,7 @@
         <br>
 
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <input type="submit" class="btn btn-info" value=" حفظ وإرسال">
+            <button type="submit" class="btn btn-info"> حفظ وإرسال</button>
         </div>
         <br>
     </form>

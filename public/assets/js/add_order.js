@@ -20,6 +20,52 @@ toggleButton1.addEventListener('click', (event) => {
     formContainer1.style.display = 'block';
 });
 
+function validateNumber(input) {
+    let value = input.value;
+
+    // Check if the number is negative
+    if (value.includes('-')) {
+        alert("يجب إدخال رقم صحيح");
+        value = value.replace('-', ''); // Remove the negative sign
+    }
+
+    // Replace any invalid characters (letters, etc.) except numbers and decimal points
+    value = value.replace(/[^0-9.]/g, '');
+    
+    // Prevent more than one decimal point
+    if (value.split('.').length > 2) {
+        value = value.substring(0, value.length - 1);
+    }
+
+    input.value = value;
+}
+
+// Initially disable price input
+$('#price').prop('disabled', true);
+
+// Enable item_name when step_name is selected
+$('#step_name').on('change', function() {
+    $('#item_name').prop('disabled', false);
+});
+
+// Enable price input when item_name is selected
+$('#item_name').on('change', function() {
+    $('#price').prop('disabled', false);
+});
+
+// Initially disable price1 input
+$('#price1').prop('disabled', true);
+
+// Enable item_name when step_name is selected
+$('#step_name1').on('change', function() {
+    $('#item_name1').prop('disabled', false);
+});
+
+// Enable price input when item_name is selected
+$('#item_name1').on('change', function() {
+    $('#price1').prop('disabled', false);
+});
+
 // get section name local transfer
 $(document).ready(function () {
     // Handle project name selection

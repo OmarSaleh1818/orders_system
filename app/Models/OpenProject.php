@@ -17,4 +17,10 @@ class OpenProject extends Model
 
     }
 
+    public function projectStart() {
+
+        return $this->belongsTo(IndirectCosts::class, 'project_id', 'project_id');
+
+    }
+
 }

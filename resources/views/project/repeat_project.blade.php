@@ -142,7 +142,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label>قيمة البند</label><span class="text-danger"> *</span>
-                                        <input type="number" class="form-control item-value" name="item_value[]" value="{{ $multi->item_value }}" required placeholder="قيمة البند...">
+                                        <input type="text" class="form-control item-value" name="item_value[]" value="{{ $multi->item_value }}" required placeholder="قيمة البند..." oninput="validateNumber(this)">
                                     </div>
                                 </div>
                                 <div class="col-md-2">
@@ -199,8 +199,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>  المصروفات الإدارية (%) </label><span style="color: red;">  *</span>
-                    <input type="number" class="form-control" name="management" id="management" required
-                           value="{{ $indirect_costs->management }}" placeholder=" المصروفات الإدارية...">
+                    <input type="text" class="form-control" name="management" id="management" required
+                           value="{{ $indirect_costs->management }}" placeholder=" المصروفات الإدارية..." oninput="validateNumber(this)">
                     @error('management')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -243,8 +243,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> فائدة المرابحة الشهرية (%) </label><span style="color: red;"> *</span>
-                        <input type="number" class="form-control" name="monthly_benefit" id="monthly_benefit"
-                               value="{{ $indirect_costs->monthly_benefit }}" placeholder="فائدة المرابحة الشهرية...">
+                        <input type="text" class="form-control" name="monthly_benefit" id="monthly_benefit"
+                               value="{{ $indirect_costs->monthly_benefit }}" placeholder="فائدة المرابحة الشهرية..." oninput="validateNumber(this)">
                         @error('monthly_benefit')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -253,8 +253,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> الفترة بالشهر </label><span style="color: red;"> *</span>
-                        <input type="number" class="form-control" name="per_month" id="per_month"
-                               value="{{ $indirect_costs->per_month }}" placeholder=" الفترة بالشهر...">
+                        <input type="text" class="form-control" name="per_month" id="per_month"
+                               value="{{ $indirect_costs->per_month }}" placeholder=" الفترة بالشهر..." oninput="validateNumber(this)">
                         @error('per_month')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -306,8 +306,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>  نسبة الربح المستهدف (%) </label><span style="color: red;">  *</span>
-                    <input type="number" class="form-control" name="target_profit_percentage" id="target_profit_percentage" required
-                           value="{{ $indirect_costs->target_profit_percentage }}" placeholder=" نسبة الربح المستهدف...">
+                    <input type="text" class="form-control" name="target_profit_percentage" id="target_profit_percentage" required
+                           value="{{ $indirect_costs->target_profit_percentage }}" placeholder=" نسبة الربح المستهدف..." oninput="validateNumber(this)">
                     @error('target_profit_percentage')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -398,6 +398,27 @@
             console.log(selectedDate); // Output the selected date
         });
 
+        function validateNumber(input) {
+            let value = input.value;
+
+            // Check if the number is negative
+            if (value.includes('-')) {
+                alert("يجب إدخال رقم صحيح");
+                value = value.replace('-', ''); // Remove the negative sign
+            }
+
+            // Replace any invalid characters (letters, etc.) except numbers and decimal points
+            value = value.replace(/[^0-9.]/g, '');
+            
+            // Prevent more than one decimal point
+            if (value.split('.').length > 2) {
+                value = value.substring(0, value.length - 1);
+            }
+
+            input.value = value;
+        }
+
+
         let stepCount = {{ count($steps) + 1 }};
 
         $(document).on('click', '.add-more-step', function () {
@@ -433,6 +454,7 @@
             let stepNumber = $(this).data('step');
             $('#stepitems' + stepNumber).remove();
             stepCount--;
+            updateTotal(); // Update total when a step is removed
         });
 
         function addItem(stepId) {
@@ -474,7 +496,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>قيمة البند</label><span class="text-danger"> *</span>
-                            <input type="number" class="form-control item-value" name="item_value[]" required placeholder="قيمة البند...">
+                            <input type="text" class="form-control item-value" name="item_value[]" required placeholder="قيمة البند..." oninput="validateNumber(this)">
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -502,6 +524,7 @@
 
         function removeItem(event) {
             event.target.closest('.row').remove();
+            updateTotal(); // Update total when an item is removed
         }
 
         document.addEventListener("DOMContentLoaded", function() {

@@ -75,97 +75,93 @@
                     @enderror
                 </div>
             </div>
-            @cannot('اعتماد القانونية للمشروع')
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>نوع العميل</label>
-                            <input type="text" class="form-control" name="customer_type" id="customerTypeSelect" readonly
-                                   value="{{ $openProject->customer_type }}">
-                            @error('customer_type')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>نوع العميل</label>
+                    <input type="text" class="form-control" name="customer_type" id="customerTypeSelect" readonly
+                            value="{{ $openProject->customer_type }}">
+                    @error('customer_type')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>اسم العميل</label>
-                            <input type="text" class="form-control" name="customer_name" id="customerNameInput" readonly
-                                   value="{{ $openProject->customer_name }}">
-                            @error('customer_name')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>الجهة المستفيدة</label>
-                            <input type="text" class="form-control" name="benefit" id="benefitInput" readonly
-                                   value="{{ $openProject->benefit }}" placeholder="الجهة المستفيدة...">
-                            @error('benefit')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>اسم العميل</label>
+                    <input type="text" class="form-control" name="customer_name" id="customerNameInput" readonly
+                            value="{{ $openProject->customer_name }}">
+                    @error('customer_name')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label> القسم</label>
-                            <input type="text" class="form-control" readonly name="section_name" value="{{ $openProject['project']['section_name'] }}" placeholder=" القسم..." readonly>
-                            @error('section_name')
-                            <span class="text-danger"> {{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label> كود المشروع</label>
-                            <input type="text" class="form-control" readonly name="project_code"
-                                   value="{{ $openProject->project_code }}" placeholder=" كود المشروع...">
-                            @error('project_code')
-                            <span class="text-danger"> {{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>الجهة المستفيدة</label>
+                    <input type="text" class="form-control" name="benefit" id="benefitInput" readonly
+                            value="{{ $openProject->benefit }}" placeholder="الجهة المستفيدة...">
+                    @error('benefit')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                <div class="row">
-                    @cannot('اعتماد المدير المالي لفتح المشروع')
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label style="margin-top: 30px; margin-left: 30px">مسودة العرض فني</label>
-                            <a href="{{ asset($openProject->art_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-                    @endcannot
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <h5> الموظفين </h5>
-                            <div class="controls">
-                                @foreach($project_users as $item)
-                                    <div class="checkbox" style="display: inline-block; margin-right: 10px;">
-                                        <label>
-                                            <input type="checkbox" name="user_name[]" value="{{ $item->user_name }}" checked disabled>
-                                            {{ $item->user_name }}
-                                        </label>
-                                    </div>
-                                @endforeach
-                                @error('user_name')
-                                <span class="text-danger"> {{ $message }}</span>
-                                @enderror
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label> القسم</label>
+                    <input type="text" class="form-control" readonly name="section_name" value="{{ $openProject['project']['section_name'] }}" placeholder=" القسم..." readonly>
+                    @error('section_name')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label> كود المشروع</label>
+                    <input type="text" class="form-control" readonly name="project_code"
+                            value="{{ $openProject->project_code }}" placeholder=" كود المشروع...">
+                    @error('project_code')
+                    <span class="text-danger"> {{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label style="margin-top: 30px; margin-left: 30px">مسودة العرض فني</label>
+                    <a href="{{ asset($openProject->art_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <h5> الموظفين </h5>
+                    <div class="controls">
+                        @foreach($project_users as $item)
+                            <div class="checkbox" style="display: inline-block; margin-right: 10px;">
+                                <label>
+                                    <input type="checkbox" name="user_name[]" value="{{ $item->user_name }}" checked disabled>
+                                    {{ $item->user_name }}
+                                </label>
                             </div>
-                        </div>
+                        @endforeach
+                        @error('user_name')
+                        <span class="text-danger"> {{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label style="margin-top: 30px; margin-left: 30px">مسودة العرض مالي</label>
-                            <a href="{{ asset($openProject->finance_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
-                        </div>
-                    </div>
-            @endcannot
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label style="margin-top: 30px; margin-left: 30px">مسودة العرض مالي</label>
+                    <a href="{{ asset($openProject->finance_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
+                </div>
+            </div>
             <div class="col-md-6">
                 <div class="form-group">
                     <label style="margin-top: 30px; margin-left: 30px"> مسودة العقد</label>
@@ -188,9 +184,9 @@
         <div class="d-flex justify-content-center" style="gap: 1rem;">
             @if($openProject->status_id == 1)
                 @can('اعتماد القانونية للمشروع')
-                    <a href="{{ route('open.project.sure', $openProject->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                    <a href="{{ route('open.project.sure', $openProject->id) }}" class="btn btn-success" id="sure"> اعتماد القانونية </a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_1">
-                        غير معتمد
+                        عدم الاعتماد
                     </button>
                 @endcan
                 <button class="btn btn-secondary" disabled> في انتظار القانونية <i class="far fa-clock" aria-hidden="true"></i></button>
@@ -200,9 +196,9 @@
                 <a href="{{ route('open.project.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @elseif($openProject->status_id == 3)
                 @can('اعتماد المدير لبدء المشروع')
-                    <a href="{{ route('open.projectManager.sure', $openProject->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                    <a href="{{ route('open.projectManager.sure', $openProject->id) }}" class="btn btn-success" id="sure"> اعتماد المدير لبدء المشروع </a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_1">
-                        غير معتمد
+                        عدم الاعتماد
                     </button>
                 @endcan
                 <button class="btn btn-success" disabled> تم اعتماد القانونية </button>

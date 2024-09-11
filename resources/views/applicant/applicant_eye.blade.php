@@ -406,12 +406,12 @@
         <div class="d-flex justify-content-center" style="gap: 1rem;">
             @if($applicant->status_id == 1)
                 @php
-                    $projectManager = App\Models\projects::where('user_id', $user_id)->first();
+                    $projectManager = App\Models\projects::where('id', $applicant['project']['id'])->where('user_id', $user_id)->first();
                 @endphp
                 @if($projectManager)
-                    <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                    <a href="{{ route('applicant.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> اعتماد مدير المشروع </a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_2">
-                        غير معتمد
+                        عدم الاعتماد
                     </button>
                 @endif
                 <div class="modal fade" id="m_modal_2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -448,9 +448,9 @@
                 <a href="{{ route('applicant.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @elseif($applicant->status_id == 3)
                 @can('اعتماد المدير لطلب الصرف')
-                    <a href="{{ route('finance.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                    <a href="{{ route('finance.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> اعتماد المدير </a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_3">
-                        غير معتمد
+                        عدم الاعتماد
                     </button>
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#m_modal_6">
                         تأجيل
@@ -463,9 +463,9 @@
                 <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @elseif($applicant->status_id == 6)
                 @can('اعتماد المدير المالي لطلب الصرف')
-                    <a href="{{ route('finance.order.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                    <a href="{{ route('finance.order.sure', $applicant->id) }}" class="btn btn-success" id="sure"> اعتماد المدير المالي </a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_7">
-                        غير معتمد
+                        عدم الاعتماد
                     </button>
                     <div class="modal fade" id="m_modal_7" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -529,9 +529,9 @@
                 <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @elseif($applicant->status_id == 9)
                 @can('اعتماد المدير لطلب الصرف')
-                    <a href="{{ route('finance.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                    <a href="{{ route('finance.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> اعتماد المدير </a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_3">
-                        غير معتمد
+                        عدم الاعتماد
                     </button>
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#m_modal_6">
                         تأجيل
@@ -554,9 +554,9 @@
                 <a href="{{ route('applicant.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
             @elseif($applicant->status_id == 11)
                 @can('اعتماد المدير لطلب الصرف')
-                    <a href="{{ route('finance.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                    <a href="{{ route('finance.manager.sure', $applicant->id) }}" class="btn btn-success" id="sure"> اعتماد المدير </a>
                     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_3">
-                        غير معتمد
+                        عدم الاعتماد
                     </button>
                     <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#m_modal_5">
                         استفسار

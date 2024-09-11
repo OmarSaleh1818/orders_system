@@ -141,8 +141,8 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>  المصروفات الإدارية (%) </label><span style="color: red;">  *</span>
-                    <input type="number" class="form-control" name="management" id="management" required
-                           placeholder=" المصروفات الإدارية...">
+                    <input type="text" class="form-control" name="management" id="management" required
+                           placeholder=" المصروفات الإدارية..." oninput="validateNumber(this)">
                     @error('management')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror
@@ -185,8 +185,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> فائدة المرابحة الشهرية (%) </label><span style="color: red;"> *</span>
-                        <input type="number" class="form-control" name="monthly_benefit" id="monthly_benefit"
-                               placeholder="فائدة المرابحة الشهرية...">
+                        <input type="text" class="form-control" name="monthly_benefit" id="monthly_benefit"
+                               placeholder="فائدة المرابحة الشهرية..." oninput="validateNumber(this)">
                         @error('monthly_benefit')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -195,8 +195,8 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> الفترة بالشهر </label><span style="color: red;"> *</span>
-                        <input type="number" class="form-control" name="per_month" id="per_month"
-                               placeholder=" الفترة بالشهر...">
+                        <input type="text" class="form-control" name="per_month" id="per_month"
+                               placeholder=" الفترة بالشهر..." oninput="validateNumber(this)">
                         @error('per_month')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
@@ -248,8 +248,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>  نسبة الربح المستهدف (%) </label><span style="color: red;">  *</span>
-                    <input type="number" class="form-control" name="target_profit_percentage" id="target_profit_percentage" required
-                           placeholder=" نسبة الربح المستهدف...">
+                    <input type="text" class="form-control" name="target_profit_percentage" id="target_profit_percentage" required
+                           placeholder=" نسبة الربح المستهدف..." oninput="validateNumber(this)">
                     @error('target_profit_percentage')
                     <span class="text-danger">{{ $message }}</span>
                     @enderror

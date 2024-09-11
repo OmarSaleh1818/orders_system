@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\IndirectCosts;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Sections;
 use App\Models\MultiSections;
 use App\Models\projects;
 use Illuminate\Support\Facades\Auth;
@@ -33,8 +34,26 @@ class ProjectsController extends Controller
 //    }
     public function ProjectView() {
 
+        $sections = Sections::all();
         $projects = projects::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
-        return view('project.project_view', compact('projects'));
+        return view('project.project_view', compact('sections', 'projects'));
+    }
+
+    public function filterProjects(Request $request)
+    {
+        $sectionName = $request->input('section_name');
+
+        // Get all projects if no section is selected
+        if (empty($sectionName)) {
+            $projects = projects::all();
+        } else {
+            // Filter projects by section name
+            $projects = projects::where('section_name', $sectionName)->get();
+        }
+
+        return response()->json([
+            'projects' => $projects
+        ]);
     }
 
     public function AddProject() {
@@ -374,23 +393,48 @@ class ProjectsController extends Controller
     }
 
     public function ProjectUpdateManager(Request $request, $id) {
+       // Update user_id in the projects and open_projects tables
         projects::findOrFail($id)->update([
-           'user_id' => $request->user_id
-        ]);
-        OpenProject::findOrFail($request->openProject_user_id)->update([
             'user_id' => $request->user_id
         ]);
+
+        OpenProject::where('project_id', $id)->update([
+            'user_id' => $request->user_id
+        ]);
+
+        // Retrieve the updated user
         $user = User::findOrFail($request->user_id);
 
+        // Check if the user has the role of "مدير مشروع", and assign if not
         $managerRole = Role::where('name', 'مدير مشروع')->first();
 
         if (!$user->roles()->where('name', 'مدير مشروع')->exists()) {
-            // Add the role "مدير المشروع" to the user's roles
-            $user->roles()->attach($managerRole);
+            $user->roles()->attach($managerRole); // Add the role
+        }
+
+        // Add or update the user in the project_users table
+        project_users::updateOrCreate(
+            [
+                'project_id' => $id,         // The unique condition for the project
+                'user_name' => $user->name,  // The user name as a unique key
+            ],
+            [
+                'openProject_id' => $request->openProject_id,
+                'user_name' => $user->name   // Ensure the user name is added if creating a new record
+            ]
+        );
+
+        // Add the user ID to the project_users table if it doesn't exist
+        if (!project_users::where('user_name', $user->name)->where('project_id', $id)->exists()) {
+            project_users::create([
+                'project_id' => $id,
+                'openProject_id' => $request->openProject_id,
+                'user_name' => $user->name,
+            ]);
         }
 
         $request->session()->flash('status', 'تم تغيير مدير المشروع بنجاح');
-        return redirect()->back();
+        return redirect('project/approved/eye/'.$request->openProject_id);
     }
 
 

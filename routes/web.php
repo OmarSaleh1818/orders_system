@@ -61,6 +61,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-item-names/{step_name}', [ApplicantControllar::class, 'getItemNames']);
     Route::get('/get-item-value/{itemName}', [ApplicantControllar::class, 'getItemValue']);
     Route::get('/get-remaining-value/{itemName}', [ApplicantControllar::class, 'getRemainingValue']);
+    Route::get('/applicants/filter', [ApplicantControllar::class, 'filterApplicants'])->name('applicants.filter');
+
 
 // End
 
@@ -84,6 +86,8 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('/get-users-by-section', [ProjectsController::class, 'getUsersBySection']);
 // End
+    Route::get('/projects/filter', [ProjectsController::class, 'filterProjects'])->name('projects.filter');
+
 
 // All Finance Manager Route
     Route::get('/finance/manager/view', [FinanceManagerController::class, 'FinanceManagerView'])->name('finance.manager.view');
@@ -144,7 +148,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/approved/Manager/sure/{id}', [StartProjectControler::class, 'ProjectApprovedManagerSure'])->name('project.approvedManager.sure');
     });
 // End
-
+    Route::get('/open-projects/filter', [OpenPrejectController::class, 'filterBySection'])->name('filter.open.project');
 // All invoices route
     Route::get('/invoices/view', [InvoicesController::class, 'InvoicesView'])->name('invoices.view');
     Route::get('/invoices/eye/{id}', [InvoicesController::class, 'InvoicesEye'])->name('invoices.eye');
@@ -157,6 +161,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/invoices/update/{id}', [InvoicesController::class, 'InvoicesUpdate'])->name('invoices.update');
     Route::get('/invoices/manager/sure/{id}', [InvoicesController::class, 'InvoicesManagerSure'])->name('invoices.manager.sure');
     Route::post('/invoices/attachment/{id}', [InvoicesController::class, 'InvoicesAttachment'])->name('invoices.attachment');
+    Route::get('/invoices/filter', [InvoicesController::class, 'filterInvoicesBySection'])->name('filter.invoices');
 
 // End
 

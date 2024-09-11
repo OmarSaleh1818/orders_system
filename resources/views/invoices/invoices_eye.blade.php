@@ -143,9 +143,9 @@
                 $projectManager = App\Models\projects::where('user_id', $user_id)->first();
             @endphp
             @if($projectManager)
-                <a href="{{ route('invoices.sure', $invoices->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                <a href="{{ route('invoices.sure', $invoices->id) }}" class="btn btn-success" id="sure"> اعتماد مدير المشروع </a>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_2">
-                    غير معتمد
+                    عدم الاعتماد
                 </button>
             @endif
             <button class="btn btn-secondary" disabled> في انتظار اعتماد مدير المشروع <i class="far fa-clock" aria-hidden="true"></i> </button>
@@ -155,9 +155,9 @@
             <a href="{{ route('invoices.back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($invoices->status_id == 3)
             @can('اعتماد المدير المالي لطلب الصرف')
-                <a href="{{ route('invoices.manager.sure', $invoices->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                <a href="{{ route('invoices.manager.sure', $invoices->id) }}" class="btn btn-success" id="sure"> اعتماد المدير المالي </a>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_2">
-                    غير معتمد
+                    عدم الاعتماد
                 </button>
             @endcan
             <button class="btn btn-success" disabled> تم اعتماد مدير المشروع </button>

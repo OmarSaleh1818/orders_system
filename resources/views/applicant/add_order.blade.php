@@ -148,7 +148,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>المبلغ بالريال السعودي</label><span style="color: red;">  *</span>
-                        <input type="text" class="form-control" required name="price" id="price" placeholder="المبلغ بالريال السعودي ...">
+                        <input type="text" class="form-control" required name="price" id="price" placeholder="المبلغ بالريال السعودي ..." oninput="validateNumber(this)" disabled>
                         @error('price')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror
@@ -219,7 +219,7 @@
                 <div class="form-group">
                     <div class="form-group">
                         <label for="order_name">البيان</label><span style="color: red;">  *</span>
-                        <textarea id="description" name="description"  class="form-control" placeholder="البيان..."></textarea>
+                        <textarea id="description" name="description" required class="form-control" placeholder="البيان..."></textarea>
                     </div>
                 </div>
             </div>
@@ -354,7 +354,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label>المبلغ بالريال السعودي</label><span style="color: red;">  *</span>
-                        <input type="text" class="form-control" required name="price" id="price1" placeholder="المبلغ بالريال السعودي...">
+                        <input type="text" class="form-control" required name="price" id="price1" placeholder="المبلغ بالريال السعودي..." oninput="validateNumber(this)" disabled>
                         @error('price')
                         <span class="text-danger"> {{ $message }}</span>
                         @enderror

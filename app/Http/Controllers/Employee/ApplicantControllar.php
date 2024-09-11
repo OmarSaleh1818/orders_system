@@ -11,6 +11,7 @@ use App\Models\MultiStep;
 use App\Models\projects;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Sections;
 use App\Models\MultiSections;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,9 +30,26 @@ class ApplicantControllar extends Controller
     }
     public function applicantView() {
 
+        $sections = Sections::all();
         $applicants = Applicant::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
 
-        return view('applicant.applicant_view', compact('applicants'));
+        return view('applicant.applicant_view', compact('sections','applicants'));
+    }
+
+    public function filterApplicants(Request $request)
+    {
+        $sectionName = $request->input('section_name');
+        
+        // Filter applicants based on section name or return all if no section selected
+        if (empty($sectionName)) {
+            $applicants = Applicant::all();
+        } else {
+            $applicants = Applicant::where('section_name', $sectionName)->get();
+        }
+
+        return response()->json([
+            'applicants' => $applicants
+        ]);
     }
 
     public function AddOrder() {
@@ -373,7 +391,7 @@ class ApplicantControllar extends Controller
         $remaining = $request->remaining_value - $request->price;
         $step = MultiStep::where('id', $request->step_name)->first();
         Applicant::findOrFail($id)->update([
-            'step_name' => $step->step_name,
+            'step_name' => $request->step_name,
             'date' => $request->date,
             'section_name' => $request->section_name,
             'item_name' => $request->item_name,

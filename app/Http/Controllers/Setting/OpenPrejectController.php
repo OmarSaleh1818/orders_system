@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\OpenProjectReject;
 use App\Models\project_users;
 use App\Models\projects;
+use App\Models\Sections;
 use App\Models\OpenProject;
 use App\Models\User;
 use Carbon\Carbon;
@@ -19,8 +20,34 @@ class OpenPrejectController extends Controller
 
     public function ProjectOpenView() {
 
+        $sections = Sections::all();
         $openProject = OpenProject::orderBy('id','DESC')->get();
-        return view('project.project_open' , compact('openProject'));
+        return view('project.project_open' , compact('sections', 'openProject'));
+    }
+    public function filterBySection(Request $request)
+    {
+        $selectedSection = $request->input('section_filter');
+
+        // Fetch open projects with filtering based on section_name
+        $openProjectQuery = OpenProject::with('project');
+
+        if ($selectedSection) {
+            $openProjectQuery->whereHas('project', function($query) use ($selectedSection) {
+                $query->where('section_name', $selectedSection);
+            });
+        }
+
+        $openProject = $openProjectQuery->get();
+
+        // Return a JSON response if the request is an AJAX call
+        if ($request->ajax()) {
+            return response()->json(['openProjects' => $openProject]);
+        }
+
+        // Fetch sections for the dropdown (if needed in view)
+        $sections = projects::select('section_name')->distinct()->get();
+
+        return view('project.project_open', compact('openProject', 'sections'));
     }
 
     public function AddProjectOpen($id) {

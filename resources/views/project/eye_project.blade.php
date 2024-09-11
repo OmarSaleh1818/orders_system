@@ -299,53 +299,63 @@
         </div>
     </div>
     <br>
+    @php
+        $user_id = Auth::user()->id;
+        $manager = App\Models\projects::where('user_id', $user_id)->where('id', $project->id)->first();
+    @endphp
 
     <div class="d-flex justify-content-center" style="gap: 1rem;">
         @if($project->status_id == 1)
-            <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
             @can('اعتماد المدير المالي للتسعيرة')
-                <a href="{{ route('project.sure', $project->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                <a href="{{ route('project.sure', $project->id) }}" class="btn btn-success" id="sure"> اعتماد المدير المالي </a>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_1">
-                    غير معتمد
+                    عدم الاعتماد  
                 </button>
             @endcan
-            <button class="btn btn-secondary" disabled> في انتظار المدير المالي <i class="far fa-clock" aria-hidden="true"></i></button>
+            @if($manager)
+                <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+                <button class="btn btn-secondary" disabled> في انتظار المدير المالي <i class="far fa-clock" aria-hidden="true"></i></button>
+            @endif
             <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 2)
-            <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+            @if($manager)
+                <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+            @endif
             <button class="btn btn-danger" disabled> غير معتمد</button>
             <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 13)
-            <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+            @if($manager)
+                <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+            @endif
             <button class="btn btn-success" disabled> تم اعتماد المشروع </button>
             <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 3)
-            <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+            @if($manager)
+                <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+            @endif
             <button class="btn btn-dark" disabled> تم فتح المشروع </button>
             <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info">الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 6)
-            <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
             @can('اعتماد المدير للتسعيرة')
-                <a href="{{ route('price.sure', $project->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                <a href="{{ route('price.sure', $project->id) }}" class="btn btn-success" id="sure"> اعتماد المدير </a>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_1">
-                    غير معتمد
+                    عدم الاعتماد
                 </button>
             @endcan
-            <button class="btn btn-secondary" disabled> في انتظار المدير <i class="far fa-clock" aria-hidden="true"></i></button>
+            @if($manager)
+                <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
+                <button class="btn btn-secondary" disabled> في انتظار المدير <i class="far fa-clock" aria-hidden="true"></i></button>
+            @endif
             <button class="btn btn-success" disabled> تم اعتماد المدير المالي</button>
             <a href="{{ route('project.pdf', $project->id) }}" class="btn btn-primary"> PDF <i class="fa fa-file-pdf-o"></i></a>
             <a href="{{ route('back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($project->status_id == 7)
-            <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
-            @php
-                $user_id = Auth::user()->id;
-                $manager = App\Models\projects::where('user_id', $user_id)->where('id', $project->id)->first();
-            @endphp
             @if($manager)
+                <a href="{{ route('project.repeat', $project->id) }}" class="btn btn-primary"> تكرار <i class="fa fa-repeat"></i></a>
                 <a href="{{ route('add.project.open', $project->id) }}" class="btn btn-secondary">  فتح مشروع  </a>
             @endif
             <button class="btn btn-success" disabled> تم اعتماد المدير </button>

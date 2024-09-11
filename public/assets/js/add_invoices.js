@@ -37,6 +37,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.remove-btn', function () {
         $(this).closest('.main-form').remove();
+        calculateTotal();
     });
 
     $(document).on('click', '.add-more-form', function () {

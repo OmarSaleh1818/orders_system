@@ -166,7 +166,11 @@
                         @foreach($users as $item)
                             <div class="checkbox" style="display: inline-block; margin-right: 10px;">
                                 <label>
-                                    <input type="checkbox" name="user_name[]" value="{{ $item->name }}">
+                                    <input type="checkbox" name="user_name[]" value="{{ $item->name }}" 
+                                        @if($item->id == $projects->user_id) 
+                                        checked 
+                                        onclick="return false;"  
+                                        @endif>
                                     {{ $item->name }}
                                 </label>
                             </div>

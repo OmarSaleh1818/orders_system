@@ -9,6 +9,7 @@ use App\Models\InvoicesAttachment;
 use App\Models\InvoicesReject;
 use App\Models\MultiInvoices;
 use App\Models\MultiProject;
+use App\Models\Sections;
 use App\Models\MultiSections;
 use App\Models\MultiStep;
 use App\Models\project_users;
@@ -24,8 +25,34 @@ class InvoicesController extends Controller
 
     public function InvoicesView() {
 
+        $sections = Sections::all();
         $invoices = Invoices::orderBy('id','DESC')->orderBy('status_id', 'ASC')->get();
-        return view('invoices.invoices_view', compact('invoices'));
+        return view('invoices.invoices_view', compact('sections', 'invoices'));
+    }
+
+    public function filterInvoicesBySection(Request $request){
+        $selectedSection = $request->input('section_filter');
+
+        // Fetch open projects with filtering based on section_name
+        $invoicesQuery = Invoices::with('project');
+
+        if ($selectedSection) {
+            $invoicesQuery->whereHas('project', function($query) use ($selectedSection) {
+                $query->where('section_name', $selectedSection);
+            });
+        }
+
+        $invoices = $invoicesQuery->get();
+
+        // Return a JSON response if the request is an AJAX call
+        if ($request->ajax()) {
+            return response()->json(['invoices' => $invoices]);
+        }
+
+        // Fetch sections for the dropdown (if needed in view)
+        $sections = projects::select('section_name')->distinct()->get();
+
+        return view('invoices.invoices_view', compact('invoices', 'sections'));
     }
 
     public function InvoicesEye($id) {

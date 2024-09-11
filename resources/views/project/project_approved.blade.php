@@ -63,7 +63,6 @@
                 @enderror
             </div>
         </div>
-        @cannot('اعتماد القانونية للمشروع')
         <div class="col-md-6">
             <div class="form-group">
                 <label>رقم التسعيرة</label><span style="color: red;"> *</span>
@@ -437,14 +436,12 @@
         </div>
     </div>
     <div class="row">
-        @cannot('اعتماد المدير المالي لبدء المشروع')
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>مسودة العرض فني</label>
-                    <a href="{{ asset($openProject->art_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
-                </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>مسودة العرض فني</label>
+                <a href="{{ asset($openProject->art_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
             </div>
-        @endcannot
+        </div>
         <div class="col-md-6">
             <div class="form-group">
                 <h5> الموظفين </h5>
@@ -471,7 +468,6 @@
                 <a href="{{ asset($openProject->finance_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
             </div>
         </div>
-        @endcannot
         <div class="col-md-6">
             <div class="form-group">
                 <label> مسودة العقد</label>
@@ -491,7 +487,6 @@
     </div>
     <br>
     <hr>
-    @cannot('اعتماد القانونية للمشروع')
     <div class="row">
         <div class="col text-center">
             <h2>بدء مشروع </h2>
@@ -508,14 +503,12 @@
                 @enderror
             </div>
         </div>
-        @cannot('اعتماد المدير المالي لبدء المشروع')
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label> العرض الفني الموقع</label><span style="color: red;">  *</span>
-                    <a href="{{ asset($start_project->art_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
-                </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label> العرض الفني الموقع</label><span style="color: red;">  *</span>
+                <a href="{{ asset($start_project->art_show) }}" class="btn btn-primary btn-sm">تحميل  <i class="fa fa-download" aria-hidden="true"></i></a>
             </div>
-        @endcannot
+        </div>
     </div>
     <div class="row">
         <div class="col-md-6">
@@ -588,7 +581,7 @@
             <div class="col-md-6">
                 <form method="post" action="{{ route('project.update.manager', $project->id) }}">
                     @csrf
-                    <input type="hidden" name="openProject_user_id" value="{{ $openProject->user_id }}">
+                    <input type="hidden" name="openProject_id" value="{{ $openProject->id }}">
                     <div class="form-group">
                         <label for="project_name">مدير المشروع </label><span style="color: red;"> *</span>
                         <select name="user_id" class="form-control">
@@ -620,25 +613,24 @@
         </div>
     </div>
 
-    @endcannot
 
     <br>
 
     <div class="d-flex justify-content-center" style="gap: 1rem;">
         @if($openProject->status_id == 4)
             @can('اعتماد المدير المالي لبدء المشروع')
-                <a href="{{ route('project.approved.sure', $openProject->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                <a href="{{ route('project.approved.sure', $openProject->id) }}" class="btn btn-success" id="sure"> اعتماد المدير المالي </a>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_1">
-                    غير معتمد
+                    عدم الاعتماد 
                 </button>
             @endcan
             <button class="btn btn-secondary" disabled> في انتظار المدير المالي <i class="far fa-clock" aria-hidden="true"></i></button>
             <a href="{{ route('open.project.back') }}" class="btn btn-info"> الرجوع <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @elseif($openProject->status_id == 5)
             @can('اعتماد المدير لبدء المشروع')
-                <a href="{{ route('project.approvedManager.sure', $openProject->id) }}" class="btn btn-success" id="sure"> معتمد </a>
+                <a href="{{ route('project.approvedManager.sure', $openProject->id) }}" class="btn btn-success" id="sure"> اعتماد المدير  </a>
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#m_modal_1">
-                    غير معتمد
+                    عدم الاعتماد
                 </button>
             @endcan
             <button class="btn btn-secondary" disabled> في انتظار المدير <i class="far fa-clock" aria-hidden="true"></i></button>

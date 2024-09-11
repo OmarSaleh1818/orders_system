@@ -12,6 +12,27 @@ input.addEventListener('input', function(event) {
     console.log(selectedDate); // Output the selected date
 });
 
+function validateNumber(input) {
+    let value = input.value;
+
+    // Check if the number is negative
+    if (value.includes('-')) {
+        alert("يجب إدخال رقم صحيح");
+        value = value.replace('-', ''); // Remove the negative sign
+    }
+
+    // Replace any invalid characters (letters, etc.) except numbers and decimal points
+    value = value.replace(/[^0-9.]/g, '');
+    
+    // Prevent more than one decimal point
+    if (value.split('.').length > 2) {
+        value = value.substring(0, value.length - 1);
+    }
+
+    input.value = value;
+}
+
+
 let stepCount = 1;
 $(document).on('click', '.add-more-step', function () {
     stepCount++;
@@ -46,6 +67,7 @@ $(document).on('click', '.remove-step', function () {
     let stepNumber = $(this).data('step');
     $('#stepitems' + stepNumber).remove();
     stepCount--;
+    updateTotal(); // Update total when a step is removed
 });
 
 function addItem(stepId) {
@@ -87,7 +109,7 @@ function addItem(stepId) {
             <div class="col-md-3">
                 <div class="form-group">
                     <label>قيمة البند</label><span class="text-danger"> *</span>
-                    <input type="number" class="form-control item-value" name="item_value[]" required placeholder="قيمة البند...">
+                    <input type="text" class="form-control item-value" name="item_value[]" required placeholder="قيمة البند..." oninput="validateNumber(this)">
                 </div>
             </div>
             <div class="col-md-2">
@@ -115,6 +137,7 @@ function toggleOtherOption(selectElement) {
 
 function removeItem(event) {
     event.target.closest('.row').remove();
+    updateTotal(); // Update total when an item is removed
 }
 
 document.addEventListener("DOMContentLoaded", function() {

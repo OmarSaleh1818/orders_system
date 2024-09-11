@@ -13,15 +13,16 @@ input.addEventListener('input', function(event) {
 });
 
 
+// Calculate the date
 var input = document.getElementById('startDateInput');
-var currentDate = new Date()
+var currentDate = new Date();
 var formattedDate = currentDate.toISOString().split('T')[0];
-
 input.value = formattedDate;
 
 input.addEventListener('input', function(event) {
     var selectedDate = event.target.value;
     console.log(selectedDate);
+    validateEndDate(); // Revalidate end date when the start date changes
 });
 
 function validateEndDate() {
@@ -36,16 +37,18 @@ function validateEndDate() {
     }
 }
 
-// count the days
 function calculateDays() {
     var startDate = new Date(document.getElementById('startDateInput').value);
     var endDate = new Date(document.getElementById('endDateInput').value);
-    // Calculate the difference in milliseconds between the two dates
-    var differenceInMilliseconds = endDate - startDate;
-    // Convert the difference to days
-    var days = Math.ceil(differenceInMilliseconds / (1000 * 60 * 60 * 24));
-    // Set the value of the "days" input field
-    document.getElementById('daysInput').value = days;
+    
+    // Calculate the difference in milliseconds
+    var timeDiff = endDate.getTime() - startDate.getTime();
+    
+    // Calculate the number of days
+    var daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    // Set the value of daysInput to the calculated days difference
+    document.getElementById('daysInput').value = daysDiff;
 }
 
 
